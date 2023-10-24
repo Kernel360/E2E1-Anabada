@@ -1,5 +1,4 @@
 spring:
-
   datasource:
     url: ${LOCAL_DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -8,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
 
     properties:
       hibernate:
