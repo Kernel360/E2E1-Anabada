@@ -1,4 +1,4 @@
-package kr.kernel360.anabada.category;
+package kr.kernel360.anabada.domain.faq.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,12 +14,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "category")
-public class Category {
+@Table(name = "faq")
+public class Faq {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "name", columnDefinition = "varchar(50)")
-	private String name;
+	@Column(nullable = false, name = "title", columnDefinition = "varchar(50)")
+	private String title;
+
+	@Column(name = "content", columnDefinition = "text")
+	private String content;
 }

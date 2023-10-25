@@ -1,5 +1,6 @@
-package kr.kernel360.anabada.member;
+package kr.kernel360.anabada.domain.member.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
-import kr.kernel360.anabada.trade.Trade;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,5 +51,5 @@ public class Member extends BaseEntity {
 	private Boolean accountStatus;
 
 	@OneToMany(mappedBy = "member")
-	private List<Trade> trades;
+	private List<Trade> trades = new ArrayList<>();
 }
