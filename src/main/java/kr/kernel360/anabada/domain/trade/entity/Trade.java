@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,11 +16,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -56,4 +62,12 @@ public class Trade extends BaseEntity {
 
 	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
+
+	@Builder
+	public Trade(Long id, String title, String tradeType, boolean tradeStatus) {
+		this.id = id;
+		this.title = title;
+		this.tradeType = tradeType;
+		this.tradeStatus = tradeStatus;
+	}
 }

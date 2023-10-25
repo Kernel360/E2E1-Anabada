@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>교환 목록</title>
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                fn_init();
+            });
+            function fn_init() {
+                fn_getTradeList(); // 교환 목록 조회
+            }
+            /**
+             * 교환목록 조회
+             */
+            function fn_getTradeList() {
+                // JSON 데이터를 가져오는 비동기 요청
+                $.ajax({
+                    url: '/api/v1/trades',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("data : "+JSON.stringify(data));
+                        var trades = data.trades;
+                        var $tradeList = $('#tradeList');
+
+                        // 각 거래 항목 표시
+                        for (var i = 0; i < trades.length; i++) {
+                            var trade = trades[i];
+                            var tradeItem = $('<div class="trade-item">' +
+                                '<h2>' + tradeList.title + '</h2>' +
+                                '<p>작성자: ' + tradeList.createBy + '</p>' +
+                                '<p>작성일: ' + tradeList.createdDate + '</p>' +
+                                '</div>');
+
+                            // tradeInfo.html로 이동하는 클릭 이벤트 추가
+                            tradeItem.click(function () {
+                                window.location.href = 'tradeInfo.html?tradeNo='+trade.id;
+                            });
+
+                            $tradeList.append(tradeItem);
+                        }
+                    },
+                    error: function () {
+                        console.log('데이터를 불러오는데 실패했습니다.');
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <h1 id="boardName">교환 목록</h1>
+        <div id="tradeList">
+        </div>
+    </body>
+</html>
