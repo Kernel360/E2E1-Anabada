@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kernel360.anabada.domain.trade.dto.TradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.service.TradeService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class TradeController {
 
 	@GetMapping("/v1/trades")
 	public ResponseEntity findAll() {
-		TradeResponse trades = tradeService.findTrades();
+		FindAllTradeResponse trades = tradeService.findTrades();
 		return ResponseEntity.ok(trades);
 	}
 }
