@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Trade Information</title>
+    <meta charset="utf-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
@@ -14,17 +15,22 @@
       }
 
       function getTradeInfo() {
-        // JSON 데이터를 가져오는 비동기 요청
+        var urlParams = new URLSearchParams(window.location.search);
+        var tradeId = urlParams.get('tradeNo');
+
         $.ajax({
-          url: 'your_trade_info_endpoint_url_here',
+          url: '/api/v1/trades/' + tradeId,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
+            console.log("data : " + JSON.stringify(data));
             // JSON 데이터를 받은 후 실행될 코드
-            $('#postTitle').text(data.title);
-            $('#postAuthor').text('작성자: ' + data.createBy);
-            $('#postContent').text(data.content);
-            $('#postDate').text('작성일: ' + data.createdDate);
+            $('#postTitle').val(data.tradeTitle);
+            $('#postAuthor').val(data.nickname);
+            $('#postDate').val(data.createdDate);
+            $('#postContent').val(data.content);
+            $('#postTradeType').val(data.tradeType);
+            $('#postCategory').val(data.categoryName);
 
             // 이미지 표시
             var $image = $('<img>');
@@ -40,17 +46,41 @@
 
       function fc_setEvent() {
         // "거래 요청" 버튼을 초기화
-        $('#tradeRequestButton').click(function() {
+        $('#tradeRequestButton').click(function () {
           window.location.href = 'tradeRequestForm.html'; // 클릭시 이동할 페이지 지정
         });
       }
     </script>
   </head>
   <body>
-    <h1 id="postTitle"></h1>
-    <p id="postAuthor"></p>
-    <p id="postContent"></p>
-    <p id="postDate"></p>
+    <h1>교환 상세</h1>
+    <div>
+      <a href="/trade/tradeList.html">목록으로</a>
+    </div>
+    <div>
+      <label for="postTitle">제목:</label>
+      <input type="text" id="postTitle" readonly>
+    </div>
+    <div>
+      <label for="postAuthor">작성자:</label>
+      <input type="text" id="postAuthor" readonly>
+    </div>
+    <div>
+      <label for="postDate">작성일자:</label>
+      <input type="text" id="postDate" readonly>
+    </div>
+    <div>
+      <label for="postCategory">카테고리:</label>
+      <input type="text" id="postCategory" readonly>
+    </div>
+    <div>
+      <label for="postTradeType">교환타입:</label>
+      <input type="text" id="postTradeType" readonly>
+    </div>
+    <div>
+      <label for="postContent">내용:</label>
+      <textarea id="postContent" rows="5" cols="50" readonly></textarea>
+    </div>
     <div id="postImage"></div>
 
     <!-- "거래 요청" 버튼 추가 -->
