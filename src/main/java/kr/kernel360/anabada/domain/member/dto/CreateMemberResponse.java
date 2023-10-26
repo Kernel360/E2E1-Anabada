@@ -17,7 +17,7 @@ public class CreateMemberResponse {
 
 	private String nickname;
 
-	public static CreateMemberResponse toDto(Member member) {
+	public static CreateMemberResponse of(Member member) {
 		return CreateMemberResponse.builder()
 			.id(member.getId())
 			.email(member.getEmail())

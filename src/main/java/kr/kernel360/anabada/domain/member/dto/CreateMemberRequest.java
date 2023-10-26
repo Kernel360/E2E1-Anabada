@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,27 +39,16 @@ public class CreateMemberRequest{
 
 	private Boolean locationPermission;
 
-	@Builder
-	public CreateMemberRequest(String email, String nickname, String password, String gender, String birth,
-		Boolean locationPermission) {
-		this.email = email;
-		this.nickname = nickname;
-		this.password = password;
-		this.gender = gender;
-		this.birth = birth;
-		this.locationPermission = locationPermission;
-	}
-
-	public Member toEntity() {
+	public static Member toEntity(CreateMemberRequest createMemberRequest) {
 		return Member.builder()
-			.email(email)
-			.nickname(nickname)
-			.password(password)
-			.authority(authority)
-			.gender(gender)
-			.birth(birth)
-			.socialProvider(socialProvider)
-			.accountStatus(accountStatus)
+			.email(createMemberRequest.email)
+			.nickname(createMemberRequest.nickname)
+			.password(createMemberRequest.password)
+			.authority(createMemberRequest.authority)
+			.gender(createMemberRequest.gender)
+			.birth(createMemberRequest.birth)
+			.socialProvider(createMemberRequest.socialProvider)
+			.accountStatus(createMemberRequest.accountStatus)
 			.build();
 	}
 }
