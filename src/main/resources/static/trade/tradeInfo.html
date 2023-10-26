@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trade Information</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        fn_init();
+      });
+
+      function fn_init() {
+        getTradeInfo(); // 교환 정보 조회
+        fc_setEvent(); // 이벤트 초기화 함수 호출
+      }
+
+      function getTradeInfo() {
+        // JSON 데이터를 가져오는 비동기 요청
+        $.ajax({
+          url: 'your_trade_info_endpoint_url_here',
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            // JSON 데이터를 받은 후 실행될 코드
+            $('#postTitle').text(data.title);
+            $('#postAuthor').text('작성자: ' + data.createBy);
+            $('#postContent').text(data.content);
+            $('#postDate').text('작성일: ' + data.createdDate);
+
+            // 이미지 표시
+            var $image = $('<img>');
+            $image.attr('src', data.imagePath);
+            $image.attr('alt', '이미지');
+            $('#postImage').append($image);
+          },
+          error: function () {
+            console.log('데이터를 불러오는데 실패했습니다.');
+          }
+        });
+      }
+
+      function fc_setEvent() {
+        // "거래 요청" 버튼을 초기화
+        $('#tradeRequestButton').click(function() {
+          window.location.href = 'tradeRequestForm.html'; // 클릭시 이동할 페이지 지정
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h1 id="postTitle"></h1>
+    <p id="postAuthor"></p>
+    <p id="postContent"></p>
+    <p id="postDate"></p>
+    <div id="postImage"></div>
+
+    <!-- "거래 요청" 버튼 추가 -->
+    <button id="tradeRequestButton">거래 요청</button>
+  </body>
+</html>
