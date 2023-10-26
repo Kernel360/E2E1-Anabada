@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trade Request Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        fn_init();
+      });
+
+      function fn_init() {
+        fn_setEvent(); // 이벤트 초기화 함수 호출
+      }
+
+      function fn_setEvent() {
+        // "요청하기" 버튼 클릭 이벤트 핸들러
+        $('#tradeRequestButton').click(function() {
+          fn_saveTradeInfo();
+        });
+      }
+
+      function fn_saveTradeInfo() {
+        // 폼 데이터 가져오기
+        var formData = {
+          title: $('#title').val(),
+          content: $('#content').val()
+        };
+
+        // 서버로 데이터를 POST 방식으로 보내는 Ajax 요청
+        $.ajax({
+          url: 'your_server_endpoint_url_here',
+          method: 'POST',
+          data: JSON.stringify(formData), // JSON 데이터로 변환
+          contentType: 'application/json', // JSON 데이터임을 서버에 알리기
+          success: function (response) {
+            // 성공 시 실행할 코드
+            console.log('요청이 성공적으로 생성되었습니다.');
+            // 페이지 이동
+            window.location.href = 'tradeList.html';
+          },
+          error: function () {
+            console.log('요청을 생성하는데 실패했습니다.');
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+  <h1>거래 요청</h1>
+    <form id="tradeRequestForm">
+      <label for="title">제목:</label>
+      <input type="text" id="title" name="title" required><br><br>
+
+      <label for="content">내용:</label>
+      <textarea id="content" name="content" required></textarea><br><br>
+
+      <!-- "요청하기" 버튼 추가 -->
+      <button id="tradeRequestButton">요청하기</button>
+    </form>
+  </body>
+</html>

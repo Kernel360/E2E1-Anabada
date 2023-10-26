@@ -16,9 +16,10 @@ import javax.persistence.Table;
 
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
-import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,7 +48,7 @@ public class Trade extends BaseEntity {
 	private boolean tradeStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", columnDefinition = "bigint(50)")
+	@JoinColumn(name = "created_by", columnDefinition = "bigint(50)")
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -56,4 +57,12 @@ public class Trade extends BaseEntity {
 
 	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
+
+	@Builder
+	public Trade(Long id, String title, String tradeType, boolean tradeStatus) {
+		this.id = id;
+		this.title = title;
+		this.tradeType = tradeType;
+		this.tradeStatus = tradeStatus;
+	}
 }
