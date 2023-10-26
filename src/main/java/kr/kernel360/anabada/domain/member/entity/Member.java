@@ -7,18 +7,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@DynamicUpdate
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "member")
 public class Member extends BaseEntity {
 	@Id
@@ -49,7 +49,26 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, name = "account_status", columnDefinition = "tinyint")
 	private Boolean accountStatus;
 
-	public void updatePassword(String password) {
+	@Builder
+	public Member(Long id, String email, String nickname, String password, String authority, String gender,
+		String birth,
+		String socialProvider, Boolean accountStatus) {
+		this.id = id;
+		this.email = email;
+		this.nickname = nickname;
 		this.password = password;
+		this.authority = authority;
+		this.gender = gender;
+		this.birth = birth;
+		this.socialProvider = socialProvider;
+		this.accountStatus = accountStatus;
+	}
+
+	public void update(String email, String nickname, String password, String gender, String birth) {
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.gender = gender;
+		this.birth = birth;
 	}
 }

@@ -4,12 +4,15 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
+import kr.kernel360.anabada.domain.member.dto.UpdateMemberResponse;
 import kr.kernel360.anabada.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +25,13 @@ public class MemberController {
 	@PostMapping("/v1/members")
 	public ResponseEntity<CreateMemberResponse> create(@RequestBody CreateMemberRequest createMemberRequest) {
 		CreateMemberResponse createMemberResponse = memberService.create(createMemberRequest);
-		return ResponseEntity.ok(createMemberResponse);
+		URI url = URI.create("api/v1/members/" + createMemberResponse.getId());
+		return ResponseEntity.created(url).body(createMemberResponse);
 	}
 
-	@PostMapping("/")
+	@PutMapping("/v1/members")
+	public ResponseEntity<UpdateMemberResponse> update(@RequestBody UpdateMemberRequest updateMemberRequest) {
+		UpdateMemberResponse updateMemberResponse = memberService.update(updateMemberRequest);
+		return ResponseEntity.ok(updateMemberResponse);
+	}
 }
