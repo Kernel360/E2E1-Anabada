@@ -9,12 +9,16 @@ import javax.persistence.Table;
 
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(name = "member")
 public class Member extends BaseEntity {
 	@Id
@@ -45,11 +49,7 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, name = "account_status", columnDefinition = "tinyint")
 	private Boolean accountStatus;
 
-	// 1. 현재 상태에서는 회원에서 교환을 join하여 교환테이블에서 데이터를 가져오는 기능은 없기 떄문에 해당 부분은 지워야하는 것으로 인지하였습니다.
-	// 하지만 회원테이블을 기준으로 교환테이블과 join해 교환테이블의 데이터를 가져와야할 경우가 생긴다면 해당 부분이 추가될 텐데,
-	// 이 부분을 추가했을 떄 순환참조가 일어나는 이유를 알고싶습니다.
-
-	// 2. 이 부분을 주석 하더라도 직렬화를 하는 과정에서 에러가 나고 있는데 원인을 알고 싶습니다.
-	// @OneToMany(mappedBy = "member")
-	// private List<Trade> trades = new ArrayList<>();
+	public void updatePassword(String password) {
+		this.password = password;
+	}
 }
