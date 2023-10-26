@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,10 @@ public class TradeService {
 	public FindAllTradeResponse findAll() {
 		List<FindAllTradeDto> findTrades = tradeRepository.findTrades();
 		return FindAllTradeResponse.of(findTrades);
+	}
+
+	public FindTradeResponse find(Long tradeId) {
+		return tradeRepository.findTrade(tradeId);
 	}
 
 }
