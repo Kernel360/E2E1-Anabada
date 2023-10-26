@@ -18,13 +18,13 @@ public class TradeController {
 	private final TradeService tradeService;
 
 	@GetMapping("/v1/trades")
-	public ResponseEntity findAll() {
+	public ResponseEntity<FindAllTradeResponse> findAll() {
 		FindAllTradeResponse trades = tradeService.findAll();
 		return ResponseEntity.ok(trades);
 	}
 
 	@GetMapping("/v1/trades/{tradeId}")
-	public ResponseEntity find(@PathVariable Long tradeId) {
+	public ResponseEntity<FindTradeResponse> find(@PathVariable Long tradeId) {
 		FindTradeResponse trade = tradeService.find(tradeId);
 		return ResponseEntity.ok(trade);
 	}
