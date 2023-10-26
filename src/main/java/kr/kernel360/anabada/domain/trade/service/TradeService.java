@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 public class TradeService {
 	private final TradeRepository tradeRepository;
 
-	public FindAllTradeResponse findTrades() {
-		List<FindAllTradeDto> trades = tradeRepository.findTrades();
-		return FindAllTradeResponse.of(trades);
+	public FindAllTradeResponse findAll() {
+		List<FindAllTradeDto> findTrades = tradeRepository.findTrades();
+		return FindAllTradeResponse.of(findTrades);
 	}
 
 }

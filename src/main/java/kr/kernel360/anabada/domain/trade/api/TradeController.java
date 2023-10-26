@@ -17,7 +17,7 @@ public class TradeController {
 
 	@GetMapping("/v1/trades")
 	public ResponseEntity findAll() {
-		FindAllTradeResponse trades = tradeService.findTrades();
+		FindAllTradeResponse trades = tradeService.findAll();
 		return ResponseEntity.ok(trades);
 	}
 }

@@ -52,15 +52,15 @@ public class Trade extends BaseEntity {
 	@Column(nullable = false, name = "trade_status", columnDefinition = "tinyint")
 	private boolean tradeStatus;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "create_by", columnDefinition = "bigint(50)")
 	private Member member;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", columnDefinition = "bigint(50)")
 	private Category category;
 
-	@OneToMany(mappedBy = "trade", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
 
 	@Builder
