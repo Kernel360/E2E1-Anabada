@@ -13,6 +13,11 @@
                 fn_setEvent();
             }
             function fn_setEvent() {
+                // "거래 요청" 버튼을 초기화
+                $('#tradeCreateButton').click(function () {
+                    window.location.href = 'tradeCreateForm.html'; // 클릭시 이동할 페이지 지정
+                });
+
                 $('.trade-item').click(function () {
                     var tradeId = $(this).data('trade-id');
                     window.location.href = 'tradeInfo.html?tradeNo='+tradeId;
@@ -28,7 +33,6 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        console.log("data : " + JSON.stringify(data));
                         var trades = data.trades;
 
                         for (var i = 0; i < trades.length; i++) {
@@ -47,7 +51,6 @@
                         fn_setEvent();
                     },
                     error: function () {
-                        console.log('데이터를 불러오는데 실패했습니다.');
                     }
                 });
             }
@@ -55,6 +58,7 @@
     </head>
     <body>
     <h1 id="boardName">교환 목록</h1>
+    <button id="tradeCreateButton">거래 등록</button>
     <table border="1">
         <tr>
             <th>No</th>
