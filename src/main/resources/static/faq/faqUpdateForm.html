@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ 수정</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            fn_init();
+        });
+
+        function fn_init() {
+            // URL 파라미터에서 FAQ ID 가져오기
+            var urlParams = new URLSearchParams(window.location.search);
+            var faqId = urlParams.get('faqId');
+
+            // FAQ 정보 가져오기
+            $.ajax({
+                url: '/api/v1/faqs/' + faqId,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // FAQ 정보를 필드에 채움
+                    $('#postTitle').val(data.title);
+                    $('#postContent').val(data.content);
+                },
+                error: function () {
+                    console.log('FAQ 정보를 불러오는데 실패했습니다.');
+                }
+
+            });
+
+            fn_setEvent();
+        }
+
+        function fn_setEvent() {
+            $('#faqSaveButton').click(function () {
+                // 수정할 FAQ 정보 가져오기
+                var faqId = getUrlParameter('faqId');
+                var updatedTitle = $('#postTitle').val();
+                var updatedContent = $('#postContent').val();
+
+                // 서버에 수정 요청 보내기
+                $.ajax({
+                    url: '/api/v1/faqs/' + faqId,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ title: updatedTitle, content: updatedContent }),
+                    success: function () {
+                        window.location.href = 'faqInfo.html?faqId=' + faqId;
+                    },
+                    error: function () {
+                        window.location.href = 'faqInfo.html?faqId=' + faqId;
+                    }
+                });
+            });
+        }
+
+        // URL에서 파라미터 가져오는 함수
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    </script>
+</head>
+<body>
+<h1>FAQ 수정</h1>
+<div>
+    <a href="/faq/faqList.html">목록으로</a>
+</div>
+<div>
+    <label for="postTitle">제목:</label>
+    <input type="text" id="postTitle">
+</div>
+<div>
+    <label for="postContent">내용:</label>
+    <textarea id="postContent" rows="5" cols="50"></textarea>
+</div>
+
+<button id="faqSaveButton">저장</button>
+</body>
+</html>
