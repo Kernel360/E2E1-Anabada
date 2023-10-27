@@ -42,4 +42,14 @@ public class MemberService {
 
 		return FindMemberResponse.of(member);
 	}
+
+	@Transactional
+	public Long remove(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+		member.remove();
+
+		return id;
+	}
 }
