@@ -34,4 +34,5 @@ public class MemberService {
 
 		return UpdateMemberResponse.toDto(member);
 	}
+
 }
