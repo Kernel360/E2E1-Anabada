@@ -3,7 +3,6 @@ package kr.kernel360.anabada.domain.member.api;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,8 +43,7 @@ public class MemberController {
 		FindMemberResponse findMemberResponse = memberService.find(id);
 		return ResponseEntity.ok(findMemberResponse);
 	}
-
-	@DeleteMapping("/v1/members/{id}")
+	@PutMapping("/v1/members/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
 		Long response = memberService.remove(id);
 		return ResponseEntity.ok(id);
