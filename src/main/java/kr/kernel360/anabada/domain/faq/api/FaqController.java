@@ -55,14 +55,6 @@ public class FaqController {
 		return ResponseEntity.ok(updateFaqResponse);
 	}
 
-	// @PutMapping("/v1/faqs")
-	// public ResponseEntity<UpdateFaqResponse> update(
-	// 	@RequestBody UpdateFaqRequest updateFaqRequest
-	// ){
-	// 	UpdateFaqResponse updateFaqResponse = faqService.update(updateFaqRequest);
-	// 	return ResponseEntity.ok(updateFaqResponse);
-	// }
-
 	@DeleteMapping("/v1/faqs/{faqId}")
 	public ResponseEntity remove(@PathVariable Long faqId) {
 		faqService.delete(faqId);

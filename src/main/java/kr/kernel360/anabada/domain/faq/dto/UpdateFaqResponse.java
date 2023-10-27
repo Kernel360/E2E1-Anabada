@@ -17,7 +17,7 @@ public class UpdateFaqResponse {
 
 	private String content;
 
-	public static UpdateFaqResponse toDto(Faq faq) {
+	public static UpdateFaqResponse of(Faq faq) {
 		return UpdateFaqResponse.builder()
 			.id(faq.getId())
 			.title(faq.getTitle())

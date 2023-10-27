@@ -46,23 +46,26 @@ public class FaqService {
 
 	@Transactional(readOnly = true)
 	public FindFaqResponse find(Long faqId){
-		Faq faq = faqRepository.findById(faqId)
-			.orElseThrow(()-> new IllegalArgumentException("faq가 존재하지 않습니다"));
+		Faq faq = findFaqById(faqId);
 		return FindFaqResponse.of(faq);
 	}
 
 	@Transactional
 	public UpdateFaqResponse update(Long faqId, UpdateFaqRequest updateFaqRequest){
-		Faq faq = faqRepository.findById(faqId)
-			.orElseThrow(() -> new IllegalArgumentException("faq가 존재하지 않습니다"));
+		Faq faq = findFaqById(faqId);
 
 		faq.update(updateFaqRequest.getTitle(),updateFaqRequest.getContent());
 
-		return UpdateFaqResponse.toDto(faq);
+		return UpdateFaqResponse.of(faq);
 	}
 
 	@Transactional
 	public void delete(Long faqId){
 		faqRepository.deleteById(faqId);
+	}
+
+	public Faq findFaqById(Long faqId) {
+		return faqRepository.findById(faqId)
+			.orElseThrow(()-> new IllegalArgumentException("faq가 존재하지 않습니다"));
 	}
 }
