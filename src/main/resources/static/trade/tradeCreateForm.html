@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trade Request Form</title>
+  <meta charset="utf-8">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      fn_init();
+    });
+
+    function fn_init() {
+      fn_setEvent(); // 이벤트 초기화 함수 호출
+    }
+
+    function fn_setEvent() {
+      // "거래 유형" 선택 상태 변경 시 이벤트 핸들러
+      $('#tradeType').change(function() {
+        fn_toggleReceiveItemField(); // "받을 물건" 필드 표시/숨김 함수 호출
+      });
+
+      // "드릴 물건" 입력 상태 변경 시 이벤트 핸들러
+      $('#shareItem').on('input', function() {
+        fn_updateTitle();
+      });
+
+      // "받을 물건" 입력 상태 변경 시 이벤트 핸들러
+      $('#receiveItem').on('input', function() {
+        fn_updateTitle();
+      });
+
+      // "요청하기" 버튼 클릭 이벤트 핸들러
+      $('#tradeRequestButton').click(function() {
+        event.preventDefault();
+        fn_saveTradeInfo();
+      });
+    }
+
+    function fn_toggleReceiveItemField() {
+      var tradeType = $('#tradeType').val(); // 선택된 거래 유형 가져오기
+      $('#receiveItem').val("");
+      if (tradeType === 'SWAP') {
+        $('#receiveItemField').show(); // "받을 물건" 필드 표시
+      } else {
+        $('#receiveItemField').hide(); // "받을 물건" 필드 숨김
+      }
+    }
+
+    function fn_updateTitle() {
+      var shareItem = $('#shareItem').val();
+      var receiveItem = $('#receiveItem').val();
+      var title = '';
+
+      if (shareItem && receiveItem) {
+        title = shareItem + "드려요. " + receiveItem + "받아요.";
+      } else if (shareItem) {
+        title = shareItem + "드려요.";
+      } else if (receiveItem) {
+        title = receiveItem + "받아요.";
+      }
+
+      $('#title').val(title);
+    }
+
+    function fn_saveTradeInfo() {
+      var formData = {
+        title: $('#title').val(),
+        content: $('#content').val(),
+        imagePath: $('#imagePath').val(),
+        tradeType: $('#tradeType').val(),
+        categoryId: $('#categoryId').val(),
+        memberId: $('#memberId').val()
+      };
+
+      $.ajax({
+        url: '/api/v1/trades',
+        method: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        success: function (response) {
+          window.location.href = 'tradeList.html';
+        },
+        error: function () {
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+<h1>거래 등록</h1>
+<form id="tradeRequestForm">
+  <div id="titleField">
+    <label for="title">제목:</label>
+    <input type="text" id="title" name="title" required>
+  </div>
+
+  <div id="shareItemField">
+    <label for="shareItem">나눌 물건:</label>
+    <input type="text" id="shareItem" name="shareItem">
+  </div>
+
+  <div id="receiveItemField" style="display: none">
+    <label for="receiveItem">받을 물건:</label>
+    <input type="text" id="receiveItem" name="receiveItem">
+  </div>
+
+  <div id="contentField">
+    <label for="content">내용:</label>
+    <textarea id="content" name="content" required></textarea>
+  </div>
+
+  <div id="imagePathField">
+    <label for="imagePath">이미지 경로:</label>
+    <input type="text" id="imagePath" name="imagePath" required>
+  </div>
+
+  <div id="tradeTypeField">
+    <label for="tradeType">거래 유형:</label>
+    <select id="tradeType" name="tradeType">
+      <option value="REQUEST">요청</option>
+      <option value="SWAP">바꿔</option>
+      <option value="SHARE">나눔</option>
+    </select>
+  </div>
+
+  <div id="categoryIdField">
+    <label for="categoryId">카테고리 ID:</label>
+    <select id="categoryId" name="categoryId">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  </div>
+
+  <div id="memberIdField">
+    <label for="memberId">로그인하고 있는 회원 ID(임시):</label>
+    <select id="memberId" name="memberId">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  </div>
+
+  <!-- "요청하기" 버튼 추가 -->
+  <button id="tradeRequestButton">거래등록</button>
+</form>
+</body>
+</html>
