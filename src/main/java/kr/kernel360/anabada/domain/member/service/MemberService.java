@@ -1,10 +1,14 @@
 package kr.kernel360.anabada.domain.member.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberResponse;
@@ -41,6 +45,18 @@ public class MemberService {
 			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
 		return FindMemberResponse.of(member);
+	}
+
+	@Transactional(readOnly = true)
+	public FindAllMemberResponse findAll() {
+		List<Member> members = memberRepository.findAll();
+
+		for (Member member : members) {
+			System.out.println(member.getNickname());
+		}
+		List<FindMemberResponse> responses = members.stream().map(FindMemberResponse::of).toList();
+
+		return FindAllMemberResponse.of(responses);
 	}
 
 	@Transactional
