@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +21,8 @@ import javax.persistence.Table;
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.global.commons.domain.TradeStatus;
+import kr.kernel360.anabada.global.commons.domain.TradeType;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,31 +44,37 @@ public class Trade extends BaseEntity {
 	@Column(nullable = false, name = "content", columnDefinition = "text")
 	private String content;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, name = "trade_type", columnDefinition = "varchar(40)")
-	private String tradeType;
+	private TradeType tradeType;
 
 	@Column(name = "image_path", columnDefinition = "varchar(40)")
 	private String imagePath;
 
-	@Column(nullable = false, name = "trade_status", columnDefinition = "tinyint")
-	private boolean tradeStatus;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, name = "trade_status", columnDefinition = "varchar(20)")
+	private TradeStatus tradeStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", columnDefinition = "bigint(50)")
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id", columnDefinition = "bigint(50)")
+	// todo : 카테고리 기능 개발 완료 후 foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT) 제거 필요
+	@JoinColumn(name = "category_id", columnDefinition = "bigint(50)", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
 	private Category category;
 
 	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
 
 	@Builder
-	public Trade(Long id, String title, String tradeType, boolean tradeStatus) {
-		this.id = id;
+	public Trade(String title, String content, TradeType tradeType, String imagePath, TradeStatus tradeStatus, Member member, Category category) {
 		this.title = title;
+		this.content = content;
 		this.tradeType = tradeType;
+		this.imagePath = imagePath;
 		this.tradeStatus = tradeStatus;
+		this.category = category;
+		this.member = member;
 	}
 }
