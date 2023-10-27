@@ -45,7 +45,7 @@ public class MemberController {
 	}
 	@PutMapping("/v1/members/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
-		Long response = memberService.remove(id);
+		memberService.remove(id);
 		return ResponseEntity.ok(id);
 	}
 }
