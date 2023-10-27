@@ -16,11 +16,10 @@ public class FindAllTradeDto {
 	private TradeType tradeType;
 
 	private String categoryName;
-
+  
 	private String tradeTitle;
-
+  
 	private String nickname;
-
+  
 	private LocalDateTime createdDate;
-
 }

@@ -15,12 +15,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FindTradeResponse {
 	private Long tradeId;
+
 	private TradeType tradeType;
+  
 	private TradeStatus tradeStatus;
+
 	private String categoryName;
+
 	private String tradeTitle;
+
 	private String nickname;
+
 	private LocalDateTime createdDate;
+
 	private String content;
+
 	private String imagePath;
 }
