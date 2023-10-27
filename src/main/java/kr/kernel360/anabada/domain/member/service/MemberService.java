@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberResponse;
 import kr.kernel360.anabada.domain.member.entity.Member;
@@ -22,7 +23,6 @@ public class MemberService {
 		return CreateMemberResponse.of(member);
 	}
 
-	//Dynamic Update Annotation class 에 추가
 	@Transactional
 	public UpdateMemberResponse update(UpdateMemberRequest updateMemberRequest) {
 		Member member = memberRepository.findById(updateMemberRequest.getId())
@@ -33,5 +33,13 @@ public class MemberService {
 			, updateMemberRequest.getBirth());
 
 		return UpdateMemberResponse.toDto(member);
+	}
+
+	@Transactional(readOnly = true)
+	public FindMemberResponse find(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+		return FindMemberResponse.of(member);
 	}
 }
