@@ -47,6 +47,12 @@ public class CategoryService {
 
 	}
 
+	@Transactional
+	public void remove(Long id) {
+		Category category = findCategoryById(id);
+		categoryRepository.delete(category);
+	}
+
 	public Category findCategoryById(Long id){
 		return categoryRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));

@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.category.api;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,4 +52,9 @@ public class CategoryController {
 		return ResponseEntity.ok(updateCategoryResponse);
 	}
 
+	@DeleteMapping("v1/categories/{id}")
+	public ResponseEntity<Long> remove(@PathVariable Long id) {
+		categoryService.remove(id);
+		return ResponseEntity.ok(id);
+	}
 }
