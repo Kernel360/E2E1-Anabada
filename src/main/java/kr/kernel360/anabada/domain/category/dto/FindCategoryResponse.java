@@ -15,10 +15,13 @@ public class FindCategoryResponse {
 
 	private String name;
 
+	private Boolean activated;
+
 	public static FindCategoryResponse of(Category category) {
 		return FindCategoryResponse.builder()
 			.id(category.getId())
 			.name(category.getName())
+			.activated(category.getActivated())
 			.build();
 	}
 }

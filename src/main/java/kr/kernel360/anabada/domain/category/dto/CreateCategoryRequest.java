@@ -14,9 +14,12 @@ public class CreateCategoryRequest {
 	@NotBlank
 	private String name;
 
+	private Boolean activated = true;
+
 	public static Category toEntity(CreateCategoryRequest createCategoryRequest) {
 		return Category.builder()
 			.name(createCategoryRequest.name)
+			.activated(createCategoryRequest.activated)
 			.build();
 	}
 }
