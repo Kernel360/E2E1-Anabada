@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ 생성</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#faqCreateButton').click(function () {
+                event.preventDefault();
+                var faqTitle = $('#faqTitle').val();
+                var faqContent = $('#faqContent').val();
+
+                console.log('버튼 클릭됨')
+                // FAQ 생성 요청 보내기
+                $.ajax({
+                    url: '/api/v1/faqs',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ title: faqTitle, content: faqContent, memberId: 1 }),
+                    success: function () {
+                        console.log('FAQ를 생성하는데 실패했습니다.');
+                        window.location.href = 'faqList.html'; // FAQ 목록 페이지로 이동
+                    },
+                    error: function () {
+                        console.log('FAQ를 생성하는데 실패했습니다.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>FAQ 생성</h1>
+<div>
+    <a href="faqList.html">목록으로</a>
+</div>
+<form id="faqCreateForm">
+    <div>
+        <label for="faqTitle">제목:</label>
+        <input type="text" id="faqTitle" name="faqTitle">
+    </div>
+    <div>
+        <label for="faqContent">내용:</label>
+        <textarea id="faqContent" name="faqContent" rows="5" cols="50"></textarea>
+    </div>
+    <button id="faqCreateButton">FAQ 생성</button>
+</form>
+</body>
+</html>

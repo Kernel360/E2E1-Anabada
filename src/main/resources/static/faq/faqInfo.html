@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ 상세</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            fn_init();
+        });
+
+        function fn_init() {
+            fn_getFaqInfo();
+            fn_setEvent();
+        }
+
+        function fn_getFaqInfo() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var faqId = urlParams.get('faqId');
+
+            $.ajax({
+                url: '/api/v1/faqs/' + faqId,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log("data : " + JSON.stringify(data));
+                    // JSON 데이터를 받은 후 실행될 코드
+                    $('#postTitle').val(data.title);
+                    $('#postContent').val(data.content);
+
+                },
+                error: function () {
+                    console.log('데이터를 불러오는데 실패했습니다.');
+                }
+            });
+        }
+
+        function fn_setEvent() {
+            // "수정" 버튼을 초기화
+            $('#faqUpdateButton').click(function () {
+                var urlParams = new URLSearchParams(window.location.search);
+                var faqId = urlParams.get('faqId');
+                window.location.href = 'faqUpdateForm.html?faqId=' + faqId;
+            });
+
+            $('#faqDeleteButton').click(function () {
+                var urlParams = new URLSearchParams(window.location.search);
+                var faqId = urlParams.get('faqId');
+
+                if (confirm("이 FAQ를 삭제하시겠습니까?")) {
+                    // 확인 대화 상자에서 확인을 누를 때만 삭제 요청 보내기
+                    $.ajax({
+                        url: '/api/v1/faqs/' + faqId,
+                        method: 'DELETE',
+                        success: function () {
+                            // FAQ 삭제 후 이동할 페이지 또는 작업 수행
+                            window.location.href = '/faq/faqList.html'; // 예제로 FAQ 목록 페이지로 이동
+                        },
+                        error: function () {
+                            console.log('FAQ를 삭제하는데 실패했습니다.');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>FAQ 정보</h1>
+<div>
+    <a href="/faq/faqList.html">목록으로</a>
+</div>
+<div>
+    <label for="postTitle">제목:</label>
+    <input type="text" id="postTitle" readonly>
+</div>
+<div>
+    <label for="postContent">내용:</label>
+    <textarea id="postContent" rows="5" cols="50" readonly></textarea>
+</div>
+
+
+<button id="faqUpdateButton">수정</button>
+<button id="faqDeleteButton">삭제</button>
+</body>
+</html>
