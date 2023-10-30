@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.category.dto;
 import javax.validation.constraints.NotBlank;
 
 import kr.kernel360.anabada.domain.category.entity.Category;
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,12 +15,12 @@ public class CreateCategoryRequest {
 	@NotBlank
 	private String name;
 
-	private Boolean activated = true;
+	private DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
 	public static Category toEntity(CreateCategoryRequest createCategoryRequest) {
 		return Category.builder()
 			.name(createCategoryRequest.name)
-			.activated(createCategoryRequest.activated)
+			.deletedStatus(createCategoryRequest.deletedStatus)
 			.build();
 	}
 }
