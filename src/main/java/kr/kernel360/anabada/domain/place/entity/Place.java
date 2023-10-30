@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,11 @@ public class Place {
 
 	@Column(nullable = false, name = "address1", columnDefinition = "varchar(40)")
 	private String address1;
+
+	@Builder
+	public Place(String state, String city, String address1) {
+		this.state = state;
+		this.city = city;
+		this.address1 = address1;
+	}
 }

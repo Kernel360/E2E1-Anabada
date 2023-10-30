@@ -78,7 +78,7 @@ public class Trade extends BaseEntity {
 
 	@Builder
 	public Trade(String title, String content, TradeType tradeType, String imagePath,
-		DeletedStatus deletedStatus, TradeStatus tradeStatus, Member member, Category category) {
+		DeletedStatus deletedStatus, TradeStatus tradeStatus, Member member, Category category, Place place) {
 		this.title = title;
 		this.content = content;
 		this.tradeType = tradeType;
@@ -87,5 +87,6 @@ public class Trade extends BaseEntity {
 		this.tradeStatus = tradeStatus;
 		this.category = category;
 		this.member = member;
+		this.place = place;
 	}
 }
