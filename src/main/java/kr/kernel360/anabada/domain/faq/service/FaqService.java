@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqRequest;
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqResponse;
+import kr.kernel360.anabada.domain.faq.dto.FindAllFaqDto;
 import kr.kernel360.anabada.domain.faq.dto.FindAllFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.FindFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.UpdateFaqRequest;
@@ -40,8 +41,8 @@ public class FaqService {
 
 	@Transactional(readOnly = true)
 	public FindAllFaqResponse findAll(){
-		List<Faq> faqs = faqRepository.findAll();
-		return FindAllFaqResponse.of(faqs);
+		List<FindAllFaqDto> findFaqs = faqRepository.findFaqs();
+		return FindAllFaqResponse.of(findFaqs);
 	}
 
 	@Transactional(readOnly = true)

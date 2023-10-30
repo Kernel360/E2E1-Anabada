@@ -13,10 +13,9 @@ import lombok.Getter;
 public class FindAllFaqResponse {
 	private List<FindAllFaqDto> faqs;
 
-	public static FindAllFaqResponse of(List<Faq> faqs) {
+	public static FindAllFaqResponse of(List<FindAllFaqDto> faqs) {
 		return FindAllFaqResponse.builder()
-			.faqs(faqs.stream().map(FindAllFaqDto::of).toList())
+			.faqs(faqs)
 			.build();
 	}
-
 }

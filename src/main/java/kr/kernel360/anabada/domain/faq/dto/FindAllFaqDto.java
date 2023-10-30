@@ -1,5 +1,7 @@
 package kr.kernel360.anabada.domain.faq.dto;
 
+import java.time.LocalDateTime;
+
 import kr.kernel360.anabada.domain.faq.entity.Faq;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeDto;
 import lombok.AllArgsConstructor;
@@ -16,10 +18,7 @@ public class FindAllFaqDto {
 
 	private String title;
 
-	public static FindAllFaqDto of(Faq faq) {
-		return FindAllFaqDto.builder()
-			.id(faq.getId())
-			.title(faq.getTitle())
-			.build();
-	}
+	private String nickname;
+
+	private LocalDateTime createdDate;
 }

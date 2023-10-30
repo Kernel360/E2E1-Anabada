@@ -52,14 +52,4 @@ public class Faq extends BaseEntity {
 		this.title = title;
 		this.content = content;
 	}
-
-	private Faq(String title, String content, Member member){
-		this.title = title;
-		this.content = content;
-		this.member = member;
-	}
-
-	public static Faq of(String title, String content, Member member){
-		return new Faq(title, content, member);
-	}
 }
