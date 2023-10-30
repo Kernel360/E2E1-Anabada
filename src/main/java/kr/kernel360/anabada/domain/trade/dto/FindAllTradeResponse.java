@@ -10,9 +10,9 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class FindAllTradeResponse {
-	private List<FindAllTradeDto> trades;
+	private List<FindTradeDto> trades;
 
-	public static FindAllTradeResponse of(List<FindAllTradeDto> trades) {
+	public static FindAllTradeResponse of(List<FindTradeDto> trades) {
 		return FindAllTradeResponse.builder()
 			.trades(trades)
 			.build();

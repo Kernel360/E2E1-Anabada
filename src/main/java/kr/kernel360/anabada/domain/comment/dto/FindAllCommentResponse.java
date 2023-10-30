@@ -12,9 +12,9 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class FindAllCommentResponse {
-	List<FindAllCommentDto> comments;
+	List<FindCommentDto> comments;
 
-	public static FindAllCommentResponse of(List<FindAllCommentDto> comments) {
+	public static FindAllCommentResponse of(List<FindCommentDto> comments) {
 		return FindAllCommentResponse.builder()
 			.comments(comments)
 			.build();
