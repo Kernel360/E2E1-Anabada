@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UpdateFaqRequest {
+	private Long faqId;
 	private String title;
-
 	private String content;
 
 }
