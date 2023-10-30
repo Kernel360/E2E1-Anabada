@@ -7,6 +7,8 @@ import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
@@ -19,6 +21,12 @@ public class TradeOfferService {
 	private final TradeOfferRepository tradeOfferRepository;
 	private final MemberRepository memberRepository;
 	private final TradeRepository tradeRepository;
+
+	public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest) {
+
+		return FindAllTradeOfferResponse.builder()
+			.build();
+	}
 
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {
 		Member member = memberRepository.findById(memberId)

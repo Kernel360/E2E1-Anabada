@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 @DynamicUpdate
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE trade_offer SET deletedStatus = 0 WHERE id  = ?")
 @Table(name = "trade_offer")
 public class TradeOffer extends BaseEntity {
 	@Id
