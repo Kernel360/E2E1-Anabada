@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.tradeoffer.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
@@ -35,8 +38,12 @@ public class TradeOffer extends BaseEntity {
 	@Column(name = "image_path", columnDefinition = "varchar(40)")
 	private String imagePath;
 
-	@Column(nullable = false, name = "trade_offer_status", columnDefinition = "tinyint")
+	@Column(nullable = false, name = "trade_offer_status", columnDefinition = "varchar(20)")
 	private Boolean tradeOfferStatus;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, name = "deleted_status", columnDefinition = "varchar(20)")
+	private DeletedStatus deletedStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "created_by", columnDefinition = "bigint(50)")
