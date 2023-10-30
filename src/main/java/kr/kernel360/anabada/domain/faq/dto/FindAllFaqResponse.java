@@ -2,7 +2,6 @@ package kr.kernel360.anabada.domain.faq.dto;
 
 import java.util.List;
 
-import kr.kernel360.anabada.domain.faq.entity.Faq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,12 +10,11 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class FindAllFaqResponse {
-	private List<FindAllFaqDto> faqs;
+	private List<FindFaqDto> faqs;
 
-	public static FindAllFaqResponse of(List<Faq> faqs) {
+	public static FindAllFaqResponse of(List<FindFaqDto> faqs) {
 		return FindAllFaqResponse.builder()
-			.faqs(faqs.stream().map(FindAllFaqDto::of).toList())
+			.faqs(faqs)
 			.build();
 	}
-
 }

@@ -1,14 +1,14 @@
 package kr.kernel360.anabada.domain.faq.service;
 
 import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqRequest;
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqResponse;
+import kr.kernel360.anabada.domain.faq.dto.FindFaqDto;
 import kr.kernel360.anabada.domain.faq.dto.FindAllFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.FindFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.UpdateFaqRequest;
@@ -38,34 +38,27 @@ public class FaqService {
 		return CreateFaqResponse.of(faq);
 	}
 
-	@Transactional(readOnly = true)
 	public FindAllFaqResponse findAll(){
-		List<Faq> faqs = faqRepository.findAll();
-		return FindAllFaqResponse.of(faqs);
+		List<FindFaqDto> findFaqs = faqRepository.findFaqs();
+		return FindAllFaqResponse.of(findFaqs);
 	}
 
-	@Transactional(readOnly = true)
 	public FindFaqResponse find(Long faqId){
-		Faq faq = findFaqById(faqId);
+		FindFaqDto faq = faqRepository.findFaq(faqId)
+			.orElseThrow(() -> new IllegalArgumentException("faq가 존재하지 않습니다"));
 		return FindFaqResponse.of(faq);
 	}
 
 	@Transactional
-	public UpdateFaqResponse update(Long faqId, UpdateFaqRequest updateFaqRequest){
-		Faq faq = findFaqById(faqId);
-
+	public UpdateFaqResponse update(UpdateFaqRequest updateFaqRequest){
+		Faq faq = faqRepository.findById(updateFaqRequest.getFaqId())
+			.orElseThrow(()-> new IllegalArgumentException("faq가 존재하지 않습니다"));
 		faq.update(updateFaqRequest.getTitle(),updateFaqRequest.getContent());
-
 		return UpdateFaqResponse.of(faq);
 	}
 
 	@Transactional
 	public void delete(Long faqId){
 		faqRepository.deleteById(faqId);
-	}
-
-	public Faq findFaqById(Long faqId) {
-		return faqRepository.findById(faqId)
-			.orElseThrow(()-> new IllegalArgumentException("faq가 존재하지 않습니다"));
 	}
 }

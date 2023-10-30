@@ -1,9 +1,27 @@
 package kr.kernel360.anabada.domain.faq.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import kr.kernel360.anabada.domain.faq.dto.FindFaqDto;
 import kr.kernel360.anabada.domain.faq.entity.Faq;
 
 public interface FaqRepository extends JpaRepository<Faq,Long> {
 
+	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
+		+ "f.id, f.title, m.nickname, f.createDate) "
+		+ "   from Faq f "
+		+ "  inner join f.member m")
+	List<FindFaqDto> findFaqs();
+
+	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
+		+ "f.id, f.title, f.content, m.nickname, f.createDate) "
+		+ "   from Faq f "
+		+ "  inner join f.member m"
+		+ "  where f.id = :faqId")
+	Optional<FindFaqDto> findFaq(@Param("faqId") Long faqId);
 }

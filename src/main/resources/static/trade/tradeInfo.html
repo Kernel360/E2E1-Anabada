@@ -4,8 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>AnabadA :: 등록</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -29,6 +27,8 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <title>AnabadA :: 교환</title>
   <script>
     $(document).ready(function () {
       fn_init();
@@ -58,7 +58,7 @@
           var $image = $('<img>');
           $image.attr('src', data.imagePath);
           $image.attr('alt', '이미지');
-          $('#postImage').append($image);
+          $('#tradeImage').append($image);
         },
         error: function () {
         }
@@ -83,8 +83,8 @@
   <div class="pagetitle">
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">AnabadA</a></li>
-        <li class="breadcrumb-item ">교환</li>
+        <li class="breadcrumb-item"><a href="/index.html">AnabadA</a></li>
+        <li class="breadcrumb-item "><a href="/trade/tradeList.html">교환</a></li>
         <li class="breadcrumb-item active">상세조회</li>
       </ol>
     </nav>
@@ -109,7 +109,13 @@
               <div class="row mb-3">
                 <label for="content" class="col-sm-2 col-form-label">내용</label>
                 <div class="col-sm-10">
-                  <textarea id="content" name="content" class="form-control" style="height: 100px" ></textarea>
+                  <textarea id="content" name="content" class="form-control" style="height: 100px" readonly></textarea>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label src="" class="col-sm-2 col-form-label">사진</label>
+                <div class="col-sm-10">
+                  <div id="tradeImage"></div>
                 </div>
               </div>
               <div class="row mb-3">
