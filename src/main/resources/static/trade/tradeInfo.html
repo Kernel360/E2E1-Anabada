@@ -58,7 +58,7 @@
           var $image = $('<img>');
           $image.attr('src', data.imagePath);
           $image.attr('alt', '이미지');
-          $('#postImage').append($image);
+          $('#tradeImage').append($image);
         },
         error: function () {
         }
@@ -110,6 +110,12 @@
                 <label for="content" class="col-sm-2 col-form-label">내용</label>
                 <div class="col-sm-10">
                   <textarea id="content" name="content" class="form-control" style="height: 100px" ></textarea>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label src="" class="col-sm-2 col-form-label">사진</label>
+                <div class="col-sm-10">
+                  <div id="tradeImage"></div>
                 </div>
               </div>
               <div class="row mb-3">
