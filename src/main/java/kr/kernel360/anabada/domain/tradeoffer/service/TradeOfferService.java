@@ -4,11 +4,12 @@ import org.springframework.stereotype.Service;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
-import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
-import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
+import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -28,5 +29,13 @@ public class TradeOfferService {
 		return tradeOfferRepository.save(CreateTradeOfferRequest.toEntity(createTradeOfferRequest, member, trade)).getId();
 	}
 
+	public UpdateTradeOfferResponse update(UpdateTradeOfferRequest updateTradeOfferRequest) {
+		TradeOffer tradeOffer = tradeOfferRepository.findById(updateTradeOfferRequest.getId())
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환 요청이 없습니다."));
 
+		tradeOffer.update(updateTradeOfferRequest.getTitle(), updateTradeOfferRequest.getContent(),
+			updateTradeOfferRequest.getImagePath());
+
+		return UpdateTradeOfferResponse.of(tradeOffer);
+	}
 }

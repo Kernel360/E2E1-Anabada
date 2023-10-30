@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
@@ -23,6 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@DynamicUpdate
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "trade_offer")
@@ -67,5 +70,11 @@ public class TradeOffer extends BaseEntity {
 		this.deletedStatus = deletedStatus;
 		this.member = member;
 		this.trade = trade;
+	}
+
+	public void update(String title, String content, String imagePath) {
+		this.title = title;
+		this.content = content;
+		this.imagePath = imagePath;
 	}
 }
