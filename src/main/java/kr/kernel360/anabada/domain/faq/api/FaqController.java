@@ -47,11 +47,10 @@ public class FaqController {
 		return ResponseEntity.ok(faq);
 	}
 
-	@PutMapping("/v1/faqs/{faqId}")
+	@PutMapping("/v1/faqs")
 	public ResponseEntity<UpdateFaqResponse> update(
-		@PathVariable Long faqId,
 		@RequestBody UpdateFaqRequest updateFaqRequest) {
-		UpdateFaqResponse updateFaqResponse = faqService.update(faqId, updateFaqRequest);
+		UpdateFaqResponse updateFaqResponse = faqService.update(updateFaqRequest);
 		return ResponseEntity.ok(updateFaqResponse);
 	}
 
