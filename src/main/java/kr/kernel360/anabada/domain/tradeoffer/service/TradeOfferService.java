@@ -1,0 +1,32 @@
+package kr.kernel360.anabada.domain.tradeoffer.service;
+
+import org.springframework.stereotype.Service;
+
+import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
+import kr.kernel360.anabada.domain.trade.entity.Trade;
+import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
+import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class TradeOfferService {
+	private final TradeOfferRepository tradeOfferRepository;
+	private final MemberRepository memberRepository;
+	private final TradeRepository tradeRepository;
+
+	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 없습니다."));
+
+		Trade trade = tradeRepository.findById(tradeId).orElseThrow(() -> new IllegalArgumentException(""));
+
+		return tradeOfferRepository.save(CreateTradeOfferRequest.toEntity(createTradeOfferRequest, member, trade)).getId();
+	}
+
+
+}

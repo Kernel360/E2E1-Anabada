@@ -12,11 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
-import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
+import kr.kernel360.anabada.global.commons.domain.TradeStatus;
+import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,8 +40,9 @@ public class TradeOffer extends BaseEntity {
 	@Column(name = "image_path", columnDefinition = "varchar(40)")
 	private String imagePath;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, name = "trade_offer_status", columnDefinition = "varchar(20)")
-	private Boolean tradeOfferStatus;
+	private TradeStatus tradeOfferStatus;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, name = "deleted_status", columnDefinition = "varchar(20)")
@@ -52,4 +55,17 @@ public class TradeOffer extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "trade_id", columnDefinition = "bigint(50)")
 	private Trade trade;
+
+	@Builder
+	public TradeOffer(Long id, String title, String content, String imagePath, TradeStatus tradeOfferStatus,
+		DeletedStatus deletedStatus, Member member, Trade trade) {
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.imagePath = imagePath;
+		this.tradeOfferStatus = tradeOfferStatus;
+		this.deletedStatus = deletedStatus;
+		this.member = member;
+		this.trade = trade;
+	}
 }
