@@ -1,9 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>FAQ 목록</title>
     <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assets/css/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <title>AnabadA :: 자주묻는질문</title>
     <script>
         $(document).ready(function () {
             fn_init();
@@ -34,7 +58,6 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log("data : " + JSON.stringify(data));
                     var faqs = data.faqs;
 
                     for (var i = 0; i < faqs.length; i++) {
@@ -42,6 +65,8 @@
                         var faqItem = '<tr class="faq-item" data-faq-id="' + faq.id + '">' +
                             '<td>' + faq.id + '</td>' +
                             '<td>' + faq.title + '</td>' +
+                            '<td>' + faq.nickname + '</td>' +
+                            '<td>' + faq.createdDate + '</td>' +
                             '</tr>';
                         $('#faqList').append(faqItem);
                     }
@@ -56,15 +81,69 @@
     </script>
 </head>
 <body>
-<h1 id="boardName">FAQ 목록</h1>
-<table border="1">
-    <tr>
-        <th>No</th>
-        <th>제목</th>
-    </tr>
-    <tbody id="faqList"></tbody>
-</table>
-<button id="faqCreateButton">FAQ 생성</button> <!-- 글 생성 버튼 추가 -->
+<div data-include-path="/include/header.html"></div>
+<div data-include-path="/include/sidebar.html"></div>
 
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/index.html">AnabadA</a></li>
+                <li class="breadcrumb-item active">자주묻는질문</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Table with stripped rows -->
+                        <table class="table align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">제목</th>
+                                <th scope="col">작성자</th>
+                                <th scope="col">작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody id="faqList">
+                            </tbody>
+                        </table>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button id="faqCreateButton" class="btn btn-primary">등록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<div data-include-path="/include/footer.html"></div>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.min.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
 </body>
 </html>
