@@ -4,13 +4,15 @@ import kr.kernel360.anabada.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * DTO for {@link kr.kernel360.anabada.domain.comment.entity.Comment}
  */
-@AllArgsConstructor
-@Builder
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 public class FindAllCommentDto {
 	private Long id;
 	private String content;
