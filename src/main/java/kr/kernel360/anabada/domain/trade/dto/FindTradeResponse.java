@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.trade.dto;
 
 import java.time.LocalDateTime;
 
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,8 @@ public class FindTradeResponse {
 	private TradeType tradeType;
   
 	private TradeStatus tradeStatus;
+
+	private DeletedStatus deletedStatus;
 
 	private String categoryName;
 
