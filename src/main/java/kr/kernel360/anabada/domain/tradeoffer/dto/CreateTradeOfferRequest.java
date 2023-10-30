@@ -1,7 +1,5 @@
 package kr.kernel360.anabada.domain.tradeoffer.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
