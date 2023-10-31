@@ -25,29 +25,20 @@ import lombok.RequiredArgsConstructor;
 public class TradeOfferController {
 	private final TradeOfferService tradeOfferService;
 
-	// todo : QueryDsl 사용한 동적 쿼리 구현
-	// @GetMapping("/v1/trades/{tradeId}/trade_offers/")
-	// public ResponseEntity<FindAllTradeOfferResponse> findAll(FindAllTradeOfferRequest findAllTradeOfferRequest, @PathVariable Long tradeId) {
-	//
-	// 	return ResponseEntity.ok(null);
-	// }
-
-	@PostMapping("/v1/trades/{tradeId}/trade_offers/")
-	public ResponseEntity<Long> create(@RequestBody CreateTradeOfferRequest createTradeOfferRequest,
-		@PathVariable Long tradeId) {
-		Long id = tradeOfferService.create(createTradeOfferRequest, tradeId, createTradeOfferRequest.getMemberId());
-		URI url = URI.create("v1/trades/" + tradeId + "/trade_offers");
+	@PostMapping("/v1/trade_offers/")
+	public ResponseEntity<Long> create(@RequestBody CreateTradeOfferRequest createTradeOfferRequest) {
+		Long id = tradeOfferService.create(createTradeOfferRequest, createTradeOfferRequest.getTradeId(), createTradeOfferRequest.getMemberId());
+		URI url = URI.create("api/v1/trades/trade_offers" + id);
 		return ResponseEntity.created(url).body(id);
 	}
 
-	@PutMapping("/v1/trades/{tradeId}/trade_offers/")
-	public ResponseEntity<UpdateTradeOfferResponse> update(@RequestBody UpdateTradeOfferRequest updateTradeOfferRequest,
-		@PathVariable Long tradeId) {
+	@PutMapping("/v1/trade_offers/")
+	public ResponseEntity<UpdateTradeOfferResponse> update(@RequestBody UpdateTradeOfferRequest updateTradeOfferRequest) {
 		UpdateTradeOfferResponse updateTradeOfferResponse = tradeOfferService.update(updateTradeOfferRequest);
 		return ResponseEntity.ok(updateTradeOfferResponse);
 	}
 
-	@DeleteMapping("v1/trades/{tradeId}/trade_offers/{tradeOfferId}")
+	@DeleteMapping("v1/trade_offers/{tradeOfferId}")
 	public ResponseEntity<Long> remove(@PathVariable Long tradeOfferId) {
 		tradeOfferService.remove(tradeOfferId);
 		return ResponseEntity.ok(tradeOfferId);

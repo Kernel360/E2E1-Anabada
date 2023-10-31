@@ -24,13 +24,6 @@ public class TradeOfferService {
 	private final MemberRepository memberRepository;
 	private final TradeRepository tradeRepository;
 
-	// todo 동적 쿼리 구현
-	// public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest) {
-	//
-	// 	return FindAllTradeOfferResponse.builder()
-	// 		.build();
-	// }
-
 	public FindTradeOfferResponse find(Long tradeOfferId) {
 		TradeOffer tradeOffer = findByTradeOfferId(tradeOfferId);
 		FindTradeOfferDto findTradeOfferDto = FindTradeOfferDto.of(tradeOffer);
