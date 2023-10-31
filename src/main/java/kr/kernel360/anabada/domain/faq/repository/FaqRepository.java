@@ -13,13 +13,13 @@ import kr.kernel360.anabada.domain.faq.entity.Faq;
 public interface FaqRepository extends JpaRepository<Faq,Long> {
 
 	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
-		+ "f.id, f.title, m.nickname, f.createDate) "
+		+ "f.id, f.title, m.nickname, f.createdDate) "
 		+ "   from Faq f "
 		+ "  inner join f.member m")
 	List<FindFaqDto> findFaqs();
 
 	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
-		+ "f.id, f.title, f.content, m.nickname, f.createDate) "
+		+ "f.id, f.title, f.content, m.nickname, f.createdDate) "
 		+ "   from Faq f "
 		+ "  inner join f.member m"
 		+ "  where f.id = :faqId")
