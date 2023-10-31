@@ -36,7 +36,7 @@ public class MemberService {
 			updateMemberRequest.getPassword(), updateMemberRequest.getGender()
 			, updateMemberRequest.getBirth());
 
-		return UpdateMemberResponse.toDto(member);
+		return UpdateMemberResponse.of(member);
 	}
 
 	@Transactional(readOnly = true)

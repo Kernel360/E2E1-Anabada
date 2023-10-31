@@ -21,7 +21,7 @@ public class UpdateMemberResponse {
 
 	private String birth;
 
-	public static UpdateMemberResponse toDto(Member member) {
+	public static UpdateMemberResponse of(Member member) {
 		return UpdateMemberResponse.builder()
 			.id(member.getId())
 			.email(member.getEmail())
