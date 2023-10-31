@@ -22,10 +22,17 @@ public class TradeOfferService {
 	private final MemberRepository memberRepository;
 	private final TradeRepository tradeRepository;
 
-	public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest) {
+	// todo 동적 쿼리 구현
+	// public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest) {
+	//
+	// 	return FindAllTradeOfferResponse.builder()
+	// 		.build();
+	// }
 
-		return FindAllTradeOfferResponse.builder()
-			.build();
+	public void find(Long tradeOfferId) {
+		TradeOffer tradeOffer = findByTradeOfferId(tradeOfferId);
+
+
 	}
 
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {
@@ -38,12 +45,22 @@ public class TradeOfferService {
 	}
 
 	public UpdateTradeOfferResponse update(UpdateTradeOfferRequest updateTradeOfferRequest) {
-		TradeOffer tradeOffer = tradeOfferRepository.findById(updateTradeOfferRequest.getId())
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환 요청이 없습니다."));
+		TradeOffer tradeOffer = findByTradeOfferId(updateTradeOfferRequest.getId());
 
 		tradeOffer.update(updateTradeOfferRequest.getTitle(), updateTradeOfferRequest.getContent(),
 			updateTradeOfferRequest.getImagePath());
 
 		return UpdateTradeOfferResponse.of(tradeOffer);
+	}
+
+	public void remove(Long tradeOfferId) {
+		TradeOffer tradeOffer = findByTradeOfferId(tradeOfferId);
+
+		tradeOffer.remove();
+	}
+
+	private TradeOffer findByTradeOfferId(Long id) {
+		return tradeOfferRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환 요청이 없습니다."));
 	}
 }

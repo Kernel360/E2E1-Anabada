@@ -4,6 +4,7 @@ import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
+import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ public class CreateTradeOfferRequest {
 
 	private String imagePath;
 
-	private TradeStatus tradeOfferStatus = TradeStatus.BEFORE_ACCEPT;
+	private TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
 
 	private DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
