@@ -5,12 +5,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.kernel360.anabada.domain.category.entity.Category;
+import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
+import kr.kernel360.anabada.domain.place.entity.Place;
+import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
-import kr.kernel360.anabada.domain.trade.dto.FindAllTradeDto;
-import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,21 +26,31 @@ import lombok.RequiredArgsConstructor;
 public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final MemberRepository memberRepository;
+	private final CategoryRepository categoryRepository;
+	private final PlaceRepository placeRepository;
+
 
 	public FindAllTradeResponse findAll() {
-		List<FindAllTradeDto> findTrades = tradeRepository.findTrades();
+		List<FindTradeDto> findTrades = tradeRepository.findTrades();
 		return FindAllTradeResponse.of(findTrades);
 	}
 
 	public FindTradeResponse find(Long tradeId) {
-		return tradeRepository.findTrade(tradeId);
+		FindTradeDto findTradeDto = tradeRepository.findTrade(tradeId)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환이 없습니다."));
+		return FindTradeResponse.of(findTradeDto);
 	}
 
 	@Transactional
-	public Long create(CreateTradeRequest createTradeRequest) {
-		Member findMember = findMemberById(createTradeRequest.getMemberId());
-		// todo : category 조회 기능 개발 후 교환 엔티티에 카테고리 추가 필요
-		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, findMember));
+	public Long create(PlaceDto placeDto, CreateTradeRequest createTradeRequest) {
+		Member member = findMemberById(createTradeRequest.getMemberId());
+
+		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 카테고리가 없습니다."));
+
+		Place place = placeRepository.save(placeDto.toEntity(placeDto));
+
+		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member, place));
 		return savedTrade.getId();
 	}
 

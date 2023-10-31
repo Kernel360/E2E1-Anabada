@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.comment.dto.CreateCommentRequest;
-import kr.kernel360.anabada.domain.comment.dto.FindAllCommentDto;
+import kr.kernel360.anabada.domain.comment.dto.FindCommentDto;
 import kr.kernel360.anabada.domain.comment.dto.FindAllCommentResponse;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.domain.comment.repository.CommentRepository;
@@ -37,7 +37,7 @@ public class CommentService {
 		Trade trade = findTrade(tradeId);
 		List<Comment> comments = commentRepository.findCommentsByTrade(trade);
 
-		return FindAllCommentResponse.of(comments.stream().map(FindAllCommentDto::of).toList());
+		return FindAllCommentResponse.of(comments.stream().map(FindCommentDto::of).toList());
 	}
 
 	private Trade findTrade(Long tradeId) {

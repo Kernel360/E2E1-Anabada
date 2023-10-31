@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
@@ -68,12 +69,16 @@ public class Trade extends BaseEntity {
 	@JoinColumn(name = "category_id", columnDefinition = "bigint(50)")
 	private Category category;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "place_id", columnDefinition = "bigint(50)")
+	private Place place;
+
 	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
 
 	@Builder
 	public Trade(String title, String content, TradeType tradeType, String imagePath,
-		DeletedStatus deletedStatus, TradeStatus tradeStatus, Member member, Category category) {
+		DeletedStatus deletedStatus, TradeStatus tradeStatus, Member member, Category category, Place place) {
 		this.title = title;
 		this.content = content;
 		this.tradeType = tradeType;
@@ -82,5 +87,6 @@ public class Trade extends BaseEntity {
 		this.tradeStatus = tradeStatus;
 		this.category = category;
 		this.member = member;
+		this.place = place;
 	}
 }
