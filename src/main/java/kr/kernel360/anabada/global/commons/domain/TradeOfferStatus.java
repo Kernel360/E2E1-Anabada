@@ -1,11 +1,13 @@
 package kr.kernel360.anabada.global.commons.domain;
 
+import lombok.Getter;
+
 public enum TradeOfferStatus {
 	REQUEST_ON_HOLD("요청대기"),
 	REQUEST_ACCEPTED("요청수락"),
 	REQUEST_EXPIRED("요청만료");
 
-	private final String description;
+	@Getter private final String description;
 
 	TradeOfferStatus(String description) {
 		this.description = description;
