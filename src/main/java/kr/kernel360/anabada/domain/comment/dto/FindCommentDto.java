@@ -13,14 +13,14 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class FindAllCommentDto {
+public class FindCommentDto {
 	private Long id;
 	private String content;
 	private String memberNickname;
 
 
-	public static FindAllCommentDto of(Comment comment) {
-		return FindAllCommentDto.builder()
+	public static FindCommentDto of(Comment comment) {
+		return FindCommentDto.builder()
 			.id(comment.getId())
 			.content(comment.getContent())
 			.memberNickname(comment.getMember().getNickname())

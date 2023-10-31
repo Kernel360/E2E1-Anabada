@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
+import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
+import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
@@ -29,10 +32,10 @@ public class TradeOfferService {
 	// 		.build();
 	// }
 
-	public void find(Long tradeOfferId) {
+	public FindTradeOfferResponse find(Long tradeOfferId) {
 		TradeOffer tradeOffer = findByTradeOfferId(tradeOfferId);
-
-
+		FindTradeOfferDto findTradeOfferDto = FindTradeOfferDto.of(tradeOffer);
+		return FindTradeOfferResponse.of(findTradeOfferDto);
 	}
 
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {

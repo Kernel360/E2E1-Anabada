@@ -30,13 +30,13 @@ public class FindTradeOfferDto {
 
 		private LocalDateTime createdDate;
 
-	public FindTradeOfferDto of(TradeOffer tradeOffer) {
+	public static FindTradeOfferDto of(TradeOffer tradeOffer) {
 		return FindTradeOfferDto.builder()
 			.id(tradeOffer.getId())
 			.title(tradeOffer.getTitle())
 			.content(tradeOffer.getContent())
 			.createdBy(tradeOffer.getMember().getNickname())
-			.createdDate(tradeOffer.getCreateDate())
+			.createdDate(tradeOffer.getCreatedDate())
 			.build();
 	}
 
