@@ -1,15 +1,13 @@
 package kr.kernel360.anabada.domain.tradeoffer.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
-import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
-import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
-import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
@@ -20,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TradeOfferService {
 	private final TradeOfferRepository tradeOfferRepository;
 	private final MemberRepository memberRepository;
@@ -38,6 +37,7 @@ public class TradeOfferService {
 		return FindTradeOfferResponse.of(findTradeOfferDto);
 	}
 
+	@Transactional
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 없습니다."));
@@ -47,6 +47,7 @@ public class TradeOfferService {
 		return tradeOfferRepository.save(CreateTradeOfferRequest.toEntity(createTradeOfferRequest, member, trade)).getId();
 	}
 
+	@Transactional
 	public UpdateTradeOfferResponse update(UpdateTradeOfferRequest updateTradeOfferRequest) {
 		TradeOffer tradeOffer = findByTradeOfferId(updateTradeOfferRequest.getId());
 
@@ -56,6 +57,7 @@ public class TradeOfferService {
 		return UpdateTradeOfferResponse.of(tradeOffer);
 	}
 
+	@Transactional
 	public void remove(Long tradeOfferId) {
 		TradeOffer tradeOffer = findByTradeOfferId(tradeOfferId);
 

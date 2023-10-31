@@ -34,8 +34,12 @@ public class FindTradeOfferDto {
 		return FindTradeOfferDto.builder()
 			.id(tradeOffer.getId())
 			.title(tradeOffer.getTitle())
+			.imagePath(tradeOffer.getImagePath())
+			.tradeOfferStatus(tradeOffer.getTradeOfferStatus())
+			.deletedStatus(tradeOffer.getDeletedStatus())
 			.content(tradeOffer.getContent())
 			.createdBy(tradeOffer.getMember().getNickname())
+			.tradeId(tradeOffer.getTrade().getId())
 			.createdDate(tradeOffer.getCreatedDate())
 			.build();
 	}

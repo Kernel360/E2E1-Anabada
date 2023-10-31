@@ -34,10 +34,9 @@ public class TradeOfferController {
 
 	@PostMapping("/v1/trades/{tradeId}/trade_offers/")
 	public ResponseEntity<Long> create(@RequestBody CreateTradeOfferRequest createTradeOfferRequest,
-		@PathVariable Long tradeId,
-		Long memberId) {
-		Long id = tradeOfferService.create(createTradeOfferRequest, tradeId, memberId);
-		URI url = URI.create("v1/trades/" + tradeId + "/" + id + "trade_offers");
+		@PathVariable Long tradeId) {
+		Long id = tradeOfferService.create(createTradeOfferRequest, tradeId, createTradeOfferRequest.getMemberId());
+		URI url = URI.create("v1/trades/" + tradeId + "/trade_offers");
 		return ResponseEntity.created(url).body(id);
 	}
 

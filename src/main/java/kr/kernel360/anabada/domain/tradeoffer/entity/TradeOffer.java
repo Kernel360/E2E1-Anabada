@@ -19,7 +19,6 @@ import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
-import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,7 +29,7 @@ import lombok.NoArgsConstructor;
 @DynamicUpdate
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE trade_offer SET deleted_status = 0 WHERE id  = ?")
+@SQLDelete(sql = "UPDATE trade_offer SET deleted_status = 1 WHERE id  = ?")
 @Table(name = "trade_offer")
 public class TradeOffer extends BaseEntity {
 	@Id
