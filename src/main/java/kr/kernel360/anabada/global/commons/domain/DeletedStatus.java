@@ -5,8 +5,8 @@ package kr.kernel360.anabada.global.commons.domain;
  */
 
 public enum DeletedStatus {
-	TRUE("삭제")
-	, FALSE("정상");
+	TRUE("삭제"),
+	FALSE("정상");
 
 	private final String description;
 
