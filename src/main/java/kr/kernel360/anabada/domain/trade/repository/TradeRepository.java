@@ -12,15 +12,16 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 
 public interface TradeRepository extends JpaRepository<Trade, Long> {
-	@Query("select new kr.kernel360.anabada.domain.trade.dto.FindTradeDto("
-		+ "t.id, t.tradeType, c.name, t.title, m.nickname, t.createDate) "
+
+	@Query("select new kr.kernel360.anabada.domain.trade.dto.FindAllTradeDto("
+		+ "t.id, t.tradeType, c.name, t.title, m.nickname, t.createdDate) "     
 		+ "   from Trade t"
 		+ "   left outer join t.category c"
 		+ "   left outer join t.member m")
 	List<FindTradeDto> findTrades();
 
-	@Query("select new kr.kernel360.anabada.domain.trade.dto.FindTradeDto("
-		+ "t.id, t.tradeType, t.tradeStatus, t.deletedStatus, c.name, t.title, m.nickname, t.createDate, t.content, t.imagePath) "
+	@Query("select new kr.kernel360.anabada.domain.trade.dto.FindTradeResponse("
+		+ "t.id, t.tradeType, t.tradeStatus, t.deletedStatus, c.name, t.title, m.nickname, t.createdDate, t.content, t.imagePath) "
 		+ "   from Trade t"
 		+ "   left outer join t.category c"
 		+ "   left outer join t.member m"
