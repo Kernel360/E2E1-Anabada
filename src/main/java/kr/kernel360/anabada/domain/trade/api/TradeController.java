@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.service.TradeService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +37,8 @@ public class TradeController {
 	}
 
 	@PostMapping("/v1/trades")
-	public ResponseEntity<Long> create(@RequestBody CreateTradeRequest createTradeRequest) {
-		Long savedTradeId = tradeService.create(createTradeRequest);
+	public ResponseEntity<Long> create(@RequestBody CreateTradeRequest createTradeRequest, PlaceDto placeDto) {
+		Long savedTradeId = tradeService.create(placeDto, createTradeRequest);
 		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 		return ResponseEntity.created(uri).build();
 	}
