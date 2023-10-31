@@ -79,7 +79,7 @@ public class TradeOffer extends BaseEntity {
 		this.content = content;
 		this.imagePath = imagePath;
 	}
-
+  
 	public void remove() {
 		this.deletedStatus = DeletedStatus.TRUE;
 	}
