@@ -14,8 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllTradeOfferRequest {
-	private String title;
-
 	private TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
 
 	private DeletedStatus deletedStatus = DeletedStatus.FALSE;
