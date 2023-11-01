@@ -1,7 +1,6 @@
 package kr.kernel360.anabada.domain.member.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +17,19 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public CreateMemberResponse create(CreateMemberRequest createMemberRequest) {
+	public CreateMemberResponse create(final CreateMemberRequest createMemberRequest) {
 		Member member = memberRepository.save(CreateMemberRequest.toEntity(createMemberRequest));
 		return CreateMemberResponse.of(member);
 	}
 
 	@Transactional
 	public UpdateMemberResponse update(UpdateMemberRequest updateMemberRequest) {
-		Member member = memberRepository.findById(updateMemberRequest.getId())
-			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+		Member member = findMemberById(updateMemberRequest.getId());
 
 		member.update(updateMemberRequest.getEmail(), updateMemberRequest.getNickname(),
 			updateMemberRequest.getPassword(), updateMemberRequest.getGender()
@@ -39,21 +38,15 @@ public class MemberService {
 		return UpdateMemberResponse.of(member);
 	}
 
-	@Transactional(readOnly = true)
 	public FindMemberResponse find(Long id) {
-		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+		Member member = findMemberById(id);
 
 		return FindMemberResponse.of(member);
 	}
 
-	@Transactional(readOnly = true)
 	public FindAllMemberResponse findAll() {
 		List<Member> members = memberRepository.findAll();
 
-		for (Member member : members) {
-			System.out.println(member.getNickname());
-		}
 		List<FindMemberResponse> responses = members.stream().map(FindMemberResponse::of).toList();
 
 		return FindAllMemberResponse.of(responses);
@@ -61,11 +54,15 @@ public class MemberService {
 
 	@Transactional
 	public Long remove(Long id) {
-		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+		Member member = findMemberById(id);
 
 		member.remove();
 
 		return id;
+	}
+
+	private Member findMemberById(Long id) {
+		return memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 	}
 }
