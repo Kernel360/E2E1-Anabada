@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,5 +51,14 @@ public class CreateMemberRequest{
 			.socialProvider(createMemberRequest.socialProvider)
 			.accountStatus(createMemberRequest.accountStatus)
 			.build();
+	}
+
+	@Builder
+	public CreateMemberRequest(String email, String nickname, String password, String gender, String birth) {
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.gender = gender;
+		this.birth = birth;
 	}
 }
