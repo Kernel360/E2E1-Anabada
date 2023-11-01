@@ -27,10 +27,10 @@ public class Member extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name ="email", columnDefinition = "varchar(50)")
+	@Column(nullable = false, unique = true, name ="email", columnDefinition = "varchar(50)")
 	private String email;
 
-	@Column(nullable = false, name = "nickname", columnDefinition = "varchar(40)")
+	@Column(nullable = false, unique = true, name = "nickname", columnDefinition = "varchar(40)")
 	private String nickname;
 
 	@Column(nullable = false, name = "password", columnDefinition = "varchar(255)")
@@ -64,6 +64,14 @@ public class Member extends BaseEntity {
 		this.birth = birth;
 		this.socialProvider = socialProvider;
 		this.accountStatus = accountStatus;
+	}
+
+	public Member(String email, String nickname, String password, String gender, String birth) {
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.gender = gender;
+		this.birth = birth;
 	}
 
 	public void update(String email, String nickname, String password, String gender, String birth) {
