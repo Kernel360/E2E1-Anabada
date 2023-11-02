@@ -25,7 +25,7 @@ public class AuthService {
 	private final MemberRepository memberRepository;
 
 	public LoginResponse authenticate(LoginRequest loginRequest) {
-		Member findMember = memberRepository.findOneWithAuthoritiesAByEmail(loginRequest.getEmail())
+		Member findMember = memberRepository.findOneWithAuthoritiesByEmail(loginRequest.getEmail())
 			.orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
 
 		validateLogin(loginRequest, findMember);
@@ -36,7 +36,6 @@ public class AuthService {
 			.authenticate(authenticationToken);
 
 		TokenResponse token = tokenProvider.createToken(authentication);
-		System.out.println("token >>>> "+token);
 
 		return LoginResponse.of(findMember.getEmail(), authentication.getAuthorities(), token);
 	}
