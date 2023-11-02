@@ -56,7 +56,7 @@ public class MemberService {
 	public Long remove(Long id) {
 		Member member = findMemberById(id);
 
-		member.remove();
+		memberRepository.delete(member);
 
 		return id;
 	}
