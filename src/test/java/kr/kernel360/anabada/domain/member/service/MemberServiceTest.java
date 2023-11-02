@@ -26,17 +26,6 @@ class MemberServiceTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	private Member memberInit() {
-		return CreateMemberRequest.toEntity(
-			CreateMemberRequest.builder()
-				.email("awdawd@naver.com")
-				.nickname("JohnDoe")
-				.password("1234124")
-				.gender("M")
-				.birth("1991-11-11")
-				.build());
-	}
-
 	@Test
 	@DisplayName("회원 정보를 입력하면, 회원 정보를 수정하고 회원 수정 응답을 반환한다.")
 	void 회원정보_수정() throws Exception {
@@ -44,7 +33,7 @@ class MemberServiceTest {
 		String newEmail = "홍길동@naver.com";
 		String newBirth = "2020-01-12";
 
-		Member member = memberInit();
+		Member member = createMember();
 
 		memberRepository.save(member);
 
@@ -69,7 +58,7 @@ class MemberServiceTest {
 	@DisplayName("회원을 저장하고 조회하면, 동일한 회원을 반환한다.")
 	void 회원_조회() throws Exception {
 		//given
-		Member member = memberRepository.save(memberInit());
+		Member member = memberRepository.save(createMember());
 
 		//when
 		FindMemberResponse findMemberResponse = memberService.find(member.getId());
@@ -82,11 +71,11 @@ class MemberServiceTest {
 	@DisplayName("존재하지 않는 회원을 조회하면, IllegalArgumentException을 반환한다.")
 	void 비정상_회원_조회() throws Exception {
 		//given
-		Member member = memberRepository.save(memberInit());
+		Member member = memberRepository.save(createMember());
 
 		//when
 		Throwable exception = assertThrows(IllegalArgumentException.class, () ->
-			memberService.find(member.getId() + 1));
+			memberService.find(member.getId() + 100));
 
 		//then
 		assertThat(exception).isInstanceOf(IllegalArgumentException.class);
@@ -96,7 +85,7 @@ class MemberServiceTest {
 	@DisplayName("회원을 저장하고 삭제하면, 해당 회원의 회원 탈퇴가 TRUE로 변경된다.")
 	void 회원_삭제() throws Exception {
 		//given
-		Member member = memberRepository.save(memberInit());
+		Member member = memberRepository.save(createMember());
 
 		//when
 		Long removedId = memberService.remove(member.getId());
@@ -109,13 +98,24 @@ class MemberServiceTest {
 	@DisplayName("존재하지 않는 회원을 삭제하면, IllegalArgumentException을 반환한다.")
 	void 비정상_회원_삭제() throws Exception {
 		//given
-		Member member = memberRepository.save(memberInit());
+		Member member = memberRepository.save(createMember());
 
 		//when
 		Throwable exception = assertThrows(IllegalArgumentException.class, () ->
-			memberService.remove(member.getId() + 1));
+			memberService.remove(member.getId() + 100));
 
 		//then
 		assertThat(exception).isInstanceOf(IllegalArgumentException.class);
+	}
+
+	private Member createMember() {
+		return CreateMemberRequest.toEntity(
+			CreateMemberRequest.builder()
+				.email("awdawd@naver.com")
+				.nickname("JohnDoe")
+				.password("1234124")
+				.gender("M")
+				.birth("1991-11-11")
+				.build());
 	}
 }

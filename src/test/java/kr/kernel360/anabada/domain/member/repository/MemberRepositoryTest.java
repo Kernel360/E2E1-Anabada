@@ -21,7 +21,7 @@ class MemberRepositoryTest {
 	@DisplayName("회원 객체가 만들어지면, repository에 저장된다")
 	void 회원_저장() throws Exception {
 	    //given
-		Member member = saveMember();
+		Member member = createMember();
 
 		//when
 		Member savedMember = memberRepository.save(member);
@@ -35,7 +35,7 @@ class MemberRepositoryTest {
 	@DisplayName("존재하는 회원을 조회하면, 회원을 반환한다.")
 	void 회원_조회하기() throws Exception {
 	    //given
-		Member member = saveMember();
+		Member member = createMember();
 
 		Member savedMember = memberRepository.save(member);
 
@@ -47,7 +47,7 @@ class MemberRepositoryTest {
 		assertThat(foundMember.getId()).isEqualTo(savedMember.getId());
 	}
 
-	private static Member saveMember() {
+	private static Member createMember() {
 		Member member = Member.builder()
 			.email("ad2d@naver.com")
 			.nickname("iwanttogohome")
