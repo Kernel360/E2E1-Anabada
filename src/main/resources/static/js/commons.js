@@ -1,0 +1,1 @@
+if (window.location.pathname != "/") window.location.href = "/error/pages-error-404.html"
