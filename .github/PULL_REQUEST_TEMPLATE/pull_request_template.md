@@ -7,6 +7,14 @@
 * ``Project``에서 ``E2E1-Anabada``를 고르시고 ``In Progress``로 바꿔주세요.
 * 정리된 컨벤션은 [여기](https://www.notion.so/c128f93c878247698d9b4d2c5a65ffe2?pvs=4)에서 확인해 주시고 질문이 있다면 [팀장](mailto:isevouofficial@gmail.com)에게 문의해 주세요.
 
+# PR 제목
+> PR 성격에 따라서 작성해 주세요.
+* ``upstream/develop`` -> ``upstream/main``의 경우
+  * merge : develop #추가된 PR 번호 into main
+* ``origin/develop`` -> ``upstream/develop``의 경우
+  * feat : 추가된 기능에 대한 내용
+  * chore : 추가된 문서 / 설명에 대한 내용
+  * fix : 수정한 내용
 
 ## 주요 변경 사항 🛠️
 > 주요 변경 사항은 다음을 포함해 주세요.
