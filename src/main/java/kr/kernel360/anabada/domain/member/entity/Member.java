@@ -36,8 +36,8 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, name = "password", columnDefinition = "varchar(255)")
 	private String password;
 
-	@Column(nullable = false, name = "authority", columnDefinition = "varchar(40)")
-	private String authority;
+	@Column(nullable = false, name = "authorities", columnDefinition = "varchar(40)")
+	private String authorities;
 
 	@Column(nullable = false, name = "gender", columnDefinition = "varchar(40)")
 	private String gender;
@@ -52,14 +52,14 @@ public class Member extends BaseEntity {
 	private Boolean accountStatus;
 
 	@Builder
-	public Member(Long id, String email, String nickname, String password, String authority, String gender,
+	public Member(Long id, String email, String nickname, String password, String authorities, String gender,
 		String birth,
 		String socialProvider, Boolean accountStatus) {
 		this.id = id;
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
-		this.authority = authority;
+		this.authorities = authorities;
 		this.gender = gender;
 		this.birth = birth;
 		this.socialProvider = socialProvider;

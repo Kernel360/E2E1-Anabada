@@ -1,238 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="pagetitle">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
+            <li class="breadcrumb-item"><a onclick="authorize('/trade/tradeList.html')">교환</a></li>
+            <li class="breadcrumb-item active">등록</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
 
-  <title>AnabadA :: 교환</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+            <div class="card">
+                <div class="card-body">
 
-  <!-- Favicons -->
-  <link href="/assets/img/favicon.png" rel="icon">
-  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+                    <!-- General Form Elements -->
+                    <form>
+                        <div class="row mb-3"></div>
+                        <div class="row mb-3">
+                            <label for="title" class="col-sm-2 col-form-label">제목</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="title" name="title" readonly required>
+                                <div style="font-size: 12px;">
+                                    제목은 물물거래 물건을 입력하면 자동입력 됩니다.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="shareItem" class="col-sm-2 col-form-label">나눌물건</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="shareItem" name="shareItem" required>
+                            </div>
+                        </div>
+                        <div id="receiveItemField" class="row mb-3" style="display: none">
+                            <label for="receiveItem" class="col-sm-2 col-form-label">받을물건</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="receiveItem" name="receiveItem">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="content" class="col-sm-2 col-form-label">내용</label>
+                            <div class="col-sm-10">
+                                    <textarea id="content" name="content" class="form-control"
+                                              style="height: 100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="imagePath" class="col-sm-2 col-form-label">사진</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="file" id="imagePath">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="tradeType" class="col-sm-2 col-form-label">거래 유형</label>
+                            <div class="col-sm-10">
+                                <select id="tradeType" name="tradeType" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="TRADE" selected>바꿔요</option>
+                                    <option value="REQUEST">원해요</option>
+                                    <option value="SHARE">나눠요</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="categoryId" class="col-sm-2 col-form-label">카테고리 ID</label>
+                            <div class="col-sm-10">
+                                <select id="categoryId" name="categoryId" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>ㅣ
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="memberId" class="col-sm-2 col-form-label">로그인하고 있는 회원 ID(임시)</label>
+                            <div class="col-sm-10">
+                                <select id="memberId" name="memberId" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                </select>
+                            </div>
+                        </div>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button id="tradeCreateButton" class="btn btn-primary">교환 등록</button>
+                            </div>
+                        </div>
 
-  <!-- Vendor CSS Files -->
-  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+                    </form><!-- End General Form Elements -->
 
-  <!-- Template Main CSS File -->
-  <link href="/assets/css/style.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<script src="/js/commons.js"></script>
+<script>
     $(document).ready(function () {
-      fn_init();
+        fn_init();
     });
 
     function fn_init() {
-      fn_setEvent(); // 이벤트 초기화 함수 호출
-      $('#receiveItemField').show(); // "받을 물건" 필드 표시
+        fn_setEvent(); // 이벤트 초기화 함수 호출
+        $('#receiveItemField').show(); // "받을 물건" 필드 표시
     }
 
     function fn_setEvent() {
-      // "거래 유형" 선택 상태 변경 시 이벤트 핸들러
-      $('#tradeType').change(function() {
-        fn_toggleReceiveItemField(); // "받을 물건" 필드 표시/숨김 함수 호출
-      });
+        // "거래 유형" 선택 상태 변경 시 이벤트 핸들러
+        $('#tradeType').change(function () {
+            fn_toggleReceiveItemField(); // "받을 물건" 필드 표시/숨김 함수 호출
+        });
 
-      // "드릴 물건" 입력 상태 변경 시 이벤트 핸들러
-      $('#shareItem').on('input', function() {
-        fn_updateTitle();
-      });
+        // "드릴 물건" 입력 상태 변경 시 이벤트 핸들러
+        $('#shareItem').on('input', function () {
+            fn_updateTitle();
+        });
 
-      // "받을 물건" 입력 상태 변경 시 이벤트 핸들러
-      $('#receiveItem').on('input', function() {
-        fn_updateTitle();
-      });
+        // "받을 물건" 입력 상태 변경 시 이벤트 핸들러
+        $('#receiveItem').on('input', function () {
+            fn_updateTitle();
+        });
 
-      // "교환 등록" 버튼 클릭 이벤트 핸들러
-      $('#tradeCreateButton').click(function() {
-        event.preventDefault();
-        fn_saveTradeInfo();
-      });
+        // "교환 등록" 버튼 클릭 이벤트 핸들러
+        $('#tradeCreateButton').click(function () {
+            event.preventDefault();
+            fn_saveTradeInfo();
+        });
     }
 
     function fn_toggleReceiveItemField() {
-      var tradeType = $('#tradeType').val(); // 선택된 거래 유형 가져오기
-      $('#receiveItem').val("");
-      if (tradeType === 'TRADE') {
-        $('#receiveItemField').show(); // "받을 물건" 필드 표시
-      } else {
-        $('#receiveItemField').hide(); // "받을 물건" 필드 숨김
-      }
+        var tradeType = $('#tradeType').val(); // 선택된 거래 유형 가져오기
+        $('#title').val("");
+        $('#shareItem').val("");
+        $('#receiveItem').val("");
+        if (tradeType === 'TRADE') {
+            $('#receiveItemField').show(); // "받을 물건" 필드 표시
+        } else {
+            $('#receiveItemField').hide(); // "받을 물건" 필드 숨김
+        }
     }
 
     function fn_updateTitle() {
-      var shareItem = $('#shareItem').val();
-      var receiveItem = $('#receiveItem').val();
-      var title = '';
+        var shareItem = $('#shareItem').val();
+        var receiveItem = $('#receiveItem').val();
+        var title = '';
 
-      if (shareItem && receiveItem) {
-        title = "[ "+shareItem+" ] 드려요. [ "+receiveItem+" ] 받아요.";
-      } else if (shareItem) {
-        title = "[ "+shareItem+" ] 드려요.";
-      } else if (receiveItem) {
-        title = "[ "+receiveItem+" ] 받아요.";
-      }
+        if (shareItem && receiveItem) {
+            title = "[ " + shareItem + " ] 드려요. [ " + receiveItem + " ] 받아요.";
+        } else if (shareItem) {
+            title = "[ " + shareItem + " ] 드려요.";
+        } else if (receiveItem) {
+            title = "[ " + receiveItem + " ] 받아요.";
+        }
 
-      $('#title').val(title);
+        $('#title').val(title);
     }
 
     function fn_saveTradeInfo() {
-      var formData = {
-        title: $('#title').val(),
-        content: $('#content').val(),
-        imagePath: $('#imagePath').val(),
-        tradeType: $('#tradeType').val(),
-        categoryId: $('#categoryId').val(),
-        memberId: $('#memberId').val()
-      };
-      $.ajax({
-        url: '/api/v1/trades',
-        method: 'POST',
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        success: function (response) {
-          window.location.href = '/trade/tradeList.html';
-        },
-        error: function () {
-        }
-      });
+        var formData = {
+            title: $('#title').val(),
+            content: $('#content').val(),
+            imagePath: $('#imagePath').val(),
+            tradeType: $('#tradeType').val(),
+            categoryId: $('#categoryId').val(),
+            memberId: $('#memberId').val()
+        };
+        $.ajax({
+            url: '/api/v1/trades',
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (response) {
+                authorize('/trade/tradeList.html');
+            },
+            error: function () {
+                console.log('fail : trade 생성');
+            }
+        });
     }
-  </script>
-</head>
-
-<body>
-<div data-include-path="/include/header.html"></div>
-<div data-include-path="/include/sidebar.html"></div>
-
-<main id="main" class="main">
-
-  <div class="pagetitle">
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
-        <li class="breadcrumb-item">교환</li>
-        <li class="breadcrumb-item active">등록</li>
-      </ol>
-    </nav>
-  </div><!-- End Page Title -->
-
-  <section class="section">
-    <div class="row">
-      <div class="col-lg-12">
-
-        <div class="card">
-          <div class="card-body">
-
-            <!-- General Form Elements -->
-            <form>
-              <div class="row mb-3"></div>
-              <div class="row mb-3">
-                <label for="title" class="col-sm-2 col-form-label">제목</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="title" name="title" readonly required>
-                  <div style="font-size: 12px;">
-                    제목은 물물거래 물건을 입력하면 자동입력 됩니다.
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="shareItem" class="col-sm-2 col-form-label">나눌물건</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="shareItem" name="shareItem" required>
-                </div>
-              </div>
-              <div id="receiveItemField" class="row mb-3" style="display: none">
-                <label for="receiveItem" class="col-sm-2 col-form-label">받을물건</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="receiveItem" name="receiveItem">
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="content" class="col-sm-2 col-form-label">내용</label>
-                <div class="col-sm-10">
-                  <textarea id="content" name="content" class="form-control" style="height: 100px" ></textarea>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="imagePath" class="col-sm-2 col-form-label">사진</label>
-                <div class="col-sm-10">
-                  <input class="form-control" type="file" id="imagePath">
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="tradeType" class="col-sm-2 col-form-label">거래 유형</label>
-                <div class="col-sm-10">
-                  <select id="tradeType" name="tradeType" class="form-select" aria-label="Default select example">
-                    <option value="TRADE" selected>바꿔요</option>
-                    <option value="REQUEST">원해요</option>
-                    <option value="SHARE">나눠요</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="categoryId" class="col-sm-2 col-form-label">카테고리 ID</label>
-                <div class="col-sm-10">
-                  <select id="categoryId" name="categoryId" class="form-select" aria-label="Default select example">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <label for="memberId" class="col-sm-2 col-form-label">로그인하고 있는 회원 ID(임시)</label>
-                <div class="col-sm-10">
-                  <select id="memberId" name="memberId" class="form-select" aria-label="Default select example">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-sm-10">
-                  <button id="tradeCreateButton" class="btn btn-primary">교환 등록</button>
-                </div>
-              </div>
-
-            </form><!-- End General Form Elements -->
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-</main><!-- End #main -->
-
-<div data-include-path="/include/footer.html"></div>
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-<!-- Vendor JS Files -->
-<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="/assets/vendor/echarts/echarts.min.js"></script>
-<script src="/assets/vendor/quill/quill.min.js"></script>
-<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="/assets/vendor/php-email-form/validate.js"></script>
-
-<!-- Template Main JS File -->
-<script src="/assets/js/main.js"></script>
-</body>
-</html>
+</script>
