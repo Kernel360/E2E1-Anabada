@@ -81,8 +81,4 @@ public class Member extends BaseEntity {
 		this.gender = gender;
 		this.birth = birth;
 	}
-
-	public void remove() {
-		this.accountStatus = false;
-	}
 }
