@@ -14,6 +14,17 @@ spring:
         #        show-sql: true
         format_sql: true
 
+  security:
+    jwt:
+      header: Authorization
+      # secret : kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360-kernel360
+      secret: a2VybmVsMzYwLWtlcm5lbDM2MC1rZXJuZWwzNjAta2VybmVsMzYwLWtlcm5lbDM2MC1rZXJuZWwzNjAta2VybmVsMzYwLWtlcm5lbDM2MC1rZXJuZWwzNjAta2VybmVsMzYwLWtlcm5lbDM2MC1rZXJuZWwzNjAta2VybmVsMzYwLWtlcm5lbDM2MC1rZXJuZWwzNjA=
+      access-token-validity-in-seconds: 86_400     # 1일
+      refresh-token-validity-in-seconds: 1_209_600  # 2주
+
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+#  org.springframework.security: debug
+
+

@@ -5,15 +5,40 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
+// window.addEventListener('load', function() {
+//   var allElements = document.getElementsByTagName('*');
+//   Array.prototype.forEach.call(allElements, function(el) {
+//     var includePath = el.dataset.includePath;
+//     if (includePath) {
+//       var xhttp = new XMLHttpRequest();
+//       xhttp.onreadystatechange = function () {
+//         if (this.readyState == 4 && this.status == 200) {
+//           el.outerHTML = this.responseText;
+//         }
+//       };
+//       xhttp.open('GET', includePath, true);
+//       xhttp.send();
+//     }
+//   });
+// });
 window.addEventListener('load', function() {
   var allElements = document.getElementsByTagName('*');
+  var includePaths = [];
+  var completedRequests = 0;
+
   Array.prototype.forEach.call(allElements, function(el) {
     var includePath = el.dataset.includePath;
     if (includePath) {
+      includePaths.push(includePath);
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           el.outerHTML = this.responseText;
+          completedRequests++;
+
+          if (completedRequests === includePaths.length) {
+            fn_headerEvent(); // 모든 요청이 완료된 후 호출
+          }
         }
       };
       xhttp.open('GET', includePath, true);
@@ -21,6 +46,7 @@ window.addEventListener('load', function() {
     }
   });
 });
+
 
 (function() {
   "use strict";
