@@ -10,77 +10,169 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var param = {};
+
+        function authorize(url) {
+            param = {};
+            if (url.includes("?")) {
+                param = parseQueryStringToJson(url)
+            }
+            $.ajax({
+                url: '/api/v1/authorize',
+                method: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
+                    $('main[content="container"]').empty();
+                    loadHtmlAndExecuteScript(url, param);
+                },
+                error: function (xhr, status, error) {
+                    alert("로그인 정보가 없거나 권한 정보가 없습니다.") // todo : 추후 exception 별 분기 필요
+                }
+            });
+        }
+
+        function parseQueryStringToJson(url) {
+            const query = url.split('?')[1]; // URI에서 '?' 이후의 부분 추출
+            if (!query) {
+                return {}; // 쿼리 파라미터가 없는 경우 빈 객체 반환
+            }
+
+            const queryParams = query.split('&');
+            const result = {};
+
+            for (const param of queryParams) {
+                const [key, value] = param.split('=');
+                result[key] = value;
+            }
+            return result;
+        }
+
+        function loadHtmlAndExecuteScript(url, param) {
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (data) {
+                    // 가져온 HTML 파일을 현재 페이지에 추가
+                    $('main[content="container"]').html(data);
+
+                    // HTML 파일 내의 외부 스크립트 파일을 찾아서 로드하고 실행
+                    var scripts = $(data).filter('script[src]');
+                    scripts.each(function () {
+                        var scriptSrc = $(this).attr('src');
+                        loadAndExecuteScript(scriptSrc);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log("페이지 로드 실패 error : " + error);
+                    console.log("페이지 로드 실패 status : " + status);
+                    console.log("페이지 로드 실패 xhr : " + JSON.stringify(xhr));
+                }
+            });
+        }
+
+        // 외부 스크립트 파일을 로드하고 실행하는 함수
+        function loadAndExecuteScript(scriptSrc) {
+            var scriptElement = document.createElement('script');
+            scriptElement.src = scriptSrc;
+
+            scriptElement.onload = function () {
+                // 스크립트 로딩이 완료된 후 실행할 코드
+            };
+
+            // 스크립트를 로드하기 위해 페이지에 추가
+            document.body.appendChild(scriptElement);
+        }
+
+        function fn_headerEvent() {
+            if (null == localStorage.getItem("accessToken")) {
+                $("#loginArea").css("display", "block");
+            } else {
+                $("#memberInfoArea").css("display", "block");
+            }
+        }
+
+        function fn_logout() {
+            localStorage.clear();
+            window.location.href = "/";
+        }
+    </script>
 </head>
 
 <body>
-<div data-include-path="/include/header.html"></div>
-<div data-include-path="/include/sidebar.html"></div>
+    <div data-include-path="/include/header.html"></div>
+    <div data-include-path="/include/sidebar.html"></div>
 
-<main id="main" class="main">
+    <main id="main" class="main" content="container">
 
-    <div class="pagetitle">
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
-                <li class="breadcrumb-item active">서비스소개</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+        <div class="pagetitle">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
+                    <li class="breadcrumb-item active">서비스 소개</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
 
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-12">
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="card">
-                    <div class="card-body">
-                        <!-- 여기에 본문 입력 -->
-                        <div class="mb-3"></div>
-                        <p>지역기반 물물교환 플랫폼 - 아나바다!</p>
-                        <p>우리 동네 주민과 물건을 나누고 바꿔보세요.</p>
-                        <a href="member/memberList.html">회원목록</a>
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 여기에 본문 입력 -->
+                            <div class="mb-3"></div>
+                            <p>지역기반 물물교환 플랫폼 - 아나바다!</p>
+                            <p>우리 동네 주민과 물건을 나누고 바꿔보세요.</p>
+                            <a onclick="authorize('/member/memberList.html')">회원목록</a>
+                        </div>
                     </div>
+
                 </div>
-
             </div>
-        </div>
-    </section>
+        </section>
 
-</main><!-- End #main -->
+    </main><!-- End #main -->
 
-<div data-include-path="/include/footer.html"></div>
+    <div data-include-path="/include/footer.html"></div>
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
-<!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.min.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+    <!-- Vendor JS Files -->
+    <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="/assets/vendor/quill/quill.min.js"></script>
+    <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="/assets/vendor/php-email-form/validate.js"></script>
 
-<!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
-</body>
+    <!-- Template Main JS File -->
+    <script src="/assets/js/main.js"></script>
+    </body>
 </html>

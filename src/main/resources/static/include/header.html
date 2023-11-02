@@ -1,4 +1,11 @@
 <!-- ======= Header 시작 ======= -->
+<script>
+  if (null == localStorage.getItem("accessToken")) {
+    $("#loginArea").css("display", "block");
+  } else {
+    $("#memberInfoArea").css("display", "block");
+  }
+</script>
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
@@ -6,7 +13,6 @@
       <img src="../assets/img/logo.png" alt="">
       <span class="d-none d-lg-block">AnabadA</span>
     </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
   </div><!-- End Logo -->
 
   <div class="search-bar">
@@ -19,16 +25,14 @@
   <nav class="header-nav ms-auto">
     <ul class="d-flex align-items-center">
 
-      <li class="nav-item d-block d-lg-none">
-        <a class="nav-link nav-icon search-bar-toggle " href="#">
-          <i class="bi bi-search"></i>
-        </a>
-      </li><!-- End Search Icon-->
+      <li id="loginArea" class="nav-item d-block" style="display: none !important;">
+        <a class="nav-link nav-icon nav-profile d-flex align-items-center pe-0" href="/auth/login.html">
+          <span class="d-none d-md-block ps-2">로그인</span>
+        </a><!-- End Profile Iamge Icon -->
+      </li>
 
-
-      <li class="nav-item dropdown pe-3">
-
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+      <li id="memberInfoArea" class="nav-item dropdown pe-3" style="display: none !important;">
+        <a class="nav-link nav-icon nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <span class="d-none d-md-block dropdown-toggle ps-2">회원1</span>
         </a><!-- End Profile Iamge Icon -->
 
@@ -52,7 +56,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="#">
+            <a class="dropdown-item d-flex align-items-center" href="#" onclick="fn_logout()">
               <i class="bi bi-box-arrow-right"></i>
               <span>로그아웃</span>
             </a>
