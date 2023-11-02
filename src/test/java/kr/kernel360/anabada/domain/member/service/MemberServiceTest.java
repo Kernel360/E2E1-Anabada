@@ -2,131 +2,120 @@ package kr.kernel360.anabada.domain.member.service;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
-import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
+import kr.kernel360.anabada.domain.member.dto.UpdateMemberResponse;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 
-@DisplayName("서비스 테스트 - 회원")
-@ExtendWith(MockitoExtension.class)
+@DisplayName("회원 서비스 단위 테스트")
+@SpringBootTest
+@Transactional
 class MemberServiceTest {
-	@InjectMocks
-	private MemberService memberService;
 
-	@Mock
+	@Autowired
+	private MemberService memberService;
+	@Autowired
 	private MemberRepository memberRepository;
 
-	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-	private Validator validator = factory.getValidator();
-
-
-	@AfterEach
-	void setUp(){
-		MockitoAnnotations.openMocks(this);
+	private Member memberInit() {
+		return CreateMemberRequest.toEntity(
+			CreateMemberRequest.builder()
+				.email("awdawd@naver.com")
+				.nickname("JohnDoe")
+				.password("1234124")
+				.gender("M")
+				.birth("1991-11-11")
+				.build());
 	}
 
 	@Test
-	@DisplayName("회원 정보를 입력하면, 새로운 회원 정보를 저장하여 가입시키고 회원 가입 응답을 반환한다.")
-	void 회원가입_후_저장() throws Exception {
-	    //given
-		CreateMemberRequest request = CreateMemberRequest.builder()
-			.email("2agwad@naver.com")
-			.nickname("email")
-			.password("1234")
-			.gender("M")
-			.birth("1910-12-11")
-			.build();
+	@DisplayName("회원 정보를 입력하면, 회원 정보를 수정하고 회원 수정 응답을 반환한다.")
+	void 회원정보_수정() throws Exception {
+		//given
+		String newEmail = "홍길동@naver.com";
+		String newBirth = "2020-01-12";
 
-		doReturn(new Member(request.getEmail()
-			, request.getNickname()
-			, request.getPassword()
-			, request.getGender()
-			, request.getBirth()))
-			.when(memberRepository)
-			.save(any(Member.class));
+		Member member = memberInit();
 
-	    //when
-		CreateMemberResponse member = memberService.create(request);
+		memberRepository.save(member);
 
-	    //then
-		assertThat(member.getEmail()).isEqualTo(request.getEmail());
-		assertThat(member.getNickname()).isEqualTo(request.getNickname());
-
-		//verify
-		verify(memberRepository, times(1)).save(any(Member.class));
-	}
-
-	@Test
-	@DisplayName("회원 조회 시, 존재하지 않는 회원 ID를 검색하면, IllegalArgumentException을 반환한다.")
-	void 회원조회() throws Exception {
-	    //given
-	    Long id = 1L;
-
-	    //when
-		Throwable exception = assertThrows(IllegalArgumentException.class, () ->
-			memberService.find(id));
-
-		//then
-		assertThat(exception).isInstanceOf(IllegalArgumentException.class);
-
-		//verify
-		verify(memberRepository, times(1)).findById(id);
-	}
-
-	@Test
-	@DisplayName("회원 가입 요청에 필수인 정보들이 존재하는지 확인한다")
-	void 회원가입_필수정보_확인() throws Exception {
-	    //given
-		CreateMemberRequest request = CreateMemberRequest.builder()
-			.email("2agwad@naver.com")
-			.nickname(null)
-			.password(null)
-			.gender("M")
-			.birth("1910-12-11")
-			.build();
-
-	    //when
-		Set<ConstraintViolation<CreateMemberRequest>> violations = validator.validate(request);
-
-	    //then
-		assertEquals(2, violations.size());
-	}
-
-	@Test
-	@DisplayName("회원가입 요청 시 이메일 형식이 올바른지 확인한다")
-	void 회원가입_이메일_유효성_검사() throws Exception {
-	    //given
-		CreateMemberRequest request = CreateMemberRequest.builder()
-			.email("@ddnav")
-			.nickname("der22df")
-			.password("ddf2332fdf")
-			.gender("M")
-			.birth("1910-12-11")
+		UpdateMemberRequest request = UpdateMemberRequest.builder()
+			.id(member.getId())
+			.email(newEmail)
+			.nickname(member.getNickname())
+			.password(member.getPassword())
+			.gender(member.getGender())
+			.birth(newBirth)
 			.build();
 
 		//when
-		Set<ConstraintViolation<CreateMemberRequest>> violations = validator.validate(request);
-		System.out.println(violations);
+		UpdateMemberResponse response = memberService.update(request);
 
 		//then
-		assertEquals(1, violations.size());
+		assertThat(response.getEmail()).isEqualTo(newEmail);
+		assertThat(response.getBirth()).isEqualTo(newBirth);
+	}
+
+	@Test
+	@DisplayName("회원을 저장하고 조회하면, 동일한 회원을 반환한다.")
+	void 회원_조회() throws Exception {
+		//given
+		Member member = memberRepository.save(memberInit());
+
+		//when
+		FindMemberResponse findMemberResponse = memberService.find(member.getId());
+
+		//then
+		assertThat(findMemberResponse.getNickname()).isEqualTo(member.getNickname());
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 회원을 조회하면, IllegalArgumentException을 반환한다.")
+	void 비정상_회원_조회() throws Exception {
+		//given
+		Member member = memberRepository.save(memberInit());
+
+		//when
+		Throwable exception = assertThrows(IllegalArgumentException.class, () ->
+			memberService.find(member.getId() + 1));
+
+		//then
+		assertThat(exception).isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@Test
+	@DisplayName("회원을 저장하고 삭제하면, 해당 회원의 회원 탈퇴가 TRUE로 변경된다.")
+	void 회원_삭제() throws Exception {
+		//given
+		Member member = memberRepository.save(memberInit());
+
+		//when
+		Long removedId = memberService.remove(member.getId());
+
+		//then
+		assertThat(removedId).isEqualTo(member.getId());
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 회원을 삭제하면, IllegalArgumentException을 반환한다.")
+	void 비정상_회원_삭제() throws Exception {
+		//given
+		Member member = memberRepository.save(memberInit());
+
+		//when
+		Throwable exception = assertThrows(IllegalArgumentException.class, () ->
+			memberService.remove(member.getId() + 1));
+
+		//then
+		assertThat(exception).isInstanceOf(IllegalArgumentException.class);
 	}
 }
