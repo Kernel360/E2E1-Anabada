@@ -25,7 +25,7 @@ public class CreateMemberRequest{
 	@NotBlank
 	private String password;
 
-	private final String authority = "USER_ROLE";
+	private final String authorities = "USER_ROLE";
 
 	@NotBlank
 	private String gender;
@@ -44,7 +44,7 @@ public class CreateMemberRequest{
 			.email(createMemberRequest.email)
 			.nickname(createMemberRequest.nickname)
 			.password(createMemberRequest.password)
-			.authority(createMemberRequest.authority)
+			.authorities(createMemberRequest.authorities)
 			.gender(createMemberRequest.gender)
 			.birth(createMemberRequest.birth)
 			.socialProvider(createMemberRequest.socialProvider)
