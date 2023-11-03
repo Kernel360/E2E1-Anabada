@@ -14,6 +14,9 @@
             url: '/api/v1/faqs/' + param.faqId,
             method: 'GET',
             dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
             success: function (data) {
                 // FAQ 정보를 필드에 채움
                 $('#faqTitle').val(data.title);
@@ -39,7 +42,10 @@
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
-                success: function () {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
                     authorize('/faq/faqInfo.html?faqId='+param.faqId);
                 },
                 error: function () {

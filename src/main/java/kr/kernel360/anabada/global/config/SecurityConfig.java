@@ -31,7 +31,7 @@ public class SecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring()
-			.antMatchers("/error/**", "/assets/**", "/include/**");
+			.antMatchers("/error/**", "/assets/**", "/include/**", "/js/**");
 	}
 
 	@Bean
@@ -40,9 +40,10 @@ public class SecurityConfig {
 
 		httpSecurity.authorizeRequests()
 			.antMatchers(
-				"/api/v1/authorize" // 토큰의 스프링 시큐리티 필터 검증을 위한 검증 API. 실제 기능은 없다. 단지 필터를 가기 위함
-			).authenticated()
-			.anyRequest().permitAll()
+				"/auth/login.html",
+				"/"
+			).permitAll()
+			.anyRequest().authenticated()
 
 			.and()
 			/** 401, 403 Exception 핸들링 **/

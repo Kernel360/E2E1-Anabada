@@ -31,7 +31,17 @@
                                           style="height: 100px"></textarea>
                             </div>
                         </div>
-
+                        <div class="row mb-3">
+                            <label for="memberId" class="col-sm-2 col-form-label">로그인하고 있는 회원 ID(임시)</label>
+                            <div class="col-sm-10">
+                                <select id="memberId" name="memberId" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">2</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-sm-10">
                                 <button id="faqCreateButton" class="btn btn-primary">저장</button>
@@ -55,7 +65,7 @@
             var param = {
                 "title": $('#faqTitle').val(),
                 "content": $('#faqContent').val(),
-                "memberId": 21 // todo : 회원 식별자 추후 수정 필요
+                "memberId": $('#memberId').val()
             };
 
             // FAQ 생성 요청 보내기
@@ -64,7 +74,10 @@
                 method: 'POST',
                 data: JSON.stringify(param),
                 contentType: 'application/json',
-                success: function () {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
                     authorize('/faq/faqList.html');
                 },
                 error: function () {
