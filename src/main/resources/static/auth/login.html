@@ -43,12 +43,21 @@
         function fn_setEvent() {
             $('#loginButton').click(function () {
                 event.preventDefault();
+                $(".invalid-feedback").hide();
+                if ("" == $("#email").val()) {
+                    $("#email-feedback").show();
+                    return;
+                }
+                if ("" == $("#password").val()) {
+                    $("#password-feedback").show();
+                    return;
+                }
                 var param = {
                     "email": $("#email").val(),
                     "password": $("#password").val()
                 }
                 $.ajax({
-                    url: '/api/v1/authenticate',
+                    url: '/api/v1/auth/authenticate',
                     method: 'POST',
                     data: JSON.stringify(param),
                     contentType: 'application/json',
@@ -96,31 +105,28 @@
 
                                     <div class="col-12">
                                         <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                            <span class="input-group-text" ><i class="bi bi-at"></i></span>
                                             <input type="text" name="email" class="form-control" id="email"
-                                                   autocomplete="username" placeholder="ID" required>
-                                            <div class="invalid-feedback">Please enter your username.</div>
+                                                   autocomplete="username" placeholder="Email" required>
+                                            <div id="email-feedback" class="invalid-feedback">이메일을 입력하세요.</div>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <input type="password" name="password" class="form-control" id="password"
-                                               placeholder="PW" autocomplete="current-password" required>
-                                        <div class="invalid-feedback">Please enter your password!</div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember" value="true"
-                                                   id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <div class="input-group has-validation">
+                                            <span class="input-group-text" ><i class="bi bi-lock"></i></span>
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                   placeholder="PW" autocomplete="current-password" required>
+                                            <div id="password-feedback" class="invalid-feedback">비밀번호를 입력하세요.</div>
                                         </div>
                                     </div>
+
                                     <div class="col-12">
                                         <button id="loginButton" class="btn btn-primary w-100">Login</button>
                                     </div>
+
                                     <div class="col-12">
-                                        <p class="small mb-0">계정이 없으신가요? <a href="pages-register.html">회원가입</a></p>
+                                        <p class="small mb-0">계정이 없으신가요? <a href="/auth/signup.html">회원가입</a></p>
                                     </div>
                                 </form>
 
