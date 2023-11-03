@@ -94,6 +94,9 @@
             url: '/api/v1/trades/' + param.tradeNo,
             method: 'GET',
             dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
             success: function (data) {
                 $('#title').val(data.tradeTitle);
                 $('#nickname').val(data.nickname);

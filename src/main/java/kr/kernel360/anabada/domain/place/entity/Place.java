@@ -24,10 +24,10 @@ public class Place {
 	@Column(name = "state", columnDefinition = "varchar(40)")
 	private String state;
 
-	@Column(nullable = false, name = "city", columnDefinition = "varchar(40)")
+	@Column(name = "city", columnDefinition = "varchar(40)") // todo : notnull 임시 제거 -> 추후 붙여야함
 	private String city;
 
-	@Column(nullable = false, name = "address1", columnDefinition = "varchar(40)")
+	@Column(name = "address1", columnDefinition = "varchar(40)") // todo : notnull 임시 제거 -> 추후 붙여야함
 	private String address1;
 
 	@Builder

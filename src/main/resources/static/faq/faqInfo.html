@@ -75,6 +75,9 @@
             url: '/api/v1/faqs/' + param.faqId,
             method: 'GET',
             dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
             success: function (data) {
                 // JSON 데이터를 받은 후 실행될 코드
                 $('#faqTitle').val(data.title);
@@ -102,7 +105,10 @@
                 $.ajax({
                     url: '/api/v1/faqs/' + param.faqId,
                     method: 'DELETE',
-                    success: function () {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                    },
+                    success: function (data) {
                         authorize('/faq/faqList.html')
                     },
                     error: function () {
