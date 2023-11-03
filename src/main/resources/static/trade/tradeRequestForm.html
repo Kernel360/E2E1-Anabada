@@ -75,7 +75,10 @@
         method: 'POST',
         data: JSON.stringify(formData),
         contentType: 'application/json',
-        success: function (response) {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+        },
+        success: function (data) {
           window.location.href = 'tradeList.html';
         },
         error: function () {

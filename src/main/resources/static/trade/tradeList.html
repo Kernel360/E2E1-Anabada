@@ -52,6 +52,9 @@
             url: '/api/v1/trades',
             method: 'GET',
             dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
             success: function (data) {
                 var trades = data.trades;
 
