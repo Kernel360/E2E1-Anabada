@@ -41,6 +41,7 @@ public class SecurityConfig {
 		httpSecurity.authorizeRequests()
 			.antMatchers(
 				"/auth/login.html",
+				"/api/v1/authenticate",
 				"/"
 			).permitAll()
 			.anyRequest().authenticated()
