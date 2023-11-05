@@ -40,6 +40,7 @@ public class SecurityConfig {
 
 		httpSecurity.authorizeRequests()
 			.antMatchers(
+				"/api/v1/members",
 				"/auth/login.html",
 				"/api/v1/authenticate",
 				"/"

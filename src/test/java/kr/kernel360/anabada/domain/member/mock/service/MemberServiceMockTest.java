@@ -1,4 +1,4 @@
-package kr.kernel360.anabada.domain.member.service;
+package kr.kernel360.anabada.domain.member.mock.service;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +24,7 @@ import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
 import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.domain.member.service.MemberService;
 
 @DisplayName("회원 서비스 mock 단위 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +45,7 @@ class MemberServiceMockTest {
 
 	@Test
 	@DisplayName("회원 정보를 입력하면, 새로운 회원 정보를 저장하여 가입시키고 회원 가입 응답을 반환한다.")
-	void 회원가입_후_저장() throws Exception {
+	void testCreateMemberUsingMock() throws Exception {
 	    //given
 		CreateMemberRequest request = CreateMemberRequest.builder()
 			.email("2agwad@naver.com")
@@ -75,7 +76,7 @@ class MemberServiceMockTest {
 
 	@Test
 	@DisplayName("존재하지 않는 회원 ID를 검색하면, IllegalArgumentException을 반환한다.")
-	void 회원조회() throws Exception {
+	void testFindMemberDoNotExistUsingMock() throws Exception {
 	    //given
 	    Long id = 1L;
 
@@ -92,7 +93,7 @@ class MemberServiceMockTest {
 
 	@Test
 	@DisplayName("회원 가입을 요청하면, 필수 정보들이 존재하는지 확인한다")
-	void 회원가입_필수정보_확인() throws Exception {
+	void testValidateMemberInfo() throws Exception {
 	    //given
 		CreateMemberRequest request = CreateMemberRequest.builder()
 			.email("2agwad@naver.com")
@@ -111,7 +112,7 @@ class MemberServiceMockTest {
 
 	@Test
 	@DisplayName("회원 가입을 요청하면, 이메일 형식이 올바른지 확인한다")
-	void 회원가입_이메일_유효성_검사() throws Exception {
+	void testValidateMemberEmail() throws Exception {
 	    //given
 		CreateMemberRequest request = CreateMemberRequest.builder()
 			.email("@ddnav")

@@ -19,7 +19,7 @@ class MemberRepositoryTest {
 
 	@Test
 	@DisplayName("회원 객체가 만들어지면, repository에 저장된다")
-	void 회원_저장() throws Exception {
+	void testSaveMember() throws Exception {
 	    //given
 		Member member = createMember();
 
@@ -33,7 +33,7 @@ class MemberRepositoryTest {
 
 	@Test
 	@DisplayName("존재하는 회원을 조회하면, 회원을 반환한다.")
-	void 회원_조회하기() throws Exception {
+	void testFindMemberById() throws Exception {
 	    //given
 		Member member = createMember();
 

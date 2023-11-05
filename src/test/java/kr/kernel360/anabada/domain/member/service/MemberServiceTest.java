@@ -28,7 +28,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원 정보를 입력하면, 회원 정보를 수정하고 회원 수정 응답을 반환한다.")
-	void 회원정보_수정() throws Exception {
+	void testUpdateMember() throws Exception {
 		//given
 		String newEmail = "홍길동@naver.com";
 		String newBirth = "2020-01-12";
@@ -56,7 +56,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원을 저장하고 조회하면, 동일한 회원을 반환한다.")
-	void 회원_조회() throws Exception {
+	void testCreateMember() throws Exception {
 		//given
 		Member member = memberRepository.save(createMember());
 
@@ -69,7 +69,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("존재하지 않는 회원을 조회하면, IllegalArgumentException을 반환한다.")
-	void 비정상_회원_조회() throws Exception {
+	void testFindMemberDoNotExist() throws Exception {
 		//given
 		Member member = memberRepository.save(createMember());
 
@@ -83,7 +83,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("회원을 저장하고 삭제하면, 해당 회원의 회원 탈퇴가 TRUE로 변경된다.")
-	void 회원_삭제() throws Exception {
+	void testDeleteMember() throws Exception {
 		//given
 		Member member = memberRepository.save(createMember());
 
@@ -96,7 +96,7 @@ class MemberServiceTest {
 
 	@Test
 	@DisplayName("존재하지 않는 회원을 삭제하면, IllegalArgumentException을 반환한다.")
-	void 비정상_회원_삭제() throws Exception {
+	void testDeleteMemberDoNotExist() throws Exception {
 		//given
 		Member member = memberRepository.save(createMember());
 
