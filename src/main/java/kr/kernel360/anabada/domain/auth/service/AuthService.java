@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
 import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
+import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
 import kr.kernel360.anabada.domain.auth.dto.TokenResponse;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
@@ -49,5 +50,26 @@ public class AuthService {
 			// todo : 추후 exception 타입 변경 필요
 			throw new IllegalArgumentException("비밀번호가 다릅니다.");
 		}
+	}
+
+	public void isEmailUnique(String email) {
+		if (memberRepository.existsByEmail(email)) {
+			// todo : 추후 exception 타입 변경 필요
+			throw new IllegalArgumentException("사용중인 이메일입니다.");
+		}
+	}
+
+	public void isNickname(String nickname) {
+		if (memberRepository.existsByNickname(nickname)) {
+			// todo : 추후 exception 타입 변경 필요
+			throw new IllegalArgumentException("사용중인 닉네임입니다.");
+		}
+	}
+
+	@Transactional
+	public Long signUp(SignUpRequest signUpRequest) {
+		signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+		Member member = memberRepository.save(signUpRequest.toEntity(signUpRequest));
+		return member.getId();
 	}
 }
