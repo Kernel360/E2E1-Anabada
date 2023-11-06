@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +48,7 @@ public class Trade extends BaseEntity {
 	@Column(nullable = false, name = "trade_type", columnDefinition = "varchar(40)")
 	private TradeType tradeType;
 
-	@Column(name = "image_path", columnDefinition = "varchar(40)")
+	@Column(name = "image_path", columnDefinition = "varchar(200)")
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)
