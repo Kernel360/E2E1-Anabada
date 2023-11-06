@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequest {
+public class SignUpRequest {
 	@Email
 	@NotBlank
 	private String email;
@@ -39,16 +39,16 @@ public class SignupRequest {
 
 	private final String socialProvider = "N";
 
-	public static Member toEntity(SignupRequest signupRequest) {
+	public static Member toEntity(SignUpRequest signUpRequest) {
 		return Member.builder()
-			.email(signupRequest.email)
-			.nickname(signupRequest.nickname)
-			.password(signupRequest.password)
-			.authorities(signupRequest.authorities)
-			.gender(signupRequest.gender)
-			.birth(signupRequest.birth)
-			.socialProvider(signupRequest.socialProvider)
-			.accountStatus(signupRequest.accountStatus)
+			.email(signUpRequest.email)
+			.nickname(signUpRequest.nickname)
+			.password(signUpRequest.password)
+			.authorities(signUpRequest.authorities)
+			.gender(signUpRequest.gender)
+			.birth(signUpRequest.birth)
+			.socialProvider(signUpRequest.socialProvider)
+			.accountStatus(signUpRequest.accountStatus)
 			.build();
 	}
 }

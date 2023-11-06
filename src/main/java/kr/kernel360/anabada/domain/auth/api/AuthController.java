@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
 import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
-import kr.kernel360.anabada.domain.auth.dto.SignupRequest;
+import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
 import kr.kernel360.anabada.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,21 +34,21 @@ public class AuthController {
 	}
 
 	@PostMapping("/v1/auth/isEmailUnique")
-	public ResponseEntity isEmailUniqueisEmailUnique(@RequestBody SignupRequest signupRequest) {;
-		authService.isEmailUnique(signupRequest.getEmail());
+	public ResponseEntity isEmailUnique(@RequestBody SignUpRequest signUpRequest) {;
+		authService.isEmailUnique(signUpRequest.getEmail());
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/v1/auth/isNicknameUnique")
-	public ResponseEntity isNicknameUnique(@RequestBody SignupRequest signupRequest) {
-		authService.isNickname(signupRequest.getNickname());
+	public ResponseEntity isNicknameUnique(@RequestBody SignUpRequest signUpRequest) {
+		authService.isNickname(signUpRequest.getNickname());
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("/v1/auth/signup")
-	public ResponseEntity<Long> signup(@RequestBody SignupRequest signupRequest) {
-		Long savedMemberId = authService.signup(signupRequest);
-		URI uri =  URI.create("/api//v1/auth/signup"+savedMemberId);
+	@PostMapping("/v1/auth/signUp")
+	public ResponseEntity<Long> signUp(@RequestBody SignUpRequest signUpRequest) {
+		Long savedMemberId = authService.signUp(signUpRequest);
+		URI uri =  URI.create("/api//v1/auth/signUp"+savedMemberId);
 		return ResponseEntity.created(uri).build();
 	}
 }
