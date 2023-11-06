@@ -29,7 +29,7 @@ public class MemberDetailService implements UserDetailsService {
 	public List<String> toList(String str) {
 		return Arrays.stream(str.split(", "))
 			.map(String::trim)
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	public UserDetails createUser(String username, Member member) {

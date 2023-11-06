@@ -40,10 +40,6 @@ public class MemberService {
 
 	public FindAllMemberResponse findAll() {
 		List<Member> members = memberRepository.findAll();
-
-		for (Member member : members) {
-			System.out.println(member.getNickname());
-		}
 		List<FindMemberResponse> responses = members.stream().map(FindMemberResponse::of).toList();
 
 		return FindAllMemberResponse.of(responses);
@@ -54,8 +50,7 @@ public class MemberService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-		member.remove();
-
+		memberRepository.delete(member);
 		return id;
 	}
 }
