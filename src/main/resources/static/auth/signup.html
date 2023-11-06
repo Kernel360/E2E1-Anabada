@@ -110,6 +110,7 @@
                     error: function () {
                         $("#email-feedback").text("사용할 수 없는 이메일 입니다.");
                         $("#email-feedback").show();
+                        $("#email").val("");
                     }
                 });
             });
@@ -137,6 +138,7 @@
                     error: function () {
                         $("#nickname-feedback").text("사용할 수 없는 닉네임 입니다.");
                         $("#nickname-feedback").show();
+                        $("#nickname").val("");
                     }
                 });
             });
