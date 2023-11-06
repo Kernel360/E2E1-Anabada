@@ -47,7 +47,8 @@ public class SecurityConfig {
 				"/api/v1/auth/authenticate",
 				"/api/v1/auth/signUp",
 				"/",
-				"/images/**"
+				"/images/**",
+				"/api/images/**"
 			).permitAll()
 			.anyRequest().authenticated()
 
