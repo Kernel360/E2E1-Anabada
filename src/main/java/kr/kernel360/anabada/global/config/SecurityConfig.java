@@ -30,7 +30,7 @@ public class SecurityConfig {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring()
+		return web -> web.ignoring()
 			.antMatchers("/error/**", "/assets/**", "/include/**", "/js/**");
 	}
 
@@ -40,7 +40,6 @@ public class SecurityConfig {
 
 		httpSecurity.authorizeRequests()
 			.antMatchers(
-				"/api/v1/members",
 				"/auth/login.html",
 				"/auth/signUp.html",
 				"/api/v1/auth/isEmailUnique",
