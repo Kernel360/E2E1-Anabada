@@ -23,9 +23,9 @@ public class CreateTradeOfferRequest {
 
 	private String imagePath;
 
-	private TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
+	private final TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
 
-	private DeletedStatus deletedStatus = DeletedStatus.FALSE;
+	private final DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
 	private Long memberId;
 

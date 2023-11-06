@@ -22,8 +22,8 @@ public class LoginResponse {
 
 	public static LoginResponse of(String email, Collection<? extends GrantedAuthority> authorities, TokenResponse tokenResponse) {
 		List<String> roles = authorities.stream()
-			.map(role -> String.valueOf(role))
-			.collect(Collectors.toList());
+			.map(String::valueOf)
+			.toList();
 
 		return LoginResponse.builder()
 			.email(email)
