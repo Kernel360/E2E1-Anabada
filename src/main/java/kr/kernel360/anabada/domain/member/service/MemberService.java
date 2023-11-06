@@ -1,13 +1,10 @@
 package kr.kernel360.anabada.domain.member.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
-import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
@@ -17,15 +14,10 @@ import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepository;
-
-	@Transactional
-	public CreateMemberResponse create(CreateMemberRequest createMemberRequest) {
-		Member member = memberRepository.save(CreateMemberRequest.toEntity(createMemberRequest));
-		return CreateMemberResponse.of(member);
-	}
 
 	@Transactional
 	public UpdateMemberResponse update(UpdateMemberRequest updateMemberRequest) {
@@ -39,7 +31,6 @@ public class MemberService {
 		return UpdateMemberResponse.of(member);
 	}
 
-	@Transactional(readOnly = true)
 	public FindMemberResponse find(Long id) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -47,7 +38,6 @@ public class MemberService {
 		return FindMemberResponse.of(member);
 	}
 
-	@Transactional(readOnly = true)
 	public FindAllMemberResponse findAll() {
 		List<Member> members = memberRepository.findAll();
 
