@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.kernel360.anabada.domain.member.dto.CreateMemberRequest;
-import kr.kernel360.anabada.domain.member.dto.CreateMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
@@ -16,20 +14,15 @@ import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public CreateMemberResponse create(final CreateMemberRequest createMemberRequest) {
-		Member member = memberRepository.save(CreateMemberRequest.toEntity(createMemberRequest));
-		return CreateMemberResponse.of(member);
-	}
-
-	@Transactional
 	public UpdateMemberResponse update(UpdateMemberRequest updateMemberRequest) {
-		Member member = findMemberById(updateMemberRequest.getId());
+		Member member = memberRepository.findById(updateMemberRequest.getId())
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
 		member.update(updateMemberRequest.getEmail(), updateMemberRequest.getNickname(),
 			updateMemberRequest.getPassword(), updateMemberRequest.getGender()
@@ -39,7 +32,8 @@ public class MemberService {
 	}
 
 	public FindMemberResponse find(Long id) {
-		Member member = findMemberById(id);
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
 		return FindMemberResponse.of(member);
 	}
@@ -47,6 +41,9 @@ public class MemberService {
 	public FindAllMemberResponse findAll() {
 		List<Member> members = memberRepository.findAll();
 
+		for (Member member : members) {
+			System.out.println(member.getNickname());
+		}
 		List<FindMemberResponse> responses = members.stream().map(FindMemberResponse::of).toList();
 
 		return FindAllMemberResponse.of(responses);
@@ -54,15 +51,11 @@ public class MemberService {
 
 	@Transactional
 	public Long remove(Long id) {
-		Member member = findMemberById(id);
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-		memberRepository.delete(member);
+		member.remove();
 
 		return id;
-	}
-
-	private Member findMemberById(Long id) {
-		return memberRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 	}
 }
