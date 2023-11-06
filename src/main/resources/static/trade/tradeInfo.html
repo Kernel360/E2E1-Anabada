@@ -105,10 +105,11 @@
                 $('#tradeType').val(data.tradeType);
                 $('#categoryName').val(data.categoryName);
 
-                var $image = $('<img>');
+                var $image = $('<img style="max-width: 400px; max-height: 400px;">');
 
                 if (data.imagePath) {
-                    $image.attr('src', data.imagePath);
+
+                    $image.attr('src', '/api'+ data.imagePath);
                     $image.attr('alt', '이미지');
                     $('#tradeImage').append($image);
                 } else {
