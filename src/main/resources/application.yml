@@ -27,9 +27,11 @@ spring:
       access-token-validity-in-seconds: 86_400     # 1일
       refresh-token-validity-in-seconds: 1_209_600  # 2주
 
+  profiles:
+    include: API-KEY
+
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
   org.springframework.security: debug
-
 

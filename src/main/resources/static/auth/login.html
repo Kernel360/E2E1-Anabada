@@ -56,6 +56,15 @@
                     "email": $("#email").val(),
                     "password": $("#password").val()
                 }
+                var latitude, longitude;
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                })
+                var placeParam = {
+                    "x" : latitude + "",
+                    "y" : longitude + ""
+                }
                 $.ajax({
                     url: '/api/v1/auth/authenticate',
                     method: 'POST',
@@ -63,6 +72,19 @@
                     contentType: 'application/json',
                     success: function (data) {
                         localStorage.setItem("accessToken", data.tokenResponse.accessToken);
+                        $.ajax({
+                            url: '/api/v1/places/result/',
+                            method: 'GET',
+                            data: placeParam,
+                            dataType: 'json',
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                            },
+                            success : function (data) {
+                                console.log(data);
+                                localStorage.setItem("address", data.address1);
+                            }
+                        })
                         window.location.href = "/"
                     },
                     error: function () {
