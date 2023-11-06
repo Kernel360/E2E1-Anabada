@@ -40,13 +40,14 @@ public class SecurityConfig {
 
 		httpSecurity.authorizeRequests()
 			.antMatchers(
+				"/",
 				"/auth/login.html",
 				"/auth/signUp.html",
+				"/main.html",
 				"/api/v1/auth/isEmailUnique",
-			    "/api/v1/auth/isNicknameUnique",
+				"/api/v1/auth/isNicknameUnique",
 				"/api/v1/auth/authenticate",
 				"/api/v1/auth/signUp",
-				"/",
 				"/images/**"
 			).permitAll()
 			.anyRequest().authenticated()
