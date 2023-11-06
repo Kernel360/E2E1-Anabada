@@ -9,13 +9,11 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
-import kr.kernel360.anabada.domain.place.dto.PlaceDto;
-import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
-import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
+import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,15 +40,15 @@ public class TradeService {
 	}
 
 	@Transactional
-	public Long create(PlaceDto placeDto, CreateTradeRequest createTradeRequest) {
+	public Long create(CreateTradeRequest createTradeRequest) {
 		Member member = findMemberById(createTradeRequest.getMemberId());
 
 		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 카테고리가 없습니다."));
 
-		Place place = placeRepository.save(placeDto.toEntity(placeDto));
+		// Place place = placeRepository.save(placeDto.toEntity(placeDto));
 
-		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member, place));
+		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member));
 		return savedTrade.getId();
 	}
 

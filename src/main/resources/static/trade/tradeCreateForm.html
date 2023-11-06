@@ -16,7 +16,7 @@
                 <div class="card-body">
 
                     <!-- General Form Elements -->
-                    <form>
+                    <form id="request-form" enctype="multipart/form-data">
                         <div class="row mb-3"></div>
                         <div class="row mb-3">
                             <label for="title" class="col-sm-2 col-form-label">제목</label>
@@ -47,9 +47,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="imagePath" class="col-sm-2 col-form-label">사진</label>
+                            <label for="imageFile" class="col-sm-2 col-form-label">사진</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="file" id="imagePath">
+                                <input class="form-control" type="file" id="imageFile" onchange="validateImage(this)">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -162,20 +162,48 @@
         $('#title').val(title);
     }
 
+    function validateImage(input) {
+        var maxFileSize = 1024 * 1024;
+        if (input.files && input.files[0]) {
+            var file = input.files[0];
+
+            if (file.size > maxFileSize) {
+                alert('이미지 파일 크기가 1MB를 초과했습니다. 1MB 이하의 이미지를 업로드해주세요.');
+                input.value = "";
+                return false;
+            }
+
+            var allowedExtensions = ["jpg", "jpeg", "png"];
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (allowedExtensions.indexOf(fileExtension) === -1) {
+                alert('올바른 이미지 파일 확장자를 사용해주세요. 허용된 확장자: ' + allowedExtensions.join(', '));
+                input.value = "";
+                return false;
+            }
+        }
+    }
+
     function fn_saveTradeInfo() {
-        var formData = {
-            title: $('#title').val(),
-            content: $('#content').val(),
-            imagePath: $('#imagePath').val(),
-            tradeType: $('#tradeType').val(),
-            categoryId: $('#categoryId').val(),
-            memberId: $('#memberId').val()
-        };
+        var formData = new FormData();
+        formData.append("title", $('#title').val());
+        formData.append("content", $('#content').val());
+        formData.append('imageFile', $('#imageFile')[0].files[0]);
+        formData.append("tradeType", $('#tradeType').val());
+        formData.append("categoryId", $('#categoryId').val());
+        formData.append("memberId", $('#memberId').val());
+
+        for(var pair of formData.entries()){
+            console.log(pair[0], pair[1]);
+        }
+
         $.ajax({
             url: '/api/v1/trades',
             method: 'POST',
-            data: JSON.stringify(formData),
-            contentType: 'application/json',
+            enctype: 'multipart/form-data',
+            data: formData,
+            contentType: false,
+            processData: false,
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
