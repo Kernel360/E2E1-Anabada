@@ -19,7 +19,7 @@
                     <form id="faqCreateForm">
                         <div class="row mb-3"></div>
                         <div class="row mb-3">
-                            <label for="faqTitle" class="col-sm-2 col-form-label">제목</label>
+                            <label for="faqTitle" class="col-sm-2 col-form-label">제목<span class="required-star">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="faqTitle" name="faqTitle" required>
                             </div>
@@ -62,6 +62,10 @@
         $('#faqCreateButton').click(function () {
             event.preventDefault();
 
+            if ("" == $('#faqTitle').val()) {
+                alert("제목은 필수입니다.");
+                return;
+            }
             var param = {
                 "title": $('#faqTitle').val(),
                 "content": $('#faqContent').val(),
