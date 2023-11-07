@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.kernel360.anabada.domain.member.dto.FindAllMemberByAgeGroupResponse;
+import kr.kernel360.anabada.domain.member.dto.FindAllMemberByGenderResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
@@ -38,6 +40,18 @@ public class MemberController {
 	public ResponseEntity<FindAllMemberResponse> findAll() {
 		FindAllMemberResponse findAllMemberResponse = memberService.findAll();
 		return ResponseEntity.ok(findAllMemberResponse);
+	}
+
+	@GetMapping("/v1/members/gender")
+	public ResponseEntity<FindAllMemberByGenderResponse> countMemberByGender() {
+		FindAllMemberByGenderResponse findAllMemberByGenderResponse = memberService.countMembersByGender();
+		return ResponseEntity.ok(findAllMemberByGenderResponse);
+	}
+
+	@GetMapping("/v1/members/age-group")
+	public ResponseEntity<FindAllMemberByAgeGroupResponse> countMemberByAgeGroup() {
+		FindAllMemberByAgeGroupResponse findAllMemberByAgeGroupResponse = memberService.countMembersByAgeGroup();
+		return ResponseEntity.ok(findAllMemberByAgeGroupResponse);
 	}
 
 	@DeleteMapping("/v1/members/{id}")
