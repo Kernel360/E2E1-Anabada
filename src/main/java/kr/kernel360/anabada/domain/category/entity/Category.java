@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
@@ -19,8 +20,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE category SET activated = 0 WHERE id = ?")
+@SQLDelete(sql = "UPDATE category SET deleted_status = 'TRUE' WHERE id = ?")
 @Table(name = "category")
 public class Category {
 	@Id
@@ -40,7 +42,7 @@ public class Category {
 		this.deletedStatus = deletedStatus;
 	}
 
-	public void update(String name) {
-		this.name = name;
+	public void activate() {
+		this.deletedStatus = DeletedStatus.FALSE;
 	}
 }

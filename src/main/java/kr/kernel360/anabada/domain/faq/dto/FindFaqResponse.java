@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.faq.dto;
 
 import java.time.LocalDateTime;
 
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,8 @@ public class FindFaqResponse {
 	private String title;
 
 	private String content;
+
+	private DeletedStatus deletedStatus;
 
 	private String createdBy;
 
