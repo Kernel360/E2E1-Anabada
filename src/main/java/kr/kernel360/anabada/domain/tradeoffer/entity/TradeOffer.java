@@ -42,7 +42,7 @@ public class TradeOffer extends BaseEntity {
 	@Column(name = "content", columnDefinition = "text")
 	private String content;
 
-	@Column(name = "image_path", columnDefinition = "varchar(40)")
+	@Column(name = "image_path", columnDefinition = "varchar(255)")
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)
