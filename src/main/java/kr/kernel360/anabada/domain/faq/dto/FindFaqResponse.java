@@ -21,7 +21,7 @@ public class FindFaqResponse {
 
 	private String createdBy;
 
-	private LocalDateTime createdDate;
+	private String createdDate;
 
 	public static FindFaqResponse of(FindFaqDto faq) {
 		return FindFaqResponse.builder()

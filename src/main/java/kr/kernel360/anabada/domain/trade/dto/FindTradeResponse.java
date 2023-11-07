@@ -29,7 +29,7 @@ public class FindTradeResponse {
 
 	private String nickname;
 
-	private LocalDateTime createdDate;
+	private String createdDate;
 
 	private String content;
 

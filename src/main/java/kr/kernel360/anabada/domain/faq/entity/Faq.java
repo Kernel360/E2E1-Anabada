@@ -30,7 +30,7 @@ public class Faq extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "title", columnDefinition = "varchar(50)")
+	@Column(nullable = false, name = "title", columnDefinition = "varchar(100)")
 	private String title;
 
 	@Column(name = "content", columnDefinition = "text")

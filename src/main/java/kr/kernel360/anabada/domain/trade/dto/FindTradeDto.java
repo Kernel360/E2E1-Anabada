@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
+import kr.kernel360.anabada.global.utils.DateParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class FindTradeDto {
 
 	private String nickname;
 
-	private LocalDateTime createdDate;
+	private String createdDate;
 
 	private String content;
 
@@ -42,7 +43,7 @@ public class FindTradeDto {
 		this.categoryName = categoryName;
 		this.tradeTitle = tradeTitle;
 		this.nickname = nickname;
-		this.createdDate = createdDate;
+		this.createdDate = DateParser.dateToString(createdDate);
 	}
 
 	@Builder
@@ -56,7 +57,7 @@ public class FindTradeDto {
 		this.categoryName = categoryName;
 		this.tradeTitle = tradeTitle;
 		this.nickname = nickname;
-		this.createdDate = createdDate;
+		this.createdDate = DateParser.dateTimeToString(createdDate);
 		this.content = content;
 		this.imagePath = imagePath;
 	}
