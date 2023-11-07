@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,17 +59,15 @@ public class TradeController {
 		return ResponseEntity.created(uri).build();
 	}
 
-	@ResponseBody
 	@GetMapping("/images/{imageName}")
 	public ResponseEntity<UrlResource> showImage(@PathVariable String imageName) {
-
 		try {
 			Path file = rootLocation.resolve(imageName);
 			UrlResource resource = new UrlResource(file.toUri());
 			return ResponseEntity.ok().body(resource);
 
 		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException("잘못된 형식의 URL 입니다");
 		}
 	}
 }
