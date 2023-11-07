@@ -30,6 +30,10 @@
     }
 
     function fn_setEvent() {
+        $('#infoPageButton').click(function (e) {
+            e.preventDefault();
+            authorize('/faq/faqInfo.html?faqId=' + param.faqId);
+        });
         $('#faqUpdateButton').click(function (e) {
             e.preventDefault();
             if ("" == $('#faqTitle').val()) {
@@ -65,6 +69,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
             <li class="breadcrumb-item "><a onclick="authorize('/faq/faqList.html')">자주묻는질문</a></li>
+            <li class="breadcrumb-item "><a id="infoPageButton">상세조회</a></li>
             <li class="breadcrumb-item active">수정</li>
         </ol>
     </nav>
