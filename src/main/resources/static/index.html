@@ -32,6 +32,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var param = {};
+        $(document).ready(function () {
+            $('main[content="container"]').empty();
+            loadHtmlAndExecuteScript("/main.html", param);
+        });
 
         function authorize(url) {
             param = {};
@@ -72,17 +76,24 @@
         }
 
         function loadHtmlAndExecuteScript(url, param) {
-            var jsonHeader = {
-                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-            };
-            if (jsonHeader.Authorization == null) {
-                alert("인증 정보가 없습니다.");
-                return;
+            const allowedUrls = [
+                "/main.html"
+            ];
+
+            var header = {};
+            if (!allowedUrls.includes(url)) {
+                header = {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                }
+                if (header.Authorization == null) {
+                    alert("인증 정보가 없습니다.");
+                    return;
+                }
             }
             $.ajax({
                 url: url,
                 dataType: 'html',
-                headers: jsonHeader,
+                headers: header,
                 success: function (data) {
                     // 가져온 HTML 파일을 현재 페이지에 추가
                     $('main[content="container"]').html(data);
@@ -136,32 +147,6 @@
 
 <main id="main" class="main" content="container">
 
-    <div class="pagetitle">
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
-                <li class="breadcrumb-item active">서비스 소개</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
-
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-12">
-
-                <div class="card">
-                    <div class="card-body">
-                        <!-- 여기에 본문 입력 -->
-                        <div class="mb-3"></div>
-                        <p>지역기반 물물교환 플랫폼 - 아나바다!</p>
-                        <p>우리 동네 주민과 물건을 나누고 바꿔보세요.</p>
-                        <a onclick="authorize('/member/memberList.html')">회원목록</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
 
 </main><!-- End #main -->
 

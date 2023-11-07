@@ -1,0 +1,59 @@
+<div class="pagetitle">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
+            <li class="breadcrumb-item active">서비스 소개</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <!-- 여기에 본문 입력 -->
+                    <div class="mb-3"></div>
+                    <p>🌳 지역기반 물물교환 플랫폼 🌳 아나바다 !</p>
+                    <p>🌈 지금! 우리 동네 주민들과 물건을 나누고 바꿔보세요 😀</p>
+                    <a onclick="authorize('/member/memberList.html')">회원목록</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        fn_init();
+    });
+
+    function fn_init() {
+        if (null != localStorage.getItem("accessToken")) {
+            fn_getTradeInfo();
+        }
+    }
+
+    function fn_getTradeInfo() {
+        var latitude, longitude;
+        navigator.geolocation.getCurrentPosition(function (position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+
+            $.ajax({
+                url: '/api/v1/findLocation?x='+latitude+'&y='+longitude,
+                method: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success : function (data) {
+                    console.log(data);
+                    localStorage.setItem("accessAddress", JSON.stringify(data));
+                    $("#accessAddress").text("🌵 "+data.state+" "+data.city+" "+data.address1+" 🌵");
+                }
+            });
+        })
+    }
+</script>

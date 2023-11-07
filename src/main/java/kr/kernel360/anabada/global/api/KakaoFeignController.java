@@ -5,13 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.place.dto.PlaceResponse;
-import kr.kernel360.anabada.domain.place.dto.PlaceSearch;
 import kr.kernel360.anabada.global.client.KakaoFeignClient;
 import kr.kernel360.anabada.global.dto.KakaoPlaceResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +24,14 @@ public class KakaoFeignController {
 
 	private final KakaoFeignClient kakaoFeignClient;
 
-	@GetMapping("/places/result")
-	public ResponseEntity<PlaceDto> findPlaceByCoordinates(@RequestBody PlaceSearch placeSearch) {
+	@GetMapping("/findLocation")
+	public ResponseEntity<PlaceDto> findPlaceByCoordinates(@RequestParam("x") double x, @RequestParam("y") double y) {
 		String inputCoordinateType = "";
 		String outputCoordinateType = "";
 
 		KakaoPlaceResponse kakaoPlaceResponse = kakaoFeignClient
 			.findPlaceByCoordinates("KakaoAK " + apiKey
-				, placeSearch.getX(), placeSearch.getY()
+				,String.valueOf(y) , String.valueOf(x)
 				, inputCoordinateType, outputCoordinateType);
 
 		List<PlaceResponse> places = kakaoPlaceResponse.getDocuments();

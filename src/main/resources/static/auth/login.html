@@ -41,8 +41,8 @@
         }
 
         function fn_setEvent() {
-            $('#loginButton').click(function () {
-                event.preventDefault();
+            $('#loginButton').click(function (e) {
+                e.preventDefault();
                 $(".invalid-feedback").hide();
                 if ("" == $("#email").val()) {
                     $("#email-feedback").show();
@@ -56,15 +56,6 @@
                     "email": $("#email").val(),
                     "password": $("#password").val()
                 }
-                var latitude, longitude;
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                })
-                var placeParam = {
-                    "x" : latitude + "",
-                    "y" : longitude + ""
-                }
                 $.ajax({
                     url: '/api/v1/auth/authenticate',
                     method: 'POST',
@@ -72,20 +63,7 @@
                     contentType: 'application/json',
                     success: function (data) {
                         localStorage.setItem("accessToken", data.tokenResponse.accessToken);
-                        $.ajax({
-                            url: '/api/v1/places/result/',
-                            method: 'GET',
-                            data: placeParam,
-                            dataType: 'json',
-                            headers: {
-                                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-                            },
-                            success : function (data) {
-                                console.log(data);
-                                localStorage.setItem("address", data.address1);
-                            }
-                        })
-                        window.location.href = "/"
+                        window.location.href = "/";
                     },
                     error: function () {
                         alert("로그인 정보를 확인하세요.")
