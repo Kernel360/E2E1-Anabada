@@ -1,7 +1,11 @@
 package kr.kernel360.anabada.domain.trade.api;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class TradeController {
 	private final TradeService tradeService;
 	private final FileHandler fileHandler;
+	private final Path rootLocation = Paths.get("src/main/resources/static/images");
 
 	@GetMapping("/v1/trades")
 	public ResponseEntity<FindAllTradeResponse> findAll() {
@@ -53,4 +59,20 @@ public class TradeController {
 		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 		return ResponseEntity.created(uri).build();
 	}
+
+	@ResponseBody
+	@GetMapping("/images/{imageName}")
+	public ResponseEntity<UrlResource> showImage(@PathVariable String imageName) {
+
+		try {
+			Path file = rootLocation.resolve(imageName);
+			UrlResource resource = new UrlResource(file.toUri());
+			return ResponseEntity.ok().body(resource);
+
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
+
+

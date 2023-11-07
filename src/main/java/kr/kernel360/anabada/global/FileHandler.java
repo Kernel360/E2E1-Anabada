@@ -15,22 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 public class FileHandler {
 	public String parseFileInfo(MultipartFile multipartFile) {
 
-		// jpeg, png 파일들만 받아서 처리할 예정
 		String contentType = multipartFile.getContentType();
-		if (!(contentType.contains("image/jpg") || contentType.contains("image/jpeg") || contentType.contains("image/png"))) {
+		if (!(contentType.contains("image/jpeg") || contentType.contains("image/png"))) {
 			return null;
 		}
-
-		// String imageName = System.nanoTime()+"_"+multipartFile.getOriginalFilename();
 		String imageName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH24mmss")) + "_" + multipartFile.getOriginalFilename();
-
-		// 경로를 지정하고 그곳에다가 저장
-
-		String imagePath = "images/";
+		String imagePath = "src/main/resources/static/images";
 		File file = new File(imagePath, imageName).getAbsoluteFile();
 
-
-		// 저장된 파일로 변경하여 이를 보여주기 위함
 		try {
 			multipartFile.transferTo(file);
 		} catch (IOException e) {
