@@ -38,7 +38,7 @@ public class Trade extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "title", columnDefinition = "varchar(40)")
+	@Column(nullable = false, name = "title", columnDefinition = "varchar(255)")
 	private String title;
 
 	@Column(nullable = false, name = "content", columnDefinition = "text")
@@ -48,7 +48,7 @@ public class Trade extends BaseEntity {
 	@Column(nullable = false, name = "trade_type", columnDefinition = "varchar(40)")
 	private TradeType tradeType;
 
-	@Column(name = "image_path", columnDefinition = "varchar(250)")
+	@Column(name = "image_path", columnDefinition = "varchar(255)")
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)

@@ -66,6 +66,14 @@
                 alert("제목은 필수입니다.");
                 return;
             }
+            if (90 >= $('#faqTitle').val().length) {
+                alert("제목을 90자 이하로 입력해주세요.");
+                return;
+            }
+            if (16370 >= $('#faqContent').val().length) {
+                alert("내용은 16370자 이하로 입력해주세요.");
+                return;
+            }
             var param = {
                 "title": $('#faqTitle').val(),
                 "content": $('#faqContent').val(),

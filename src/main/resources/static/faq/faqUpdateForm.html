@@ -30,10 +30,22 @@
     }
 
     function fn_setEvent() {
+        $('#infoPageButton').click(function (e) {
+            e.preventDefault();
+            authorize('/faq/faqInfo.html?faqId=' + param.faqId);
+        });
         $('#faqUpdateButton').click(function (e) {
             e.preventDefault();
             if ("" == $('#faqTitle').val()) {
                 alert("제목은 필수입니다.");
+                return;
+            }
+            if (90 < $('#faqTitle').val().length) {
+                alert("제목을 90자 이하로 입력해주세요.");
+                return;
+            }
+            if (16370 < $('#faqContent').val().length) {
+                alert("내용은 16370자 이하로 입력해주세요.");
                 return;
             }
             var formData = {
@@ -65,6 +77,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
             <li class="breadcrumb-item "><a onclick="authorize('/faq/faqList.html')">자주묻는질문</a></li>
+            <li class="breadcrumb-item "><a id="infoPageButton">상세조회</a></li>
             <li class="breadcrumb-item active">수정</li>
         </ol>
     </nav>

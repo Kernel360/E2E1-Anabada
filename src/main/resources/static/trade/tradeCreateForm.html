@@ -138,6 +138,14 @@
                 alert("받을 물건은 필수 입니다.");
                 return;
             }
+            if (230 < $('#title').val().length) {
+                alert("받을 물건명 길이와 나눌 물건명 길이의 합이 230자 이하이도록 입력해주세요.");
+                return;
+            }
+            if (16370 < $('#content').val().length) {
+                alert("내용은 16370자 이하로 입력해주세요.");
+                return;
+            }
             fn_saveTradeInfo();
         });
     }

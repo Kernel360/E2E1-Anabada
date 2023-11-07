@@ -15,7 +15,8 @@ public interface FaqRepository extends JpaRepository<Faq,Long> {
 	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
 		+ "f.id, f.title, m.nickname, f.createdDate) "
 		+ "   from Faq f "
-		+ "  inner join f.member m")
+		+ "  inner join f.member m"
+		+ "  order by f.createdDate desc")
 	List<FindFaqDto> findFaqs();
 
 	@Query("select new kr.kernel360.anabada.domain.faq.dto.FindFaqDto("
