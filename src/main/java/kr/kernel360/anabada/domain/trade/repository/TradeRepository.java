@@ -15,7 +15,8 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
 		+ "t.id, t.tradeType, c.name, t.title, m.nickname, t.createdDate) "
 		+ "   from Trade t"
 		+ "   left outer join t.category c"
-		+ "   left outer join t.member m")
+		+ "   left outer join t.member m"
+		+ "   order by t.createdDate desc")
 	List<FindTradeDto> findTrades();
 
 	@Query("select new kr.kernel360.anabada.domain.trade.dto.FindTradeDto("
