@@ -38,7 +38,7 @@ public class Trade extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, name = "title", columnDefinition = "varchar(40)")
+	@Column(nullable = false, name = "title", columnDefinition = "varchar(255)")
 	private String title;
 
 	@Column(nullable = false, name = "content", columnDefinition = "text")

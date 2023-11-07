@@ -19,6 +19,7 @@
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">카테고리</th>
+                            <th scope="col"> </th>
                         </tr>
                         </thead>
                         <tbody id="categoryList">
@@ -61,7 +62,10 @@
                 alert("등록할 카테고리명을 입력해주세요.");
                 return;
             }
-
+            if (40 < $('#categoryName').val().length) {
+                alert("카테고리명을 40자 이하로 입력해주세요.");
+                return;
+            }
             var param = {
                 "name": $('#categoryName').val(),
             }
