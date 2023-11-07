@@ -16,6 +16,14 @@
 .table-list {
   cursor: pointer;
 }
+
+.required-star {
+  color: red !important;
+  margin-left: 5px;
+  font-size: 16px;
+  font-weight: bolder;
+}
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/

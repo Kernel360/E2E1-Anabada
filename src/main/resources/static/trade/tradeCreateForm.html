@@ -28,13 +28,13 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="shareItem" class="col-sm-2 col-form-label">나눌물건</label>
+                            <label for="shareItem" class="col-sm-2 col-form-label">나눌물건<span class="required-star">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="shareItem" name="shareItem" required>
                             </div>
                         </div>
                         <div id="receiveItemField" class="row mb-3" style="display: none">
-                            <label for="receiveItem" class="col-sm-2 col-form-label">받을물건</label>
+                            <label for="receiveItem" class="col-sm-2 col-form-label">받을물건<span class="required-star">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="receiveItem" name="receiveItem">
                             </div>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="tradeType" class="col-sm-2 col-form-label">거래 유형</label>
+                            <label for="tradeType" class="col-sm-2 col-form-label">거래 유형<span class="required-star">*</span></label>
                             <div class="col-sm-10">
                                 <select id="tradeType" name="tradeType" class="form-select"
                                         aria-label="Default select example">
@@ -128,8 +128,16 @@
         });
 
         // "교환 등록" 버튼 클릭 이벤트 핸들러
-        $('#tradeCreateButton').click(function () {
-            event.preventDefault();
+        $('#tradeCreateButton').click(function (e) {
+            e.preventDefault();
+            if ("" == $('#shareItem').val()) {
+                alert("나눌 물건은 필수 입니다.");
+                return;
+            }
+            if ('TRADE' == $('#tradeType').val() && "" == $('#receiveItem').val()) {
+                alert("받을 물건은 필수 입니다.");
+                return;
+            }
             fn_saveTradeInfo();
         });
     }
