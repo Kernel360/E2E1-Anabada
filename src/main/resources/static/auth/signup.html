@@ -73,7 +73,7 @@
                     "nickname": $("#nickname").val(),
                     "password": $("#password").val(),
                     "birth"   : $("#birth").val(),
-                    "gender"  : $("[name='gender']").val()
+                    "gender"  : $("input[name='gender']:checked").val()
                 }
                 $.ajax({
                     url: '/api/v1/auth/signUp',
@@ -218,7 +218,7 @@
                                         <div class="input-group has-validation">
                                             <span class="input-group-text"><i class="bi bi-check-lg"></i></span>
                                             <div class="form-control">
-                                                <input class="form-check-input" type="radio" name="gender" id="male" value="M" checked
+                                                <input class="form-check-input" type="radio" name="gender" id="male" value="M"
                                                        style="margin: 5px 10px 0px 10px;">
                                                 <label for="male">남자</label>
 
