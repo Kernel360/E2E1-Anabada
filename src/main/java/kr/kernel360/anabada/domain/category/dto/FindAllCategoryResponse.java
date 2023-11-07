@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllCategoryResponse {
-	List<FindCategoryResponse> responses;
+	List<FindCategoryResponse> categories;
 
-	public static FindAllCategoryResponse of(List<FindCategoryResponse> responses) {
+	public static FindAllCategoryResponse of(List<FindCategoryResponse> categories) {
 		return FindAllCategoryResponse.builder()
-			.responses(responses)
+			.categories(categories)
 			.build();
 	}
 }

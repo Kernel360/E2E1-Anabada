@@ -48,7 +48,7 @@ public class Trade extends BaseEntity {
 	@Column(nullable = false, name = "trade_type", columnDefinition = "varchar(40)")
 	private TradeType tradeType;
 
-	@Column(name = "image_path", columnDefinition = "varchar(200)")
+	@Column(name = "image_path", columnDefinition = "varchar(250)")
 	private String imagePath;
 
 	@Enumerated(EnumType.STRING)
