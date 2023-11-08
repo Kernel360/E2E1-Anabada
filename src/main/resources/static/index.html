@@ -76,6 +76,9 @@
         }
 
         function loadHtmlAndExecuteScript(url, param) {
+            // 단순 페이지 간 파라미터를 전송할 목적인 경우가 있어서 ? 이전으로 삭제함.
+            if (url.includes('?'))
+                url = url.substring(0, url.indexOf('?'));
             const allowedUrls = [
                 "/main.html"
             ];
