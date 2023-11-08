@@ -11,7 +11,6 @@
 <section class="section">
     <div class="row">
         <div class="col-lg-12">
-
             <div class="card">
                 <div class="card-body">
 
@@ -108,7 +107,6 @@
                 var $image = $('<img style="max-width: 400px; max-height: 400px;">');
 
                 if (data.imagePath) {
-
                     $image.attr('src', '/api'+ data.imagePath);
                     $image.attr('alt', '이미지');
                     $('#tradeImage').append($image);
@@ -116,6 +114,8 @@
                     $('#tradeImage').append("", $('#image').val())
                 }
 
+                param.nickname = data.nickname;
+                param.tradeTitle = data.tradeTitle;
             },
             error: function () {
                 console.log('fail : trade 상세 조회');
@@ -125,8 +125,9 @@
 
     function fn_setEvent() {
         // "거래 요청" 버튼을 초기화
-        $('#tradeRequestButton').click(function () {
-            authorize('/trade/tradeRequestForm.html');
+        $('#tradeRequestButton').click(function (e) {
+            e.preventDefault();
+            authorize('/trade/tradeRequestForm.html?tradeNo='+param.tradeNo+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
         });
     }
 </script>
