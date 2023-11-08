@@ -14,8 +14,6 @@ public class CreateFaqRequest {
 
 	private String content;
 
-	private Long memberId;
-
 	public static Faq toEntity(CreateFaqRequest createFaqRequest, Member member) {
 		return Faq.builder()
 			.title(createFaqRequest.title)

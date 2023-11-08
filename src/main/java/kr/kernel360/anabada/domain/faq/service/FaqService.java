@@ -1,15 +1,15 @@
 package kr.kernel360.anabada.domain.faq.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqRequest;
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqResponse;
-import kr.kernel360.anabada.domain.faq.dto.FindFaqDto;
 import kr.kernel360.anabada.domain.faq.dto.FindAllFaqResponse;
+import kr.kernel360.anabada.domain.faq.dto.FindFaqDto;
 import kr.kernel360.anabada.domain.faq.dto.FindFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.UpdateFaqRequest;
 import kr.kernel360.anabada.domain.faq.dto.UpdateFaqResponse;
@@ -30,7 +30,8 @@ public class FaqService {
 
 	@Transactional
 	public CreateFaqResponse create(CreateFaqRequest createFaqRequest) {
-		Member member = memberRepository.findById(createFaqRequest.getMemberId())
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Faq faq = faqRepository.save(createFaqRequest.toEntity(createFaqRequest, member));
