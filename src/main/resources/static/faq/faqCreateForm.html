@@ -32,17 +32,6 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="memberId" class="col-sm-2 col-form-label">로그인하고 있는 회원 ID(임시)</label>
-                            <div class="col-sm-10">
-                                <select id="memberId" name="memberId" class="form-select"
-                                        aria-label="Default select example">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col-sm-10">
                                 <button id="faqCreateButton" class="btn btn-primary">저장</button>
                             </div>
@@ -66,18 +55,17 @@
                 alert("제목은 필수입니다.");
                 return;
             }
-            if (90 >= $('#faqTitle').val().length) {
+            if (90 < $('#faqTitle').val().length) {
                 alert("제목을 90자 이하로 입력해주세요.");
                 return;
             }
-            if (16370 >= $('#faqContent').val().length) {
+            if (16370 < $('#faqContent').val().length) {
                 alert("내용은 16370자 이하로 입력해주세요.");
                 return;
             }
             var param = {
                 "title": $('#faqTitle').val(),
-                "content": $('#faqContent').val(),
-                "memberId": $('#memberId').val()
+                "content": $('#faqContent').val()
             };
 
             // FAQ 생성 요청 보내기
