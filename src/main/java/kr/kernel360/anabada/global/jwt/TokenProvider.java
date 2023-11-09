@@ -7,18 +7,25 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletRequest;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,10 +38,13 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import kr.kernel360.anabada.domain.auth.dto.TokenResponse;
+import kr.kernel360.anabada.domain.auth.entity.RefreshToken;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
 	private Key key;
 	private final String AUTHORITIES_KEY = "auth";
@@ -42,6 +52,9 @@ public class TokenProvider implements InitializingBean {
 	private String secret;
 	@Value("${spring.security.jwt.access-token-validity-in-seconds}")
 	private long accessTokenValidityInSeconds;
+	@Value("${spring.security.jwt.refresh-token-validity-in-seconds}")
+	private long refreshTokenValidityInSeconds;
+	private final RedisTemplate<Object, Object> redisTemplate;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -55,9 +68,11 @@ public class TokenProvider implements InitializingBean {
 			.collect(Collectors.joining(","));
 		return TokenResponse.builder()
 			.accessToken(createAccessToken(authentication.getName(), authorities))
+			.refreshToken(createRefreshToken(authentication.getName()))
 			.build();
 	}
 
+	/** Access Token 발급 **/
 	public String createAccessToken(String sub, String roles) {
 		LocalDateTime localDateTime = LocalDateTime.now()
 			.plusSeconds(accessTokenValidityInSeconds);
@@ -70,6 +85,39 @@ public class TokenProvider implements InitializingBean {
 			.signWith(key, SignatureAlgorithm.HS512)
 			.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
 			.compact();
+	}
+
+	/** Refresh Token 발급 **/
+	public String createRefreshToken(String sub) {
+		LocalDateTime expirationDate = LocalDateTime.now()
+			.plusSeconds(refreshTokenValidityInSeconds);
+
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+
+		RefreshToken refreshToken = RefreshToken.builder()
+			.refreshToken(uuid)
+			.createdDate(LocalDateTime.now())
+			.expirationDate(expirationDate)
+			.email(sub)
+			.build();
+
+		String refreshTokenJson = toJsonString(refreshToken);
+		redisTemplate.opsForValue().set("refreshToken:" + refreshToken.getRefreshToken(), refreshTokenJson);
+
+		return uuid;
+	}
+
+	private String toJsonString(RefreshToken refreshToken) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+			String refreshTokenJson = mapper.writeValueAsString(refreshToken);
+			return refreshTokenJson;
+		} catch (JsonProcessingException exception) {
+			exception.printStackTrace();
+			throw new IllegalArgumentException("JsonProcessingException 발생");
+		}
 	}
 
 	/** 인증 정보 조회 **/
