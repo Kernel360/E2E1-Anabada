@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.comment.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,8 @@ public class CommentService {
 
 	@Transactional
 	public Long create(CreateCommentRequest createCommentRequest, Long tradeId) {
-		Member member = memberRepository.findById(createCommentRequest.getMemberId())
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 		Trade trade = findTrade(tradeId);
 		Comment savedComment = commentRepository.save(CreateCommentRequest.toEntity(createCommentRequest, member, trade));

@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.tradeoffer.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +47,10 @@ public class TradeOfferService {
 	}
 
 	@Transactional
-	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long memberId, Long tradeId) {
-		Member member = findMemberById(memberId);
+	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long tradeId) {
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Trade trade = findTradeById(tradeId);
 

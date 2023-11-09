@@ -62,7 +62,7 @@ public class TradeOfferController {
 			createTradeOfferRequest.setImagePath(imagePath);
 		}
 
-		Long id = tradeOfferService.create(createTradeOfferRequest, createTradeOfferRequest.getTradeId(), createTradeOfferRequest.getMemberId());
+		Long id = tradeOfferService.create(createTradeOfferRequest, createTradeOfferRequest.getTradeId());
 		URI url = URI.create("api/v1/trades/trade_offers/" + id);
 		return ResponseEntity.created(url).body(id);
 	}
