@@ -2,7 +2,6 @@ package kr.kernel360.anabada.domain.auth.dto;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -18,9 +17,9 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
 	private String email;
 	private List<String> roles;
-	private TokenResponse tokenResponse;
+	private TokenDto tokenDto;
 
-	public static LoginResponse of(String email, Collection<? extends GrantedAuthority> authorities, TokenResponse tokenResponse) {
+	public static LoginResponse of(String email, Collection<? extends GrantedAuthority> authorities, TokenDto tokenDto) {
 		List<String> roles = authorities.stream()
 			.map(String::valueOf)
 			.toList();
@@ -28,7 +27,7 @@ public class LoginResponse {
 		return LoginResponse.builder()
 			.email(email)
 			.roles(roles)
-			.tokenResponse(tokenResponse)
+			.tokenDto(tokenDto)
 			.build();
 	}
 }

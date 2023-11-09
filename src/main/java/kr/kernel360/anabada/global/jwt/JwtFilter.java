@@ -26,7 +26,7 @@ public class JwtFilter extends GenericFilterBean {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String jwt = resolveToken(httpServletRequest);
 
-		if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt, request)) {
+		if (StringUtils.hasText(jwt) && tokenProvider.validateAccessToken(jwt, request)) {
 			Authentication authentication = tokenProvider.getAuthentication(jwt);
 			// Security Context에 인증정보 저장
 			SecurityContextHolder.getContext().setAuthentication(authentication);
