@@ -19,6 +19,10 @@ spring:
         #        show-sql: true
         format_sql: true
 
+  redis:
+    host: localhost
+    port: 6379
+
   security:
     jwt:
       header: Authorization
