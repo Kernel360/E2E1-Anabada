@@ -108,7 +108,7 @@
                     success: function (data) {
                     },
                     error: function () {
-                        $("#email-feedback").text("사용할 수 없는 이메일 입니다.");
+                        $("#email-feedback").text("이미 존재하는 이메일 입니다.");
                         $("#email-feedback").show();
                         $("#email").val("");
                     }
@@ -233,8 +233,7 @@
                                         <label for="birth" class="form-label">생년월일</label>
                                         <div class="input-group has-validation">
                                             <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
-                                            <input id="birth" type="date" name="birth" class="form-control" id="birth"
-                                                   required>
+                                            <input id="birth" type="date" name="birth" class="form-control" required>
                                             <div id="birth-feedback" class="invalid-feedback">생년월일을 입력하세요</div>
                                         </div>
                                     </div>
