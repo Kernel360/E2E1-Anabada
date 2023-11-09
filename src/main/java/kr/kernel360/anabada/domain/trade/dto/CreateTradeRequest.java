@@ -31,8 +31,6 @@ public class CreateTradeRequest {
 
 	private Long categoryId;
 
-	private Long memberId;
-
 	public static Trade toEntity(CreateTradeRequest createTradeRequest, Category category, Member member) {
 		return Trade.builder()
 			.title(createTradeRequest.title)

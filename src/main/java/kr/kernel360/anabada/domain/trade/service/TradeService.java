@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.trade.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,10 @@ public class TradeService {
 
 	@Transactional
 	public Long create(CreateTradeRequest createTradeRequest) {
-		Member member = findMemberById(createTradeRequest.getMemberId());
+
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 카테고리가 없습니다."));
@@ -52,8 +56,4 @@ public class TradeService {
 		return savedTrade.getId();
 	}
 
-	private Member findMemberById(Long memberId) {
-		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
-	}
 }
