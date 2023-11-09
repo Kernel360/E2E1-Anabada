@@ -207,7 +207,6 @@
         formData.append('imageFile', $('#imageFile')[0].files[0]);
         formData.append("tradeType", $('#tradeType').val());
         formData.append("categoryId", $('#categoryId').val());
-        formData.append("memberId", $('#memberId').val());
 
         for(var pair of formData.entries()){
             console.log(pair[0], pair[1]);

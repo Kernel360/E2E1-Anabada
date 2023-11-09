@@ -27,8 +27,6 @@ public class CreateTradeOfferRequest {
 
 	private final DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
-	private Long memberId;
-
 	private Long tradeId;
 
 	public static TradeOffer toEntity(CreateTradeOfferRequest createTradeOfferRequest, Member member, Trade trade) {
