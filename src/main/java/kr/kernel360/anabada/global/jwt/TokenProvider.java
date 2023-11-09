@@ -37,7 +37,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
-import kr.kernel360.anabada.domain.auth.dto.TokenResponse;
+import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.entity.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class TokenProvider implements InitializingBean {
 	private long accessTokenValidityInSeconds;
 	@Value("${spring.security.jwt.refresh-token-validity-in-seconds}")
 	private long refreshTokenValidityInSeconds;
-	private final RedisTemplate<Object, Object> redisTemplate;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -62,11 +62,11 @@ public class TokenProvider implements InitializingBean {
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	public TokenResponse createToken(Authentication authentication) {
+	public TokenDto createToken(Authentication authentication) {
 		String authorities = authentication.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
-		return TokenResponse.builder()
+		return TokenDto.builder()
 			.accessToken(createAccessToken(authentication.getName(), authorities))
 			.refreshToken(createRefreshToken(authentication.getName()))
 			.build();
@@ -120,13 +120,21 @@ public class TokenProvider implements InitializingBean {
 		}
 	}
 
+	private RefreshToken toRefreshToken(String refreshTokenToString) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+			return mapper.readValue(refreshTokenToString, RefreshToken.class);
+		} catch (JsonProcessingException exception) {
+			exception.printStackTrace();
+			throw new IllegalArgumentException("JsonProcessingException 발생");
+		}
+	}
+
 	/** 인증 정보 조회 **/
 	public Authentication getAuthentication(String token) {
-		Claims claims = Jwts.parserBuilder()
-			.setSigningKey(key)
-			.build()
-			.parseClaimsJws(token)
-			.getBody();
+		Claims claims = parseClaims(token);
 
 		List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
 			.map(SimpleGrantedAuthority::new)
@@ -137,8 +145,21 @@ public class TokenProvider implements InitializingBean {
 		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 
-	/** 토큰 유효성 검증을 수행 **/
-	public boolean validateToken(String token, ServletRequest request) {
+	public Claims parseClaims(String token) {
+		try {
+			Claims claims = Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
+			return claims;
+		} catch (ExpiredJwtException ex) {
+			return ex.getClaims();
+		}
+	}
+
+	/** Access Token 유효성 검증을 수행 **/
+	public boolean validateAccessToken(String token, ServletRequest request) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
@@ -156,4 +177,44 @@ public class TokenProvider implements InitializingBean {
 			throw new IllegalArgumentException("잘못된 JWT 토큰입니다"); // todo : 추후 Exception 변경
 		}
 	}
+
+	/** Refresh Token 재발급 **/
+	public TokenDto reissueToken(TokenDto tokenDto) {
+		Claims claims = parseClaims(tokenDto.getAccessToken());
+		String findEmailByAccessToken = parseClaims(tokenDto.getAccessToken()).getSubject();
+		String refreshTokenToString = redisTemplate.opsForValue().get("refreshToken:" + tokenDto.getRefreshToken());
+
+		RefreshToken refreshToken = toRefreshToken(refreshTokenToString);
+		validateReissueToken(refreshToken, findEmailByAccessToken);
+
+		return TokenDto.builder()
+			.accessToken(createAccessToken(refreshToken.getEmail(), claims.get("auth").toString()))
+			.refreshToken(tokenDto.getRefreshToken()) // todo : 리플래시토큰 재발급할지 고민
+			.build();
+	}
+
+	/** Refresh Token 유효성 검증을 수행 **/
+	private void validateReissueToken(RefreshToken refreshToken, String accessTokenEmail) {
+		validateRefreshTokenExpirationDate(refreshToken.getExpirationDate(), refreshToken.getRefreshToken());
+		validateAccessTokenEmailByRefreshTokenEmail(accessTokenEmail, refreshToken.getEmail());
+	}
+
+	private void validateRefreshTokenExpirationDate(LocalDateTime expirationDate, String refreshToken) {
+		if (!expirationDate.isAfter(LocalDateTime.now())) {
+			removeRedisRefreshToken(refreshToken);
+			throw new IllegalArgumentException("만료일자가 지난 refreshToken");
+		}
+	}
+
+	private void removeRedisRefreshToken(String refreshToken) {
+		redisTemplate.opsForValue().getOperations().delete("refreshToken:" + refreshToken);
+	}
+
+	private void validateAccessTokenEmailByRefreshTokenEmail(String accessTokenEmail, String refreshTokenEmail) {
+		if (!accessTokenEmail.equals(refreshTokenEmail)) {
+			throw new IllegalArgumentException("해당 refreshToken의 accessToken이 아님");
+		}
+	}
+
+
 }

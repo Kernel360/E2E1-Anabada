@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
 import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
 import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
+import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
@@ -50,5 +51,11 @@ public class AuthController {
 		Long savedMemberId = authService.signUp(signUpRequest);
 		URI uri =  URI.create("/api//v1/auth/signUp"+savedMemberId);
 		return ResponseEntity.created(uri).build();
+	}
+
+	@PostMapping("/v1/auth/reissue")
+	public ResponseEntity<TokenDto> reissueAccessToken(@RequestBody TokenDto requestTokenDto) {
+		TokenDto responseTokenDto = authService.reissueAccessToken(requestTokenDto);
+		return ResponseEntity.ok().body(responseTokenDto);
 	}
 }
