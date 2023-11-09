@@ -48,6 +48,7 @@ public class SecurityConfig {
 				"/api/v1/auth/isNicknameUnique",
 				"/api/v1/auth/authenticate",
 				"/api/v1/auth/signUp",
+				"/api/v1/auth/reissue",
 				"/images/**",
 				"/api/images/**"
 			).permitAll()
