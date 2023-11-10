@@ -37,6 +37,12 @@ public class CategoryController {
 		return ResponseEntity.ok(findAllCategoryResponse);
 	}
 
+	@GetMapping("/v1/categories/active")
+	public ResponseEntity<FindAllCategoryResponse> findAllByDeletedStatusFalse(){
+		FindAllCategoryResponse findAllCategoryResponse = categoryService.findByDeletedStatusFalse();
+		return ResponseEntity.ok(findAllCategoryResponse);
+	}
+
 	@GetMapping("/v1/categories/{id}")
 	public ResponseEntity<FindCategoryResponse> find(@PathVariable Long id) {
 		FindCategoryResponse findCategoryResponse = categoryService.find(id);

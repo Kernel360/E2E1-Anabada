@@ -38,6 +38,16 @@ public class CategoryService {
 		return FindAllCategoryResponse.of(responses);
 	}
 
+	public FindAllCategoryResponse findByDeletedStatusFalse() {
+		List<Category> categories = categoryRepository.findAll();
+		List<FindCategoryResponse> responses = categories.stream()
+			.filter(c -> c.getDeletedStatus() == DeletedStatus.FALSE)
+			.map(FindCategoryResponse::of)
+			.toList();
+
+		return FindAllCategoryResponse.of(responses);
+	}
+
 	@Transactional
 	public void remove(Long id) {
 		Category category = findCategoryById(id);
