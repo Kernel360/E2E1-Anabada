@@ -16,7 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse {
 	private String email;
+
 	private List<String> roles;
+
 	private TokenDto tokenDto;
 
 	public static LoginResponse of(String email, Collection<? extends GrantedAuthority> authorities, TokenDto tokenDto) {
