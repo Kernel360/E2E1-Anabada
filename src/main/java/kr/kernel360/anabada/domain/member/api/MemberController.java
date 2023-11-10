@@ -14,7 +14,6 @@ import kr.kernel360.anabada.domain.member.dto.FindAllMemberByGenderResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
-import kr.kernel360.anabada.domain.member.dto.UpdateMemberResponse;
 import kr.kernel360.anabada.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,9 +24,8 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PutMapping("/v1/members")
-	public ResponseEntity<UpdateMemberResponse> update(@RequestBody UpdateMemberRequest updateMemberRequest) {
-		UpdateMemberResponse updateMemberResponse = memberService.update(updateMemberRequest);
-		return ResponseEntity.ok(updateMemberResponse);
+	public ResponseEntity update(@RequestBody UpdateMemberRequest updateMemberRequest) {
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/v1/members/{id}")

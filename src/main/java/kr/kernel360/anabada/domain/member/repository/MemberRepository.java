@@ -16,6 +16,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT m.gender, COUNT(m) FROM Member m GROUP BY m.gender")
 	List<Object[]> countMembersByGender();
 
+	//회원이 많아질수록 성능이 떨어집니다. 계산을 매번 쿼리를 날리는 것보다 미리 나이값을 구해놓고 가져오는것도 방법일 듯합니다. 통계 테이블을 따로 관리하는 것도 좋은 방법일것 같아요.
+	// SQL 쿼리가 무거우면 안된다. 인덱스가 많은 경우에서 테이블이 늘어나면 데이터 베이스 용량이 늘어나니까 이런 것도 고려해보면 좋을것 같아요.
+
 	@Query("SELECT " +
 		"CASE " +
 		"  WHEN FUNCTION('DATEDIFF', CURRENT_DATE(), FUNCTION('STR_TO_DATE', CONCAT(SUBSTRING(m.birth, 1, 4), '-12-31'), '%Y-%m-%d'))/365 <= 9 THEN '10대' " +

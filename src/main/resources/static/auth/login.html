@@ -72,6 +72,27 @@
                 });
             });
         }
+
+        function socialSignUp() {
+            $.ajax({
+                url: '/api/v1/auth/socialSignUp',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.ajax({
+                        url: '/api/v1/auth/callback',
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+
+                        },
+                    })
+                },
+                error: function () {
+                    console.log('fail : 소셜 회원 가입 실패');
+                }
+            });
+        }
     </script>
 </head>
 
@@ -128,6 +149,10 @@
 
                                     <div class="col-12">
                                         <p class="small mb-0">계정이 없으신가요? <a href="/auth/signUp.html">회원가입</a></p>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button onclick=socialSignUp()>카카오로 가입하기</button>
                                     </div>
                                 </form>
 

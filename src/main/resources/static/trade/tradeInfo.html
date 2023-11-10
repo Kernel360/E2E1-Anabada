@@ -101,7 +101,7 @@
                 $('#nickname').val(data.nickname);
                 $('#createdDate').val(data.createdDate);
                 $('#content').val(data.content);
-                $('#tradeType').val(data.tradeType);
+                $('#tradeType').val((data.tradeType === "TRADE" ? "바꿔요": (data.tradeType === "REQUEST" ? "받아요" : "드려요")));
                 $('#categoryName').val(data.categoryName);
 
                 var $image = $('<img style="max-width: 400px; max-height: 400px;">');

@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KakaoPlaceResponse {
 	private Meta meta;
+
 	private List<PlaceResponse> documents;
 
 	@Getter
 	@NoArgsConstructor
 	@AllArgsConstructor
-	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Meta {
 		private Long totalCount;
 	}

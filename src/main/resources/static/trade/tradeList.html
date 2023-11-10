@@ -62,7 +62,7 @@
                     var trade = trades[i];
                     var tradeItem = '<tr class="trade-item table-list" data-trade-id="' + trade.tradeId + '">' +
                         '<th scope="row">' + trade.tradeId + '</th>' +
-                        '<td>' + trade.tradeType + '</td>' +
+                        '<td>' + (trade.tradeType === "TRADE" ? "바꿔요": (trade.tradeType === "REQUEST" ? "받아요" : "드려요"))+ '</td>' +
                         '<td>' + trade.categoryName + '</td>' +
                         '<td>' + trade.tradeTitle + '</td>' +
                         '<td>' + trade.nickname + '</td>' +
