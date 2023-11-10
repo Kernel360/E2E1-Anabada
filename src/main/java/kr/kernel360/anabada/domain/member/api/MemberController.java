@@ -1,5 +1,7 @@
 package kr.kernel360.anabada.domain.member.api;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +26,16 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PutMapping("/v1/members")
-	public ResponseEntity update(@RequestBody UpdateMemberRequest updateMemberRequest) {
-		memberService.update(updateMemberRequest);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Long> update(@RequestBody UpdateMemberRequest updateMemberRequest) {
+		return ResponseEntity.ok(memberService.update(updateMemberRequest));
 	}
 
-	@GetMapping("/v1/memberInfo")
+	@PutMapping("/v1/members/password")
+	public ResponseEntity<Long> updatePassword(@RequestBody Map<String,String> password) {
+		return ResponseEntity.ok(memberService.updatePassword(password.get("password")));
+	}
+
+	@GetMapping("/v1/members/info")
 	public ResponseEntity<FindMemberResponse> find() {
 		FindMemberResponse findMemberResponse = memberService.find();
 		return ResponseEntity.ok(findMemberResponse);
@@ -55,7 +61,6 @@ public class MemberController {
 
 	@DeleteMapping("/v1/members/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
-		memberService.remove(id);
-		return ResponseEntity.ok(id);
+		return ResponseEntity.ok(memberService.remove(id));
 	}
 }

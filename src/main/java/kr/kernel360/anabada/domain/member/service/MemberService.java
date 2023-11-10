@@ -23,16 +23,21 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 	@Transactional
-	public void update(UpdateMemberRequest updateMemberRequest) {
-		if (updateMemberRequest.getPassword() != null) {
-			updateMemberRequest.setPassword(passwordEncoder.encode(updateMemberRequest.getPassword()));
-		}
-
+	public Long update(UpdateMemberRequest updateMemberRequest) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
 		Member member = findByEmail(findEmailByJwt);
 
-		member.update(updateMemberRequest.getPassword(), updateMemberRequest.getGender()
-			, updateMemberRequest.getBirth());
+		member.update(updateMemberRequest.getGender(), updateMemberRequest.getBirth());
+		return member.getId();
+	}
+
+	@Transactional
+	public Long updatePassword(String password) {
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = findByEmail(findEmailByJwt);
+
+		member.updatePassword(passwordEncoder.encode(password));
+		return member.getId();
 	}
 
 	public FindMemberResponse find() {
