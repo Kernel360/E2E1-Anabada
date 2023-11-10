@@ -74,9 +74,12 @@ public class Member extends BaseEntity {
 		this.birth = birth;
 	}
 
-	public void update(String password, String gender, String birth) {
-		this.password = password;
+	public void update(String gender, String birth) {
 		this.gender = gender;
 		this.birth = birth;
+	}
+
+	public void updatePassword(String password) {
+		this.password = password;
 	}
 }

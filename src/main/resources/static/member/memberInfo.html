@@ -7,7 +7,7 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
                         data-bs-target="#bordered-profile" type="button" role="tab"
-                        aria-controls="profile" aria-selected="true" onclick=getMemberInfo()> 개인 정보 수정
+                        aria-controls="profile" aria-selected="true" onclick=getMemberInfo()> 내정보
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -24,31 +24,36 @@
                 </button>
             </li>
         </ul>
-        <div class="tab-content pt-2" id="borderedTabContent">
+        <div class="tab-content pt-3" id="borderedTabContent">
             <div class="tab-pane fade show active" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card mb-3">
                             <div class="card-body">
+                                <h5 class="card-title">내정보</h5>
+                                <div class="col-12">
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="bi bi bi-at"></i></span>
+                                        <input type="text" class="form-control" id="email" readonly>
+                                    </div>
+                                </div>
 
+                                <div class="col-12">
+                                    <label class="form-label" id="myNickname-label"></label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="bi bi bi-person-check-fill"></i></span>
+                                        <input type="text" class="form-control" id="nickname" readonly>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <h5 class="card-title">개인정보 수정</h5>
                                 <!-- General Form Elements -->
                                 <form>
                                     <div class="col-12">
-                                        <div>
-                                            <label for="password" class="col-sm-2 col-form-label"></label>
-                                        </div>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                            <input type="password" name="password" class="form-control" id="password"
-                                                   placeholder="새로운 비밀번호을 입력해 주세요." autocomplete="current-password">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="birth" class="form-label" id="birth-label"></label>
                                         <div class="input-group has-validation">
                                             <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
-                                            <input type="date" name="birth" class="form-control" id="birth">
+                                            <input type="date" name="birth" class="form-control myBirth" id="birth">
                                         </div>
                                     </div>
 
@@ -70,13 +75,24 @@
                                     <br>
                                     <div class="row mb-3" style="float: right; white-space: nowrap">
                                         <div class="col-sm-10">
-                                            <button id="tradeRequestButton" class="btn btn-primary btn-sm"
-                                                    onclick=updateMemberInfo()>수정하기</button>
+                                            <button id="memberInfoUpdateButton" class="btn btn-primary btn-sm"> 수정하기</button>
                                         </div>
                                     </div>
-
                                 </form><!-- End General Form Elements -->
 
+                                <br>
+                                <h5 class="card-title">비밀번호 수정</h5>
+                                <form>
+                                    <div class="col-12">
+                                        <div class="input-group has-validation">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                   placeholder="새로운 비밀번호을 입력해 주세요." autocomplete="current-password">
+                                            <button id="passwordUpdateButton" class="btn btn-primary btn-sm">변경</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <br>
                             </div>
                         </div>
 
@@ -161,17 +177,19 @@
 
     function getMemberInfo() {
         $.ajax({
-            url: '/api/v1/memberInfo',
+            url: '/api/v1/members/info',
             method: 'GET',
             dataType: 'json',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
+                $('#email').val(data.email);
+                $('#nickname').val(data.nickname);
                 $('#birth').val(data.birth);
-                if (data.gender === 'M') {
+                if (data.gender == 'M') {
                     $('input:radio[name=gender][value=M]').prop('checked', true);
-                } else if (data.gender === 'female') {
+                } else if (data.gender == 'F') {
                     $('input:radio[name=gender][value=F]').prop('checked', true);
                 }
             },
@@ -179,73 +197,6 @@
                 console.log('fail : member 상세 조회');
             }
         });
-    }
-
-    function fn_setEvent() {
-        // 이메일 형식, 중복, 닉네임 중복 체크
-        $('#email').on('blur', function () {
-            $("#email-feedback").hide();
-            const emailValue = $(this).val().trim();
-
-            isValidEmail(emailValue);
-
-            if (emailValue === "") {
-                $("#email-feedback").text("이메일을 입력하세요.");
-                $("#email-feedback").show();
-                return;
-            }
-            $.ajax({
-                url: '/api/v1/auth/isEmailUnique',
-                method: 'POST',
-                data: JSON.stringify({email: emailValue}),
-                contentType: 'application/json',
-                success: function (data) {
-                },
-                error: function () {
-                    $("#email-feedback").text("이미 존재하는 이메일 입니다.");
-                    $("#email-feedback").show();
-                    $("#email").val("");
-                }
-            });
-        });
-
-        $('#nickname').on('blur', function () {
-            $("#nickname-feedback").hide();
-            const nicknameValue = $(this).val().trim();
-            if (nicknameValue.length != 0 && !(4 <= nicknameValue.length && 10 >= nicknameValue.length)) {
-                alert("닉네임은 4자리 ~ 10자리만 가능합니다.");
-                $('#nickname').val("");
-                return;
-            }
-            if (nicknameValue === "") {
-                $("#nickname-feedback").text("닉네임 입력하세요.");
-                $("#nickname-feedback").show();
-                return;
-            }
-            $.ajax({
-                url: '/api/v1/auth/isNicknameUnique',
-                method: 'POST',
-                data: JSON.stringify({nickname: nicknameValue}),
-                contentType: 'application/json',
-                success: function (data) {
-                },
-                error: function () {
-                    $("#nickname-feedback").text("사용할 수 없는 닉네임 입니다.");
-                    $("#nickname-feedback").show();
-                    $("#nickname").val("");
-                }
-            });
-        });
-
-        function isValidEmail(email) {
-            var regExp = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.[a-zA-Z]{2,4}$/;
-            if (!regExp.test(email)) {
-                alert("이메일 형식이 아닙니다.");
-                $('#email').val("");
-                return false;
-            }
-            return true;
-        }
     }
 
     function getTradeListByMember() {
@@ -316,31 +267,54 @@
         });
     }
 
-    function updateMemberInfo() {
-        var param = {
-            "id" : 1,
-            "email"   : $("#email").val(),
-            "nickname": $("#nickname").val(),
-            "password": $("#password").val(),
-            "birth"   : $("#birth").val(),
-            "gender"  : $("input[name='gender']:checked").val()
-        }
-        console.log(param);
-        $.ajax({
-            url: 'api/v1/members',
-            method: 'PUT',
-            data: JSON.stringify(param),
-            contentType: 'application/json',
-            dataType: 'json',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-            },
-            success: function (data) {
-                authorize('member/memberInfo.html');
-            },
-            error: function () {
-                console.log('fail : member 상세 조회');
+    function fn_setEvent() {
+        $('#memberInfoUpdateButton').click(function (e) {
+            e.preventDefault()
+            var param = {
+                "birth": $("#birth").val(),
+                "gender": $("input[name='gender']:checked").val()
             }
+            console.log(param);
+            $.ajax({
+                url: 'api/v1/members',
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(param),
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
+                    alert("회원정보가 수정되었습니다.");
+                },
+                error: function () {
+                    console.log('fail : 회원 정보 변경');
+                }
+            });
+        });
+
+        $('#passwordUpdateButton').click(function (e) {
+            e.preventDefault()
+            if ($("#password").val().trim().length!=0 && !(8 <= $("#password").val().trim().length &&  16 >= $("#password").val().trim().length)) {
+                alert("비밀번호는 8자리 ~ 16자리만 가능합니다.");
+                return;
+            }
+            $.ajax({
+                url: 'api/v1/members/password',
+                method: 'PUT',
+                data: JSON.stringify({ "password" : $("#password").val()}),
+                contentType: 'application/json',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
+                    alert("비밀번호가 변경되었습니다.");
+                    $("#password").val("");
+                },
+                error: function (xhr, status, error) {
+                    console.log('fail : 비밀번호 변경', xhr);
+                }
+            });
         });
     }
 
