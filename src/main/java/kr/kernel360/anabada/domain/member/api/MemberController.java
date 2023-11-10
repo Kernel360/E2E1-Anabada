@@ -25,12 +25,13 @@ public class MemberController {
 
 	@PutMapping("/v1/members")
 	public ResponseEntity update(@RequestBody UpdateMemberRequest updateMemberRequest) {
+		memberService.update(updateMemberRequest);
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/v1/members/{id}")
-	public ResponseEntity<FindMemberResponse> find(@PathVariable Long id) {
-		FindMemberResponse findMemberResponse = memberService.find(id);
+	@GetMapping("/v1/memberInfo")
+	public ResponseEntity<FindMemberResponse> find() {
+		FindMemberResponse findMemberResponse = memberService.find();
 		return ResponseEntity.ok(findMemberResponse);
 	}
 
