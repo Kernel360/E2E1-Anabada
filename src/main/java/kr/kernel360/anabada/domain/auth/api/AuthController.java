@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 	private final AuthService authService;
+
 	private final KakaoService kakaoService;
 
 	@PostMapping("/v1/auth/authenticate")
@@ -41,7 +42,6 @@ public class AuthController {
 
 	@PostMapping("/v1/auth/isEmailUnique")
 	public ResponseEntity isEmailUnique(@RequestBody SignUpRequest signUpRequest) {
-		;
 		authService.isEmailUnique(signUpRequest.getEmail());
 		return ResponseEntity.ok().build();
 	}

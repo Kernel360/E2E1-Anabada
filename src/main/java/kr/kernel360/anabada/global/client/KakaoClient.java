@@ -27,7 +27,6 @@ public interface KakaoClient {
 		@RequestParam("client_id") String apiKey,
 		@RequestParam("redirect_uri") String redirectUri);
 
-
 	@PostMapping
 	KakaoInfoResponse getInfo(URI baseURL, @RequestHeader("Authorization") String accessToken);
 

@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FaqService {
 	private final FaqRepository faqRepository;
+
 	private final MemberRepository memberRepository;
 
 	@Transactional
@@ -34,7 +35,7 @@ public class FaqService {
 		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
-		Faq faq = faqRepository.save(createFaqRequest.toEntity(createFaqRequest, member));
+		Faq faq = faqRepository.save(CreateFaqRequest.toEntity(createFaqRequest, member));
 
 		return CreateFaqResponse.of(faq);
 	}
