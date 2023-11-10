@@ -26,36 +26,3 @@
         </div>
     </div>
 </section>
-<script>
-    $(document).ready(function () {
-        fn_init();
-    });
-
-    function fn_init() {
-        if (null != localStorage.getItem("accessToken")) {
-            fn_getTradeInfo();
-        }
-    }
-
-    function fn_getTradeInfo() {
-        var latitude, longitude;
-        navigator.geolocation.getCurrentPosition(function (position) {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude;
-
-            $.ajax({
-                url: '/api/v1/findLocation?x='+latitude+'&y='+longitude,
-                method: 'GET',
-                dataType: 'json',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-                },
-                success : function (data) {
-                    console.log(data);
-                    localStorage.setItem("accessAddress", JSON.stringify(data));
-                    $("#accessAddress").text("🌵 "+data.state+" "+data.city+" "+data.address1+" 🌵");
-                }
-            });
-        })
-    }
-</script>

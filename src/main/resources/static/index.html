@@ -33,11 +33,63 @@
     <script>
         var param = {};
         $(document).ready(function () {
+            fn_init();
             $('main[content="container"]').empty();
             loadHtmlAndExecuteScript("/main.html", param);
         });
 
+        function fn_init() {
+            if (null != localStorage.getItem("accessToken")) {
+                fn_getMemberInfo();
+                fn_getLocationInfo();
+            }
+        }
+
+        function fn_getLocationInfo() {
+            var latitude, longitude;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+
+                $.ajax({
+                    url: '/api/v1/findLocation?x='+latitude+'&y='+longitude,
+                    method: 'GET',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                    },
+                    success : function (data) {
+                        console.log(data);
+                        localStorage.setItem("accessAddress", JSON.stringify(data));
+                        $("#accessAddress").text("🌵 "+data.state+" "+data.city+" "+data.address1+" 🌵");
+                    }
+                });
+            })
+        }
+
+        function fn_getMemberInfo() {
+            $.ajax({
+                url: '/api/v1/memberInfo',
+                method: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success : function (data) {
+                    $(".member-nickname").text(data.nickname);
+                    $(".member-email").text(data.email);
+                }
+            });
+        }
+
         function authorize(url) {
+            const allowedUrls = [
+                "/main.html"
+            ];
+            if (allowedUrls.includes(url)) {
+                loadHtmlAndExecuteScript(url,{});
+                return;
+            }
             param = {};
             if (url.includes("?")) {
                 param = parseQueryStringToJson(url)

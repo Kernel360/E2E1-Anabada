@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.member.service;
 import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +21,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepository;
-
+	private final PasswordEncoder passwordEncoder;
 	@Transactional
 	public void update(UpdateMemberRequest updateMemberRequest) {
+		if (updateMemberRequest.getPassword() != null) {
+			updateMemberRequest.setPassword(passwordEncoder.encode(updateMemberRequest.getPassword()));
+		}
+
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+		Member member = findByEmail(findEmailByJwt);
 
 		member.update(updateMemberRequest.getPassword(), updateMemberRequest.getGender()
 			, updateMemberRequest.getBirth());
-
 	}
 
-	public FindMemberResponse find(Long id) {
-		Member member = findMemberById(id);
+	public FindMemberResponse find() {
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = findByEmail(findEmailByJwt);
 
 		return FindMemberResponse.of(member);
 	}
@@ -76,14 +80,15 @@ public class MemberService {
 
 	@Transactional
 	public Long remove(Long id) {
-		Member member = findMemberById(id);
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member member = findByEmail(findEmailByJwt);
 
 		memberRepository.delete(member);
 		return id;
 	}
 
-	private Member findMemberById(Long id) {
-		return memberRepository.findById(id)
+	private Member findByEmail(String findEmailByJwt) {
+		return memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
 			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 	}
 }
