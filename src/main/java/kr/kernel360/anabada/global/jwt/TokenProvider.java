@@ -47,13 +47,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
 	private Key key;
+
 	private final String AUTHORITIES_KEY = "auth";
+
 	@Value("${spring.security.jwt.secret}")
 	private String secret;
+
 	@Value("${spring.security.jwt.access-token-validity-in-seconds}")
 	private long accessTokenValidityInSeconds;
+
 	@Value("${spring.security.jwt.refresh-token-validity-in-seconds}")
 	private long refreshTokenValidityInSeconds;
+
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Override

@@ -111,9 +111,29 @@
             </div>
             </div>
             <div class="tab-pane fade" id="bordered-trade-offer" role="tabpanel" aria-labelledby="trade-offer-tab">
-                Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam
-                perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum
-                iure. Dignissimos fuga tempore dolor.
+                <div class="col-lg-12">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Table with stripped rows -->
+                            <table class="table align-middle">
+                                <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">제목</th>
+                                    <th scope="col">요청상태</th>
+                                    <th scope="col">작성일</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tradeOfferList">
+                                </tbody>
+                            </table>
+                            <!-- End Table with stripped rows -->
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div><!-- End Bordered Tabs -->
 
@@ -135,6 +155,7 @@
     function fn_init() {
         getMemberInfo(); // 회원 정보 조회
         getTradeListByMember(); // 회원이 올린 교환 조회
+        getTradeOfferListByMember() // 회원이 올린 교환 요청 조회
         fn_setEvent(); // 이벤트 초기화 함수 호출
     }
 
@@ -264,20 +285,33 @@
 
     function getTradeOfferListByMember() {
         $.ajax({
-            url: '/api/v1/trade-offers/',
+            url: '/api/v1/trade-offers',
             method: 'GET',
             dataType: 'json',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                $('#email-label').text("이메일: " + data.email);
-                $('#nickname-label').text("닉네임: " + data.nickname);
-                $('#birth-label').text("생년월일: " + data.birth);
-                $('#gender-label').text("성별: " + (data.gender === "M" ? "남성" : "여성"));
+                var tradeOffers = data.tradeOffers;
+
+                for (var i = 0; i < tradeOffers.length; i++) {
+                    var tradeOffer = tradeOffers[i];
+                    var tradeOfferItem = '<tr class="trade-item table-list" data-tradeOffer-id="' + tradeOffer.id + '">' +
+                        '<th scope="row">' + tradeOffer.id + '</th>' +
+                        '<td>' + tradeOffer.title + '</td>' +
+                        '<td>' + (tradeOffer.tradeOfferStatus === "REQUEST_ON_HOLD" ? "요청대기": (tradeOffer.tradeOfferStatus === "REQUEST_ACCEPTED" ? "요청수락" : "요청만료"))+ '</td>' +
+                        '<td>' + tradeOffer.createdDate + '</td>' +
+                        '</tr>';
+                    $('#tradeOfferList').append(tradeOfferItem);
+                }
+
+                // $('.trade-item').click(function () {
+                //     var tradeId = $(this).data('trade-id');
+                //     authorize('/trade/tradeInfo.html?tradeNo='+tradeId);
+                // });
             },
             error: function () {
-                console.log('fail : member 상세 조회');
+                console.log('fail : trade 목록 조회');
             }
         });
     }
