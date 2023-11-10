@@ -149,9 +149,9 @@
             success: function (data) {
                 $('#birth').val(data.birth);
                 if (data.gender === 'M') {
-                    $('input:radio[name=gender][value=male]').prop('checked', true);
+                    $('input:radio[name=gender][value=M]').prop('checked', true);
                 } else if (data.gender === 'female') {
-                    $('input:radio[name=gender][value=female]').prop('checked', true);
+                    $('input:radio[name=gender][value=F]').prop('checked', true);
                 }
             },
             error: function () {
