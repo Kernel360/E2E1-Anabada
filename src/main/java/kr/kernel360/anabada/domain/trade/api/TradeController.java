@@ -37,7 +37,6 @@ public class TradeController {
 		FindAllTradeResponse trades = tradeService.findAll();
 		return ResponseEntity.ok(trades);
 	}
-
 	@GetMapping("/v1/trades/{tradeId}")
 	public ResponseEntity<FindTradeResponse> find(@PathVariable Long tradeId) {
 		FindTradeResponse trade = tradeService.find(tradeId);

@@ -19,4 +19,6 @@ public class FindAllMemberByAgeGroupResponse {
 	private Long fifties;
 
 	private Long sixties;
+
+	// private List<AgeGroup> ageGroupList;
 }

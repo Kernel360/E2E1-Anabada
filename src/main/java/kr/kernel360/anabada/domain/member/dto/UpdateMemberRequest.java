@@ -12,12 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateMemberRequest {
-	private Long id;
-
-	private String email;
-
-	private String nickname;
-
 	private String password;
 
 	private String gender;

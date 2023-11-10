@@ -31,8 +31,14 @@ spring:
       access-token-validity-in-seconds: 86_400     # 1일
       refresh-token-validity-in-seconds: 1_209_600  # 2주
 
-  profiles:
-    include: API-KEY
+kakao:
+  authorizeUrl: https://kauth.kakao.com/oauth/authorize
+  authUrl: https://kauth.kakao.com/oauth/token
+  userApiUrl: https://kapi.kakao.com/v2/user/me
+  placeApiUrl: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
+  restapiKey: ${REST_API_KEY}
+  redirectUrl: api/v1/auth/callback
+
 
 logging.level:
   org.hibernate.SQL: debug
