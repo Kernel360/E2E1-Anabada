@@ -62,8 +62,8 @@
                     data: JSON.stringify(param),
                     contentType: 'application/json',
                     success: function (data) {
-                        localStorage.setItem("accessToken", data.tokenResponse.accessToken);
-                        localStorage.setItem("refreshToken", data.tokenResponse.refreshToken);
+                        localStorage.setItem("accessToken", data.tokenDto.accessToken);
+                        localStorage.setItem("refreshToken", data.tokenDto.refreshToken);
                         window.location.href = "/";
                     },
                     error: function () {

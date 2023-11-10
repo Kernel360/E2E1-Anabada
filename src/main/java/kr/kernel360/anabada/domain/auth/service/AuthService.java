@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
 import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
 import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
-import kr.kernel360.anabada.domain.auth.dto.TokenResponse;
+import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import kr.kernel360.anabada.global.jwt.TokenProvider;
@@ -36,7 +36,7 @@ public class AuthService {
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(authenticationToken);
 
-		TokenResponse token = tokenProvider.createToken(authentication);
+		TokenDto token = tokenProvider.createToken(authentication);
 
 		return LoginResponse.of(findMember.getEmail(), authentication.getAuthorities(), token);
 	}
@@ -72,4 +72,9 @@ public class AuthService {
 		Member member = memberRepository.save(signUpRequest.toEntity(signUpRequest));
 		return member.getId();
 	}
+
+	public TokenDto reissueAccessToken(TokenDto requestTokenDto) {
+		return tokenProvider.reissueToken(requestTokenDto);
+	}
+
 }

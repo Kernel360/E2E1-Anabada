@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
 import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
 import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
+import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.service.AuthService;
 import kr.kernel360.anabada.global.dto.KakaoMemberResponse;
 import kr.kernel360.anabada.global.service.KakaoService;
@@ -58,6 +59,7 @@ public class AuthController {
 		return ResponseEntity.created(uri).build();
 	}
 
+
 	@GetMapping("/v1/auth/callback")
 	public KakaoMemberResponse getKakaoMember(@RequestParam("code") String code) {
 		return kakaoService.getInfo(code).getKakaoMemberResponse();
@@ -66,5 +68,11 @@ public class AuthController {
 	@GetMapping("/v1/auth/socialSignUp")
 	public void socialSignUp() throws URISyntaxException {
 		kakaoService.getCode();
+  }
+
+	@PostMapping("/v1/auth/reissue")
+	public ResponseEntity<TokenDto> reissueAccessToken(@RequestBody TokenDto requestTokenDto) {
+		TokenDto responseTokenDto = authService.reissueAccessToken(requestTokenDto);
+		return ResponseEntity.ok().body(responseTokenDto);
 	}
 }

@@ -93,7 +93,9 @@
                 $("#email-feedback").hide();
                 const emailValue = $(this).val().trim();
 
-                isValidEmail(emailValue);
+                if ("" != $("#email").val()) {
+                    isValidEmail(emailValue);
+                }
 
                 if (emailValue === "") {
                     $("#email-feedback").text("이메일을 입력하세요.");
