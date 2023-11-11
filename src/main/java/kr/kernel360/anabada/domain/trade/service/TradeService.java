@@ -1,7 +1,7 @@
 package kr.kernel360.anabada.domain.trade.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class TradeService {
 	private final PlaceRepository placeRepository;
 
 
-	public FindAllTradeResponse findAll() {
-		List<FindTradeDto> findTrades = tradeRepository.findTrades();
+	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
+
+		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, pageable);
 		return FindAllTradeResponse.of(findTrades);
 	}
 
