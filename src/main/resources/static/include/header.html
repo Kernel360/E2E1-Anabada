@@ -9,7 +9,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
-    <a href="/" class="logo d-flex align-items-center">
+    <a onclick="authorize('/main.html')" class="logo d-flex align-items-center">
       <img src="../assets/img/logo.png" alt="">
       <span class="d-none d-lg-block">AnabadA</span>
     </a>
@@ -51,12 +51,20 @@
             <hr class="dropdown-divider">
           </li>
 
-          <li>
+          <li id="memberInfo" style="display: none">
             <a class="dropdown-item d-flex align-items-center" onclick="authorize('/member/memberInfo.html')">
               <i class="bi bi-person"></i>
-              <span>My Page</span>
+              <span>마이 페이지</span>
             </a>
           </li>
+
+          <li id="adminInfo" style="display: none">
+            <a class="dropdown-item d-flex align-items-center" onclick="authorize('/admin/adminInfo.html')">
+              <i class="bi bi-person"></i>
+              <span>관리자 페이지</span>
+            </a>
+          </li>
+
           <li>
             <hr class="dropdown-divider">
           </li>

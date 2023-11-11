@@ -78,6 +78,12 @@
                 success : function (data) {
                     $(".member-nickname").text(data.nickname);
                     $(".member-email").text(data.email);
+                    console.log(data.role);
+                    if (data.role.includes("ROLE_ADMIN")) {
+                        $("#adminInfo").show();
+                    } else {
+                        $("#memberInfo").show();
+                    }
                 }
             });
         }

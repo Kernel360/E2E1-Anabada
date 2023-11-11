@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.kernel360.anabada.domain.category.dto.CreateCategoryRequest;
 import kr.kernel360.anabada.domain.category.dto.CreateCategoryResponse;
 import kr.kernel360.anabada.domain.category.dto.FindAllCategoryResponse;
-import kr.kernel360.anabada.domain.category.dto.FindCategoryResponse;
 import kr.kernel360.anabada.domain.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 
@@ -41,12 +40,6 @@ public class CategoryController {
 	public ResponseEntity<FindAllCategoryResponse> findAllByDeletedStatusFalse(){
 		FindAllCategoryResponse findAllCategoryResponse = categoryService.findByDeletedStatusFalse();
 		return ResponseEntity.ok(findAllCategoryResponse);
-	}
-
-	@GetMapping("/v1/categories/{id}")
-	public ResponseEntity<FindCategoryResponse> find(@PathVariable Long id) {
-		FindCategoryResponse findCategoryResponse = categoryService.find(id);
-		return ResponseEntity.ok(findCategoryResponse);
 	}
 
 	@DeleteMapping("v1/categories/{id}")

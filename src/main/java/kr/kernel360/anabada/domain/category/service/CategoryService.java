@@ -22,13 +22,9 @@ public class CategoryService {
 
 	@Transactional
 	public CreateCategoryResponse create(CreateCategoryRequest createCategoryRequest) {
+		 validateNameUnique(createCategoryRequest.getName());
 		 Category category = categoryRepository.save(CreateCategoryRequest.toEntity(createCategoryRequest));
 		 return CreateCategoryResponse.of(category);
-	}
-
-	public FindCategoryResponse find(Long id) {
-		Category category = findCategoryById(id);
-		return FindCategoryResponse.of(category);
 	}
 
 	public FindAllCategoryResponse findAll() {
@@ -50,7 +46,8 @@ public class CategoryService {
 
 	@Transactional
 	public void remove(Long id) {
-		Category category = findCategoryById(id);
+		Category category = categoryRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));
 		if (category.getDeletedStatus().equals(DeletedStatus.FALSE)) {
 			categoryRepository.delete(category);
 		} else {
@@ -58,8 +55,10 @@ public class CategoryService {
 		}
 	}
 
-	public Category findCategoryById(Long id){
-		return categoryRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));
+	public void validateNameUnique(String name) {
+		if (categoryRepository.existsByName(name)) {
+			// todo : 추후 exception 타입 변경 필요
+			throw new IllegalArgumentException("사용중인 카테고리명 입니다.");
+		}
 	}
 }
