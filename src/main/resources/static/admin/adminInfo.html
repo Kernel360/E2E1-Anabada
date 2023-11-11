@@ -217,9 +217,9 @@
                         '<td>'
 
                     if (category.deletedStatus === "FALSE") {
-                        categoryItem += '<button style="float:right; width: 70px;" id="categoryDeleteButton' + category.id + '" class="btn btn-danger btn-sm" onclick="fn_deleteCategory(' + category.id + ')"> 비활성화</button></td>';
+                        categoryItem += '<button style="float:right; width: 80px; height: 30px" id="categoryDeleteButton' + category.id + '" class="btn btn-danger btn-sm" onclick="fn_deleteCategory(' + category.id + ')"> 비활성화</button></td>';
                     } else {
-                        categoryItem += '<button style="float:right; width: 70px;" id="categoryDeleteButton' + category.id + '" class="btn btn-success btn-sm" onclick="fn_deleteCategory(' + category.id + ')"> 활성화</button></td>';
+                        categoryItem += '<button style="float:right; width: 80px; height: 30px" id="categoryDeleteButton' + category.id + '" class="btn btn-success btn-sm" onclick="fn_deleteCategory(' + category.id + ')"> 활성화</button></td>';
                     }
 
                     categoryItem += '</tr>';
