@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.member.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +12,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 
+import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 import kr.kernel360.anabada.global.commons.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,15 +49,19 @@ public class Member extends BaseEntity {
 	private String birth;
 
 	@Column(name = "social_provider", columnDefinition = "varchar(40)")
-	private String socialProvider;
+	@Enumerated(EnumType.STRING)
+	private SocialProvider socialProvider;
 
 	@Column(nullable = false, name = "account_status", columnDefinition = "tinyint")
 	private Boolean accountStatus;
 
+	@Column(name = "social_id", columnDefinition = "varchar(50)")
+	private String socialId;
+
 	@Builder
 	public Member(Long id, String email, String nickname, String password, String authorities, String gender,
 		String birth,
-		String socialProvider, Boolean accountStatus) {
+		SocialProvider socialProvider, Boolean accountStatus, String socialId) {
 		this.id = id;
 		this.email = email;
 		this.nickname = nickname;
@@ -64,6 +71,7 @@ public class Member extends BaseEntity {
 		this.birth = birth;
 		this.socialProvider = socialProvider;
 		this.accountStatus = accountStatus;
+		this.socialId = socialId;
 	}
 
 	public Member(String email, String nickname, String password, String gender, String birth) {

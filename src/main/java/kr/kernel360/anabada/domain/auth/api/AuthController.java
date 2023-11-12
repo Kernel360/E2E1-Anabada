@@ -17,8 +17,8 @@ import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
 import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
 import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.service.AuthService;
-import kr.kernel360.anabada.global.dto.KakaoMemberResponse;
-import kr.kernel360.anabada.global.service.KakaoService;
+import kr.kernel360.anabada.global.kakao.dto.KakaoMemberResponse;
+import kr.kernel360.anabada.global.kakao.service.KakaoLoginService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final AuthService authService;
 
-	private final KakaoService kakaoService;
+	private final KakaoLoginService kakaoLoginService;
 
 	@PostMapping("/v1/auth/authenticate")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
@@ -59,16 +59,15 @@ public class AuthController {
 		return ResponseEntity.created(uri).build();
 	}
 
-
 	@GetMapping("/v1/auth/callback")
 	public KakaoMemberResponse getKakaoMember(@RequestParam("code") String code) {
-		return kakaoService.getInfo(code).getKakaoMemberResponse();
+		return kakaoLoginService.getInfo(code).getKakaoMemberResponse();
 	}
 
 	@GetMapping("/v1/auth/socialSignUp")
 	public void socialSignUp() throws URISyntaxException {
-		kakaoService.getCode();
-  }
+		kakaoLoginService.getCode();
+	}
 
 	@PostMapping("/v1/auth/reissue")
 	public ResponseEntity<TokenDto> reissueAccessToken(@RequestBody TokenDto requestTokenDto) {

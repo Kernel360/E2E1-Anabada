@@ -72,27 +72,6 @@
                 });
             });
         }
-
-        function socialSignUp() {
-            $.ajax({
-                url: '/api/v1/auth/socialSignUp',
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    $.ajax({
-                        url: '/api/v1/auth/callback',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-
-                        },
-                    })
-                },
-                error: function () {
-                    console.log('fail : 소셜 회원 가입 실패');
-                }
-            });
-        }
     </script>
 </head>
 
@@ -152,7 +131,10 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <button onclick=socialSignUp()>카카오로 가입하기</button>
+                                        <a id="social-login" href="/oauth2/authorization/kakao">
+                                            카카오로 시작하기
+                                            <img src="">
+                                        </a>
                                     </div>
                                 </form>
 
