@@ -1,5 +1,7 @@
 package kr.kernel360.anabada.domain.trade.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,13 +33,12 @@ public class TradeService {
 
 
 	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
-
 		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, pageable);
 		return FindAllTradeResponse.of(findTrades);
 	}
 
 	public FindTradeResponse find(Long tradeId) {
-		FindTradeDto findTradeDto = tradeRepository.findTrade(tradeId)
+		FindTradeDto findTradeDto = Optional.of(tradeRepository.findTrade(tradeId))
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환이 없습니다."));
 		return FindTradeResponse.of(findTradeDto);
 	}

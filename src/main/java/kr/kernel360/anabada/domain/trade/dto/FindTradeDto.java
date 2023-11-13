@@ -51,6 +51,7 @@ public class FindTradeDto {
 		this.createdDate = DateParser.dateToString(createdDate);
 	}
 
+	@QueryProjection
 	@Builder
 	public FindTradeDto(Long tradeId, TradeType tradeType, TradeStatus tradeStatus, DeletedStatus deletedStatus,
 		String categoryName, String tradeTitle, String nickname, LocalDateTime createdDate, String content,
