@@ -12,8 +12,31 @@
         <div class="col-lg-12">
 
             <div class="card">
-                <div class="card-body">
-                    <!-- Table with stripped rows -->
+                <div class="card-body" style="padding: 10px 20px 10px 20px;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dis class="row mb-3">
+                                <label for="title" class="col-sm-2 col-form-label">제목</label>
+                                <div class="col-sm-10">
+                                    <div class="col-sm-10">
+                                        <input type="text" id="title" class="form-control" name="title">
+                                    </div>
+                                </div>
+                            </dis>
+                        </div>
+                        <div class="col-md-5">
+                            <dis class="row mb-3">
+                                <label for="createdBy" class="col-sm-2 col-form-label">작성자</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="createdBy" class="form-control" name="createdBy">
+                                </div>
+                            </dis>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" id="searchButton">검색</button>
+                        </div>
+                    </div>
+
                     <table class="table align-middle">
                         <thead>
                         <tr>
@@ -27,8 +50,13 @@
                         </tbody>
                     </table>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <div class="pagination-container">
+                                <ul class="pagination"></ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
                             <button id="faqCreateButton" class="btn btn-primary">등록</button>
                         </div>
                     </div>
@@ -45,7 +73,7 @@
     });
 
     function fn_init() {
-        fn_getFaqList(); // FAQ 목록 조회
+        fn_getFaqList(0); // FAQ 목록 조회
         fn_setEvent();
     }
 
@@ -53,40 +81,92 @@
         $('#faqCreateButton').click(function () {
             authorize('/faq/faqCreateForm.html');
         });
+
+        $('#searchButton').click(function (e) {
+            e.preventDefault()
+            fn_getFaqList(0);
+        });
     }
 
-    function fn_getFaqList() {
-        // JSON 데이터를 가져오는 비동기 요청
+    function fn_getFaqList(pageNo) {
+        $('#faqList').empty();
+
+        var param = {
+            "pageNo": pageNo,
+            "createdBy": $('#createdBy').val(),
+            "title": $('#title').val()
+        };
+
+        var url = '/api/v1/faqs?' + $.param(param);
+
         $.ajax({
-            url: '/api/v1/faqs',
+            url: url,
             method: 'GET',
             dataType: 'json',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                var faqs = data.faqs;
-
-                for (var i = 0; i < faqs.length; i++) {
-                    var faq = faqs[i];
-                    var faqItem = '<tr class="faq-item table-list" data-faq-id="' + faq.id + '">' +
-                        '<td>' + faq.id + '</td>' +
-                        '<td>' + faq.title + '</td>' +
-                        '<td>' + faq.createdBy + '</td>' +
-                        '<td>' + faq.createdDate + '</td>' +
-                        '</tr>';
-                    $('#faqList').append(faqItem);
+                var faqs = data.faqs.content;
+                if (faqs) {
+                    faqs.forEach(function (faq) {
+                        var faqItem = '<tr class="faq-item table-list" data-faq-id="' + faq.id + '">' +
+                            '<td>' + faq.id + '</td>' +
+                            '<td>' + faq.title + '</td>' +
+                            '<td>' + faq.createdBy + '</td>' +
+                            '<td>' + faq.createdDate + '</td>' +
+                            '</tr>';
+                        $('#faqList').append(faqItem);
+                    });
                 }
+
+                // 페이지네이션 처리
+                var totalPages = data.faqs.totalPages;
+                var currentPage = data.faqs.number;
+                updatePagination(currentPage, totalPages);
 
                 $('.faq-item').click(function () {
                     var faqId = $(this).data('faq-id');
                     authorize('/faq/faqInfo.html?faqId='+faqId);
                 });
+
             },
             error: function () {
                 console.log('fail : faq 목록 조회');
             }
         });
     }
+
+    function updatePagination(currentPage, totalPages) {
+        var paginationContainer = $('.pagination-container ul');
+        paginationContainer.empty();
+
+        var pagesToShow = 10; // 한 번에 보여질 페이지 수
+        var startPage = Math.max(1, currentPage+1 - Math.floor(pagesToShow / 2));
+        var endPage = Math.min(totalPages, startPage + pagesToShow - 1);
+
+        // 이전 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === 1 ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getFaqList(' + ((currentPage+1) - 1) + ')">«</a>' +
+            '</li>'
+        );
+
+        for (var i = startPage; i <= endPage; i++) {
+            var pageItem =
+                '<li class="page-item ' + (i === (currentPage+1) ? 'active' : '') + '">' +
+                '<a class="page-link" onclick="fn_getFaqList(' + i + ')">' + i + '</a>' +
+                '</li>';
+            paginationContainer.append(pageItem);
+        }
+
+        // 다음 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === totalPages ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getFaqList(' + ((currentPage+1) + 1) + ')">»</a>' +
+            '</li>'
+        );
+    }
+
 </script>
 
