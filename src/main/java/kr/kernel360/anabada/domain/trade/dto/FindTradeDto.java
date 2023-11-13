@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.trade.dto;
 
 import java.time.LocalDateTime;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
@@ -35,11 +37,14 @@ public class FindTradeDto {
 
 	private String imagePath;
 
+	@QueryProjection
 	@Builder
-	public FindTradeDto(Long tradeId, TradeType tradeType, String categoryName, String tradeTitle, String nickname,
+	public FindTradeDto(Long tradeId, TradeType tradeType, TradeStatus tradeStatus, DeletedStatus deletedStatus, String categoryName, String tradeTitle, String nickname,
 		LocalDateTime createdDate) {
 		this.tradeId = tradeId;
 		this.tradeType = tradeType;
+		this.tradeStatus = tradeStatus;
+		this.deletedStatus = deletedStatus;
 		this.categoryName = categoryName;
 		this.tradeTitle = tradeTitle;
 		this.nickname = nickname;
