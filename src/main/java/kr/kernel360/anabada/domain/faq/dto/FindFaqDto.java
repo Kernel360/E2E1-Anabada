@@ -2,9 +2,10 @@ package kr.kernel360.anabada.domain.faq.dto;
 
 import java.time.LocalDateTime;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.utils.DateParser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class FindFaqDto {
 
 	private String createdDate;
 
+	@QueryProjection
 	public FindFaqDto(Long id, String title, String createdBy, LocalDateTime createdDate) {
 		this.id = id;
 		this.title = title;
@@ -30,6 +32,7 @@ public class FindFaqDto {
 		this.createdDate = DateParser.dateToString(createdDate);
 	}
 
+	@QueryProjection
 	public FindFaqDto(Long id, String title, String content, String createdBy, LocalDateTime createdDate) {
 		this.id = id;
 		this.title = title;

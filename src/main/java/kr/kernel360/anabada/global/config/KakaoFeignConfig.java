@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import feign.Client;
 
 @Configuration
-public class KakaoFeignConfiguration {
+public class KakaoFeignConfig {
 	@Bean
 	public Client feingClient() {
 		return new Client.Default(null, null);

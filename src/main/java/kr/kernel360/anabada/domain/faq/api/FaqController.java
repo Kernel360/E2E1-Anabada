@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.faq.api;
 
 import java.net.URI;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqRequest;
 import kr.kernel360.anabada.domain.faq.dto.CreateFaqResponse;
+import kr.kernel360.anabada.domain.faq.dto.FaqSearchCondition;
 import kr.kernel360.anabada.domain.faq.dto.FindAllFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.FindFaqResponse;
 import kr.kernel360.anabada.domain.faq.dto.UpdateFaqRequest;
@@ -36,8 +40,10 @@ public class FaqController {
 	}
 
 	@GetMapping("/v1/faqs")
-	public ResponseEntity<FindAllFaqResponse> findAll() {
-		FindAllFaqResponse faqs = faqService.findAll();
+	public ResponseEntity<FindAllFaqResponse> findAll(FaqSearchCondition faqSearchCondition,
+													  @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
+		FindAllFaqResponse faqs = faqService.findAll(faqSearchCondition, pageable);
 		return ResponseEntity.ok(faqs);
 	}
 
@@ -48,8 +54,7 @@ public class FaqController {
 	}
 
 	@PutMapping("/v1/faqs")
-	public ResponseEntity<UpdateFaqResponse> update(
-		@RequestBody UpdateFaqRequest updateFaqRequest) {
+	public ResponseEntity<UpdateFaqResponse> update(@RequestBody UpdateFaqRequest updateFaqRequest) {
 		UpdateFaqResponse updateFaqResponse = faqService.update(updateFaqRequest);
 		return ResponseEntity.ok(updateFaqResponse);
 	}

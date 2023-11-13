@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.kernel360.anabada.global.config.KakaoFeignConfiguration;
+import kr.kernel360.anabada.global.config.KakaoFeignConfig;
 import kr.kernel360.anabada.global.dto.KakaoInfoResponse;
 import kr.kernel360.anabada.global.dto.KakaoPlaceResponse;
 import kr.kernel360.anabada.global.dto.KakaoTokenResponse;
 
-@FeignClient(name = "kakaoClient", configuration = KakaoFeignConfiguration.class)
+@FeignClient(name = "kakaoClient", configuration = KakaoFeignConfig.class)
 public interface KakaoClient {
 
 	@GetMapping
