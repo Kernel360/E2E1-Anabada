@@ -45,7 +45,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),
 				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
-				tradeTitleLike(tradeSearchCondition.getTitle())
+				tradeTitleContain(tradeSearchCondition.getTitle())
 			)
 			.orderBy(trade.id.desc())
 			.offset(pageable.getOffset())
@@ -58,7 +58,9 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.leftJoin(trade.member, member)
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
-				categoryIdEq(tradeSearchCondition.getCategoryId())
+				categoryIdEq(tradeSearchCondition.getCategoryId()),
+				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
+				tradeTitleContain(tradeSearchCondition.getTitle())
 			)
 			.fetchOne();
 
@@ -95,7 +97,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 		return categoryId != null ? trade.category.id.eq(categoryId) : null;
 	}
 
-	private BooleanExpression tradeTitleLike(String title) {
+	private BooleanExpression tradeTitleContain(String title) {
 		return hasText(title) ? trade.title.contains(title) : null;
 	}
 
