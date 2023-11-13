@@ -14,22 +14,84 @@
 
             <div class="card">
                 <div class="card-body">
-                    <!-- Table with stripped rows -->
-                    <table class="table align-middle">
-                        <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">교환구분</th>
-                            <th scope="col">카테고리</th>
-                            <th scope="col">제목</th>
-                            <th scope="col">작성자</th>
-                            <th scope="col">작성일</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tradeList">
-                        </tbody>
-                    </table>
-                    <!-- End Table with stripped rows -->
+
+                    <div class="card" style="margin-bottom: 10px !important;">
+                        <div class="card-body" style="padding: 10px 20px 10px 20px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <dis class="row">
+                                        <label for="tradeType" class="col-sm-2 col-form-label">거래유형</label>
+                                        <div class="col-sm-10">
+                                            <select id="tradeType" name="tradeType" class="form-select"
+                                                    aria-label="Default select example">
+                                                <option value selected>전체</option>
+                                                <option value="TRADE">바꿔요</option>
+                                                <option value="REQUEST">원해요</option>
+                                                <option value="SHARE">드려요</option>
+                                            </select>
+                                        </div>
+                                    </dis>
+                                </div>
+                                <div class="col-md-6">
+                                    <dis class="row">
+                                        <label for="categoryList" class="col-sm-2 col-form-label">카테고리</label>
+                                        <div class="col-sm-10">
+                                            <select id="categoryList" name="categoryId" class="form-select">
+                                            </select>
+                                        </div>
+                                    </dis>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-body" style="padding: 10px 20px 10px 20px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <dis class="row mb-3">
+                                        <label for="title" class="col-sm-2 col-form-label">제목</label>
+                                        <div class="col-sm-10">
+                                            <div class="col-sm-10">
+                                                <input type="text" id="title" class="form-control" name="title">
+                                            </div>
+                                        </div>
+                                    </dis>
+                                </div>
+                                <div class="col-md-5">
+                                    <dis class="row mb-3">
+                                        <label for="createdBy" class="col-sm-2 col-form-label">작성자</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="createdBy" class="form-control" name="createdBy">
+                                        </div>
+                                    </dis>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-primary" id="searchButton">검색</button>
+                                </div>
+                            </div>
+                            <table class="table align-middle">
+                                <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">교환구분</th>
+                                    <th scope="col">카테고리</th>
+                                    <th scope="col">제목</th>
+                                    <th scope="col">작성자</th>
+                                    <th scope="col">작성일</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tradeList">
+                                </tbody>
+                            </table>
+                            <!-- End Table with stripped rows -->
+
+                            <div class="pagination-container">
+                                <ul class="pagination"></ul>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -41,37 +103,104 @@
 <script>
     $(document).ready(function () {
         fn_init();
+
+        // 카테고리 선택이 변경되었을 때
+        $('#categoryList').on('change', function () {
+            fn_getTradeList(0); // 선택된 카테고리에 따라서 거래 목록을 다시 불러옴
+        })
+
+        // 거래유형 선택이 변경되었을 때
+        $('#tradeType').on('change', function () {
+            fn_getTradeList(0); // 선택된 거래유형에 따라서 거래 목록을 다시 불러옴
+        });
     });
     function fn_init() {
-        fn_getTradeList();
+        fn_getCategoryList();
+        fn_getTradeList(0);
+        fn_setEvent();
     }
 
-    function fn_getTradeList() {
+    function fn_setEvent() {
+        $('#searchButton').click(function (e) {
+            e.preventDefault()
+
+            fn_getTradeList();
+        });
+    }
+
+    function fn_getCategoryList() {
         // JSON 데이터를 가져오는 비동기 요청
         $.ajax({
-            url: '/api/v1/trades',
+            url: '/api/v1/categories/active',
             method: 'GET',
             dataType: 'json',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                var trades = data.trades;
+                var nullcategory = '<option value selected  >' + "전체" + '</option>';
+                $('#categoryList').append(nullcategory);
 
-                for (var i = 0; i < trades.length; i++) {
-                    var trade = trades[i];
-                    var classname = trade.tradeType == "TRADE" ? "badge bg-primary" : (trade.tradeType == "REQUEST" ? "badge bg-success" : "badge bg-danger");
-                    var text = trade.tradeType === "TRADE" ? "바꿔요": (trade.tradeType === "REQUEST" ? "원해요" : "드려요");
-                    var tradeItem = '<tr class="trade-item table-list" data-trade-id="' + trade.tradeId + '">' +
-                        '<th scope="row">' + trade.tradeId + '</th>' +
-                        '<td><span class="' + classname + '">' + text+'</span></td>' +
-                        '<td>' + trade.categoryName + '</td>' +
-                        '<td>' + trade.tradeTitle + '</td>' +
-                        '<td>' + trade.nickname + '</td>' +
-                        '<td>' + trade.createdDate + '</td>' +
-                        '</tr>';
-                    $('#tradeList').append(tradeItem);
+                var categories = data.categories;
+                for (var i = 0; i < categories.length; i++) {
+                    var category = categories[i];
+                    var categoryItem = '<option value="' + category.id + '">' + category.name + '</option>';
+
+                    $('#categoryList').append(categoryItem);
                 }
+            },
+            error: function () {
+                console.log('fail : 카테고리 목록 조회');
+            }
+        });
+    }
+
+    function fn_getTradeList(pageNo) {
+        $('#tradeList').empty();
+
+        var param = {
+            "pageNo": pageNo,
+            "categoryId": $('#categoryList').val(),
+            "tradeType": $('#tradeType').val(),
+            "createdBy": $('#createdBy').val(),
+            "title": $('#title').val()
+        };
+
+        // URL에 쿼리 문자열을 추가
+        var url = '/api/v1/trades?' + $.param(param);
+        console.log(url);
+
+        // JSON 데이터를 가져오는 비동기 요청
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+            },
+            contentType: 'application/json',
+            success: function (data) {
+                var trades = data.trades.content;
+                if (trades) {
+                    trades.forEach(function (trade) {
+                        var classname = trade.tradeType == "TRADE" ? "badge bg-primary" : (trade.tradeType == "REQUEST" ? "badge bg-success" : "badge bg-danger");
+                        var text = trade.tradeType === "TRADE" ? "바꿔요" : (trade.tradeType === "REQUEST" ? "원해요" : "드려요");
+                        var tradeItem = '<tr class="trade-item table-list" data-trade-id="' + trade.tradeId + '">' +
+                            '<th scope="row">' + trade.tradeId + '</th>' +
+                            '<td><span class="' + classname + '">' + text + '</span></td>' +
+                            '<td>' + trade.categoryName + '</td>' +
+                            '<td>' + trade.tradeTitle + '</td>' +
+                            '<td>' + trade.nickname + '</td>' +
+                            '<td>' + trade.createdDate + '</td>' +
+                            '</tr>';
+                        $('#tradeList').append(tradeItem);
+                    });
+                }
+
+                // 페이지네이션 처리
+                var totalPages = data.trades.totalPages;
+                var currentPage = data.trades.number;
+                updatePagination(currentPage, totalPages);
 
                 $('.trade-item').click(function () {
                     var tradeId = $(this).data('trade-id');
@@ -82,5 +211,19 @@
                 console.log('fail : trade 목록 조회');
             }
         });
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        // Pagination 부분 업데이트
+        var paginationContainer = $('.pagination-container ul');
+        paginationContainer.empty();
+
+        for (var i = 0; i < totalPages; i++) {
+            var pageItem =
+                '<li class="page-item ' + (i == currentPage ? 'active' : '') + '">' +
+                '<a class="page-link" onclick="fn_getTradeList(' + (i+1) + ')">' + (i+1) + '</a>' +
+                '</li>';
+            paginationContainer.append(pageItem);
+        }
     }
 </script>
