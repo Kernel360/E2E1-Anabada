@@ -13,7 +13,7 @@
         <div class="col-lg-12">
 
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="padding: 20px !important;">
 
                     <div class="card" style="margin-bottom: 10px !important;">
                         <div class="card-body" style="padding: 10px 20px 10px 20px;">
@@ -46,7 +46,7 @@
                     </div>
 
 
-                    <div class="card">
+                    <div class="card" style="margin-bottom: 0px !important;">
                         <div class="card-body" style="padding: 10px 20px 10px 20px;">
                             <div class="row">
                                 <div class="col-md-6">
@@ -123,8 +123,7 @@
     function fn_setEvent() {
         $('#searchButton').click(function (e) {
             e.preventDefault()
-
-            fn_getTradeList();
+            fn_getTradeList(0);
         });
     }
 
@@ -168,7 +167,6 @@
 
         // URL에 쿼리 문자열을 추가
         var url = '/api/v1/trades?' + $.param(param);
-        console.log(url);
 
         // JSON 데이터를 가져오는 비동기 요청
         $.ajax({
@@ -212,18 +210,36 @@
             }
         });
     }
-
     function updatePagination(currentPage, totalPages) {
         // Pagination 부분 업데이트
         var paginationContainer = $('.pagination-container ul');
         paginationContainer.empty();
 
-        for (var i = 0; i < totalPages; i++) {
+        var pagesToShow = 10; // 한 번에 보여질 페이지 수
+        var startPage = Math.max(1, currentPage+1 - Math.floor(pagesToShow / 2));
+        var endPage = Math.min(totalPages, startPage + pagesToShow - 1);
+
+        // 이전 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === 1 ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getTradeList(' + ((currentPage+1) - 1) + ')">«</a>' +
+            '</li>'
+        );
+
+        for (var i = startPage; i <= endPage; i++) {
             var pageItem =
-                '<li class="page-item ' + (i == currentPage ? 'active' : '') + '">' +
-                '<a class="page-link" onclick="fn_getTradeList(' + (i+1) + ')">' + (i+1) + '</a>' +
+                '<li class="page-item ' + (i === (currentPage+1) ? 'active' : '') + '">' +
+                '<a class="page-link" onclick="fn_getTradeList(' + i + ')">' + i + '</a>' +
                 '</li>';
             paginationContainer.append(pageItem);
         }
+
+        // 다음 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === totalPages ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getTradeList(' + ((currentPage+1) + 1) + ')">»</a>' +
+            '</li>'
+        );
     }
+
 </script>
