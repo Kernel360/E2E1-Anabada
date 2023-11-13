@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,13 +36,13 @@ public class TradeController {
 	private final Path rootLocation = Paths.get("src/main/resources/static/images/trade");
 
 	@GetMapping("/v1/trades")
-	public ResponseEntity<FindAllTradeResponse> findAll(
-		@ModelAttribute TradeSearchCondition tradeSearchCondition,
-		@PageableDefault(size = 3) Pageable pageable) {
-		// @PageableDefault(size = 3, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
+														@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
 		FindAllTradeResponse trades = tradeService.findAll(tradeSearchCondition, pageable);
 		return ResponseEntity.ok(trades);
 	}
+
 	@GetMapping("/v1/trades/{tradeId}")
 	public ResponseEntity<FindTradeResponse> find(@PathVariable Long tradeId) {
 		FindTradeResponse trade = tradeService.find(tradeId);

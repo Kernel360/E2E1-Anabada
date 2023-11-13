@@ -7,8 +7,6 @@ import static org.springframework.util.StringUtils.*;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,21 +18,12 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.QFindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
+import lombok.RequiredArgsConstructor;
 
-public class TradeRepositoryImpl implements TradeRepositoryCustom{
-	// @Query("select new kr.kernel360.anabada.domain.trade.dto.FindTradeDto("
-	// 	+ "t.id, t.tradeType, c.name, t.title, m.nickname, t.createdDate) "
-	// 	+ "   from Trade t"
-	// 	+ "   left outer join t.category c"
-	// 	+ "   left outer join t.member m"
-	// 	+ "   order by t.id desc")
-	// List<FindTradeDto> findTrades();
+@RequiredArgsConstructor
+public class TradeRepositoryImpl implements TradeRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
-
-	public TradeRepositoryImpl(EntityManager em) {
-		this.queryFactory = new JPAQueryFactory(em);
-	}
 
 	@Override
 	public Page<FindTradeDto> findTrades(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
@@ -52,8 +41,12 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom{
 			.from(trade)
 			.leftJoin(trade.category, category)
 			.leftJoin(trade.member, member)
-			.where(tradeTypeEq(tradeSearchCondition.getTradeType()),
-				categoryNameEq(tradeSearchCondition.getCategoryName()))
+			.where(
+				tradeTypeEq(tradeSearchCondition.getTradeType()),
+				categoryIdEq(tradeSearchCondition.getCategoryId()),
+				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
+				tradeTitleLike(tradeSearchCondition.getTitle())
+			)
 			.orderBy(trade.id.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
@@ -62,22 +55,51 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom{
 		Long total = queryFactory
 			.select(trade.count())
 			.from(trade)
-			.leftJoin(trade.category, category)
 			.leftJoin(trade.member, member)
-			.where(tradeTypeEq(tradeSearchCondition.getTradeType()),
-				categoryNameEq(tradeSearchCondition.getCategoryName()))
+			.where(
+				tradeTypeEq(tradeSearchCondition.getTradeType()),
+				categoryIdEq(tradeSearchCondition.getCategoryId())
+			)
 			.fetchOne();
 
 		return new PageImpl<>(content, pageable, total);
+	}
+
+	@Override
+	public FindTradeDto findTrade(Long tradeId) {
+		return queryFactory
+			.select(new QFindTradeDto(
+				trade.id,
+				trade.tradeType,
+				trade.tradeStatus,
+				trade.deletedStatus,
+				category.name,
+				trade.title,
+				member.nickname,
+				trade.createdDate,
+				trade.content,
+				trade.imagePath
+			))
+			.from(trade)
+			.leftJoin(trade.category, category)
+			.leftJoin(trade.member, member)
+			.where(trade.id.eq(tradeId))
+			.fetchOne();
 	}
 
 	private BooleanExpression tradeTypeEq(String tradeType) {
 		return hasText(tradeType) ? trade.tradeType.eq(TradeType.valueOf(tradeType)) : null;
 	}
 
-	private BooleanExpression categoryNameEq(String categoryName) {
-		return hasText(categoryName) ? category.name.eq(categoryName) : null;
+	private BooleanExpression categoryIdEq(Long categoryId) {
+		return categoryId != null ? trade.category.id.eq(categoryId) : null;
 	}
 
+	private BooleanExpression tradeTitleLike(String title) {
+		return hasText(title) ? trade.title.contains(title) : null;
+	}
 
+	private BooleanExpression tradeCreatedByEq(String createdBy) {
+		return hasText(createdBy) ? member.nickname.eq(createdBy) : null;
+	}
 }
