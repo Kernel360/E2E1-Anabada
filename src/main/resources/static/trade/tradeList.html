@@ -34,10 +34,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <dis class="row">
-                                        <label for="categoryName" class="col-sm-2 col-form-label">카테고리</label>
+                                        <label for="categoryList" class="col-sm-2 col-form-label">카테고리</label>
                                         <div class="col-sm-10">
-                                            <select id="categoryName" name="categoryName" class="form-select"
-                                                    aria-label="Default select example">
+                                            <select id="categoryList" name="categoryId" class="form-select">
                                             </select>
                                         </div>
                                     </dis>
@@ -106,7 +105,7 @@
         fn_init();
 
         // 카테고리 선택이 변경되었을 때
-        $('#categoryName').on('change', function () {
+        $('#categoryList').on('change', function () {
             fn_getTradeList(0); // 선택된 카테고리에 따라서 거래 목록을 다시 불러옴
         })
 
@@ -140,14 +139,14 @@
             },
             success: function (data) {
                 var nullcategory = '<option value selected  >' + "전체" + '</option>';
-                $('#categoryName').append(nullcategory);
+                $('#categoryList').append(nullcategory);
 
                 var categories = data.categories;
                 for (var i = 0; i < categories.length; i++) {
                     var category = categories[i];
-                    var categoryItem = '<option value="' + category.name + '">' + category.name + '</option>';
+                    var categoryItem = '<option value="' + category.id + '">' + category.name + '</option>';
 
-                    $('#categoryName').append(categoryItem);
+                    $('#categoryList').append(categoryItem);
                 }
             },
             error: function () {
@@ -161,7 +160,7 @@
 
         var param = {
             "pageNo": pageNo,
-            "categoryName": $('#categoryName').val(),
+            "categoryId": $('#categoryList').val(),
             "tradeType": $('#tradeType').val(),
             "createdBy": $('#createdBy').val(),
             "title": $('#title').val()

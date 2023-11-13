@@ -11,5 +11,5 @@ public class TradeSearchCondition {
 	private String title;
 	private String createdBy;
 	private String tradeType;
-	private String categoryName;
+	private Long categoryId;
 }

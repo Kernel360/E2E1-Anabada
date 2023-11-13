@@ -43,7 +43,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.leftJoin(trade.member, member)
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
-				categoryNameEq(tradeSearchCondition.getCategoryName()),
+				categoryIdEq(tradeSearchCondition.getCategoryId()),
 				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
 				tradeTitleLike(tradeSearchCondition.getTitle())
 			)
@@ -55,9 +55,10 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 		Long total = queryFactory
 			.select(trade.count())
 			.from(trade)
+			.leftJoin(trade.member, member)
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
-				categoryNameEq(tradeSearchCondition.getCategoryName())
+				categoryIdEq(tradeSearchCondition.getCategoryId())
 			)
 			.fetchOne();
 
@@ -90,8 +91,8 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 		return hasText(tradeType) ? trade.tradeType.eq(TradeType.valueOf(tradeType)) : null;
 	}
 
-	private BooleanExpression categoryNameEq(String categoryName) {
-		return hasText(categoryName) ? category.name.eq(categoryName) : null;
+	private BooleanExpression categoryIdEq(Long categoryId) {
+		return categoryId != null ? trade.category.id.eq(categoryId) : null;
 	}
 
 	private BooleanExpression tradeTitleLike(String title) {
