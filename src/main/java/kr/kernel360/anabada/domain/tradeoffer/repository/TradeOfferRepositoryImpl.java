@@ -16,6 +16,7 @@ import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
 import kr.kernel360.anabada.domain.tradeoffer.dto.QFindTradeOfferDto;
+import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +40,8 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 			.leftJoin(tradeOffer.member, member)
 			.where(
 				memberIdEq(findAllTradeOfferRequest.getMemberId()),
-				tradeIdEq(findAllTradeOfferRequest.getTradeId())
+				tradeIdEq(findAllTradeOfferRequest.getTradeId()),
+				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
 				)
 			.orderBy(tradeOffer.id.desc())
 			.offset(pageable.getOffset())
@@ -52,7 +54,8 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 			.leftJoin(tradeOffer.member, member)
 			.where(
 				memberIdEq(findAllTradeOfferRequest.getMemberId()),
-				tradeIdEq(findAllTradeOfferRequest.getTradeId())
+				tradeIdEq(findAllTradeOfferRequest.getTradeId()),
+				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
 			)
 			.fetchOne();
 
@@ -92,7 +95,10 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 		queryFactory
 			.update(tradeOffer)
 			.set(tradeOffer.tradeOfferStatus, TradeOfferStatus.REQUEST_EXPIRED)
-			.where(tradeOffer.trade.eq(findTrade).and(tradeOffer.id.ne(tradeOfferId)))
+			.where(
+				tradeOffer.trade.eq(findTrade).and(tradeOffer.id.ne(tradeOfferId)),
+				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
+			)
 			.execute();
 	}
 }

@@ -165,6 +165,21 @@
     }
 
     function fn_tradeOfferDelete() {
+        $.ajax({
+            url: '/api/v1/trade-offers/' + param.tradeOfferId,
+            method: 'DELETE',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
+            success: function () {
+                console.log("delete success");
+                authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
+            },
+            error: function () {
+                console.log('fail : tradeOffer 삭제');
+            }
+        })
 
     }
 
