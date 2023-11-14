@@ -1,7 +1,6 @@
 package kr.kernel360.anabada.domain.auth.api;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
@@ -17,8 +15,6 @@ import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
 import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
 import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.service.AuthService;
-import kr.kernel360.anabada.global.kakao.dto.KakaoMemberResponse;
-import kr.kernel360.anabada.global.kakao.service.KakaoLoginService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 	private final AuthService authService;
-
-	private final KakaoLoginService kakaoLoginService;
 
 	@PostMapping("/v1/auth/authenticate")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
@@ -57,16 +51,6 @@ public class AuthController {
 		Long savedMemberId = authService.signUp(signUpRequest);
 		URI uri = URI.create("/api//v1/auth/signUp" + savedMemberId);
 		return ResponseEntity.created(uri).build();
-	}
-
-	@GetMapping("/v1/auth/callback")
-	public KakaoMemberResponse getKakaoMember(@RequestParam("code") String code) {
-		return kakaoLoginService.getInfo(code).getKakaoMemberResponse();
-	}
-
-	@GetMapping("/v1/auth/socialSignUp")
-	public void socialSignUp() throws URISyntaxException {
-		kakaoLoginService.getCode();
 	}
 
 	@PostMapping("/v1/auth/reissue")
