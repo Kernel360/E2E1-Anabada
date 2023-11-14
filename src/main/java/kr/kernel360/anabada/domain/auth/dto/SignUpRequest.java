@@ -34,7 +34,7 @@ public class SignUpRequest {
 	@NotBlank
 	private String birth;
 
-	private final String authorities = "USER_ROLE";
+	private final String authorities = "ROLE_USER";
 
 	private final Boolean accountStatus = true;
 
