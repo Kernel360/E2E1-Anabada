@@ -72,16 +72,16 @@ public class TradeOfferService {
 	}
 
 	@Transactional
-	public long accept(Long tradeOfferId) {
+	public void accept(Long tradeOfferId) {
 		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
 		Trade findTrade = tradeOffer.getTrade();
 
 		if (findTrade.getTradeStatus() == TradeStatus.AFTER_ACCEPT) {
 			throw new IllegalArgumentException("이미 교환 완료된 상품입니다.");
 		}
-		findTrade.setTradeStatus(TradeStatus.AFTER_ACCEPT);
-		tradeOffer.setTradeOfferStatus(TradeOfferStatus.REQUEST_ACCEPTED);
-		return tradeOfferRepository.rejectTradeOfferStatus(tradeOfferId, findTrade);
+		findTrade.update(TradeStatus.AFTER_ACCEPT);
+		tradeOffer.update(TradeOfferStatus.REQUEST_ACCEPTED);
+		tradeOfferRepository.updateTradeOffersByTradeOfferIdNeAndTradeEq(tradeOfferId, findTrade);
 
 	}
 }

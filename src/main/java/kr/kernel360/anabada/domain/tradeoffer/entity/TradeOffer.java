@@ -74,7 +74,7 @@ public class TradeOffer extends BaseEntity {
 		this.trade = trade;
 	}
 
-	public void setTradeOfferStatus(TradeOfferStatus tradeOfferStatus) {
+	public void update(TradeOfferStatus tradeOfferStatus) {
 		this.tradeOfferStatus = tradeOfferStatus;
 	}
   

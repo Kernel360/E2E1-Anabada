@@ -12,5 +12,5 @@ public interface TradeOfferRepositoryCustom {
 
 	FindTradeOfferDto find(Long tradeOfferId);
 
-	long rejectTradeOfferStatus(Long tradeOfferId, Trade findTrade);
+	void updateTradeOffersByTradeOfferIdNeAndTradeEq(Long tradeOfferId, Trade findTrade);
 }

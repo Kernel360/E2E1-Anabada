@@ -57,6 +57,10 @@
                             <div class="col-sm-10">
                                 <button id="tradeOfferAcceptButton" class="btn btn-primary">요청 수락</button>
                             </div>
+
+                            <div class="col-sm-10">
+                                <button id="tradeOfferDeleteButton" class="btn btn-primary">요청 삭제</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,22 +86,48 @@
     }
 
     function fn_setEvent() {
-        $('#infoPageButton').click(function () {
+        $('#infoPageButton').click(function (e) {
+            e.preventDefault()
             authorize('/trade/tradeInfo.html?tradeId=' + param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
         });
 
-        $('#OfferListPageButton').click(function () {
+        $('#OfferListPageButton').click(function (e) {
+            e.preventDefault()
             authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
         });
 
-        $('#tradeOfferAcceptButton').click(function () {
-            fn_tradeOfferAccept();
+        $('#tradeOfferAcceptButton').click(function (e) {
+            e.preventDefault()
+            fn_acceptTradeOffer();
+        });
+        $('#tradeOfferDeleteButton').click(function (e) {
+            e.preventDefault()
+            fn_tradeOfferDelete();
         });
 
     }
 
-    function fn_getTradeOfferInfo() {
+    function fn_acceptTradeOffer() {
         console.log(param.tradeOfferId);
+        $.ajax({
+            url: '/api/v1/trade-offers/'+param.tradeOfferId+'/accept',
+            method: 'PUT',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+            },
+            contentType: 'application/json',
+            success: function () {
+                console.log("accept success");
+                fn_getTradeOfferInfo();
+            },
+            error: function () {
+                console.log('fail : trade offer 수락');
+            }
+        });
+    }
+
+    function fn_getTradeOfferInfo() {
         $.ajax({
             url: '/api/v1/trade-offers/' + param.tradeOfferId,
             method: 'GET',
@@ -106,8 +136,7 @@
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                console.log(data.content);
-                console.log(data);
+
                 $('#title').val(data.findTradeOfferDto.title);
                 $('#content').val(data.findTradeOfferDto.content);
 
@@ -124,6 +153,10 @@
                 if(data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD'){
                     $('#tradeOfferAcceptButton').hide();
                 }
+                // 요청 대기 아니고 , 내가 쓴 요청글 아니면 삭제버튼 hide
+                if (data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD') {
+                    $('#tradeOfferDeleteButton').hide();
+                }
             },
             error: function () {
                 console.log('fail : tradeOffer 상세 조회');
@@ -131,6 +164,9 @@
         });
     }
 
+    function fn_tradeOfferDelete() {
+
+    }
 
 </script>
 

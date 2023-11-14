@@ -88,7 +88,7 @@ public class Trade extends BaseEntity {
 		this.place = place;
 	}
 
-	public void setTradeStatus(TradeStatus tradeStatus) {
+	public void update(TradeStatus tradeStatus) {
 		this.tradeStatus = tradeStatus;
 	}
 }
