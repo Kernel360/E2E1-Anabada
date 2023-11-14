@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.kernel360.anabada.domain.member.dto.AgeGroupDto;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberByAgeGroupResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberByGenderResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepository;
+
 	private final PasswordEncoder passwordEncoder;
 	@Transactional
 	public Long update(UpdateMemberRequest updateMemberRequest) {
@@ -69,19 +71,9 @@ public class MemberService {
 	}
 
 	public FindAllMemberByAgeGroupResponse countMembersByAgeGroup() {
-		List<Object[]> ageGroupCounts = memberRepository.countMembersByAgeGroup();
-		FindAllMemberByAgeGroupResponse findAllMemberByAgeGroupResponse = new FindAllMemberByAgeGroupResponse();
-		for (Object[] ageGroupCount : ageGroupCounts) {
-			switch ((String) ageGroupCount[0]) {
-				case "10대" -> findAllMemberByAgeGroupResponse.setTeenagers((Long)ageGroupCount[1]);
-				case "20대" -> findAllMemberByAgeGroupResponse.setTwenties((Long)ageGroupCount[1]);
-				case "30대" -> findAllMemberByAgeGroupResponse.setThirties((Long)ageGroupCount[1]);
-				case "40대" -> findAllMemberByAgeGroupResponse.setForties((Long)ageGroupCount[1]);
-				case "50대" -> findAllMemberByAgeGroupResponse.setFifties((Long)ageGroupCount[1]);
-				case "60대" -> findAllMemberByAgeGroupResponse.setSixties((Long)ageGroupCount[1]);
-			}
-		}
-		return findAllMemberByAgeGroupResponse;
+		List<AgeGroupDto> ageGroupList = memberRepository.countMembersByAgeGroup();
+
+		return FindAllMemberByAgeGroupResponse.of(ageGroupList);
 	}
 
 	@Transactional

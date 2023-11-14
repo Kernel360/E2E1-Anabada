@@ -55,10 +55,13 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, name = "account_status", columnDefinition = "tinyint")
 	private Boolean accountStatus;
 
+	@Column(nullable = false, name = "age_group", columnDefinition = "varchar(40)")
+	private String ageGroup;
+
 	@Builder
 	public Member(Long id, String email, String nickname, String password, String authorities, String gender,
 		String birth,
-		SocialProvider socialProvider, Boolean accountStatus) {
+		SocialProvider socialProvider, Boolean accountStatus, String ageGroup) {
 		this.id = id;
 		this.email = email;
 		this.nickname = nickname;
@@ -68,6 +71,7 @@ public class Member extends BaseEntity {
 		this.birth = birth;
 		this.socialProvider = socialProvider;
 		this.accountStatus = accountStatus;
+		this.ageGroup = ageGroup;
 	}
 
 	public Member(String email, String nickname, String password, String gender, String birth) {

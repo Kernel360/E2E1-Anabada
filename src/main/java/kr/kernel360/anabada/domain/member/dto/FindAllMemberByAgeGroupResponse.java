@@ -1,24 +1,24 @@
 package kr.kernel360.anabada.domain.member.dto;
 
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class FindAllMemberByAgeGroupResponse {
-	private Long teenagers;
+	private List<AgeGroupDto> ageGroupList;
 
-	private Long twenties;
-
-	private Long thirties;
-
-	private Long forties;
-
-	private Long fifties;
-
-	private Long sixties;
-
-	// private List<AgeGroup> ageGroupList;
+	public static FindAllMemberByAgeGroupResponse of(List<AgeGroupDto> ageGroupList) {
+		return FindAllMemberByAgeGroupResponse.builder()
+			.ageGroupList(ageGroupList)
+			.build();
+	}
 }

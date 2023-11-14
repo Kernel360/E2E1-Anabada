@@ -40,11 +40,14 @@ public class SignUpRequest {
 
 	private final SocialProvider socialProvider = SocialProvider.LOCAL;
 
+	private String ageGroup;
+
 	public static Member toEntity(SignUpRequest signUpRequest) {
 		return Member.builder()
 			.email(signUpRequest.email)
 			.nickname(signUpRequest.nickname)
 			.password(signUpRequest.password)
+			.ageGroup(signUpRequest.ageGroup)
 			.authorities(signUpRequest.authorities)
 			.gender(signUpRequest.gender)
 			.birth(signUpRequest.birth)
