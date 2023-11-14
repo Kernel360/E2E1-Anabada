@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +25,6 @@ import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
-import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
-import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.service.TradeOfferService;
 import kr.kernel360.anabada.global.FileHandler;
 import lombok.RequiredArgsConstructor;
@@ -66,18 +63,11 @@ public class TradeOfferController {
 		return ResponseEntity.created(url).body(id);
 	}
 
-	@PutMapping("/v1/trade-offers")
-	public ResponseEntity<UpdateTradeOfferResponse> update(@RequestBody UpdateTradeOfferRequest updateTradeOfferRequest) {
-		UpdateTradeOfferResponse updateTradeOfferResponse = tradeOfferService.update(updateTradeOfferRequest);
-		return ResponseEntity.ok(updateTradeOfferResponse);
+	@PutMapping("/v1/trade-offers/{tradeOfferId}/accept")
+	public ResponseEntity<Long> accept(@PathVariable Long tradeOfferId) {
+		long accept = tradeOfferService.accept(tradeOfferId);
+		return ResponseEntity.ok(accept);
 	}
-
-	// todo : 수락버튼 클릭시
-	// @PutMapping("/v1/trade-offers/{tradeOfferId}/accept")
-	// public ResponseEntity<UpdateTradeOfferResponse> accept(@PathVariable Long tradeOfferId) {
-	// 	UpdateTradeOfferResponse updateTradeOfferResponse = tradeOfferService.accept(tradeOfferId);
-	// 	return ResponseEntity.ok(updateTradeOfferResponse);
-	// }
 
 	@DeleteMapping("/v1/trade-offers/{tradeOfferId}")
 	public ResponseEntity<Long> remove(@PathVariable Long tradeOfferId) {

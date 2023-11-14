@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTradeOfferResponse {
+public class AcceptTradeOfferResponse {
 	private Long id;
 
 	private String title;
@@ -21,8 +21,8 @@ public class UpdateTradeOfferResponse {
 
 	private String imagePath;
 
-	public static UpdateTradeOfferResponse of(TradeOffer tradeOffer) {
-		return UpdateTradeOfferResponse.builder()
+	public static AcceptTradeOfferResponse of(TradeOffer tradeOffer) {
+		return AcceptTradeOfferResponse.builder()
 			.id(tradeOffer.getId())
 			.title(tradeOffer.getTitle())
 			.content(tradeOffer.getContent())

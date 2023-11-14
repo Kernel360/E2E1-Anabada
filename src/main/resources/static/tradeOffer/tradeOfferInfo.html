@@ -121,6 +121,9 @@
                 } else {
                     $('#tradeImage').append("", $('#image').val())
                 }
+                if(data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD'){
+                    $('#tradeOfferAcceptButton').hide();
+                }
             },
             error: function () {
                 console.log('fail : tradeOffer 상세 조회');

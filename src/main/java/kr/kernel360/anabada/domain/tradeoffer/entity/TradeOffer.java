@@ -74,10 +74,8 @@ public class TradeOffer extends BaseEntity {
 		this.trade = trade;
 	}
 
-	public void update(String title, String content, String imagePath) {
-		this.title = title;
-		this.content = content;
-		this.imagePath = imagePath;
+	public void setTradeOfferStatus(TradeOfferStatus tradeOfferStatus) {
+		this.tradeOfferStatus = tradeOfferStatus;
 	}
   
 	public void remove() {

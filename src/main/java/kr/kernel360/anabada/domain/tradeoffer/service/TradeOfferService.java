@@ -17,10 +17,10 @@ import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
-import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
-import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
+import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
+import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -55,16 +55,6 @@ public class TradeOfferService {
 	}
 
 	@Transactional
-	public UpdateTradeOfferResponse update(UpdateTradeOfferRequest updateTradeOfferRequest) {
-		TradeOffer tradeOffer = findTradeOfferById(updateTradeOfferRequest.getId());
-
-		tradeOffer.update(updateTradeOfferRequest.getTitle(), updateTradeOfferRequest.getContent(),
-			updateTradeOfferRequest.getImagePath());
-
-		return UpdateTradeOfferResponse.of(tradeOffer);
-	}
-
-	@Transactional
 	public void remove(Long tradeOfferId) {
 		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
 
@@ -79,5 +69,19 @@ public class TradeOfferService {
 
 	private Trade findTradeById(Long tradeId) {
 		return tradeRepository.findById(tradeId).orElseThrow(() -> new IllegalArgumentException(""));
+	}
+
+	@Transactional
+	public long accept(Long tradeOfferId) {
+		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
+		Trade findTrade = tradeOffer.getTrade();
+
+		if (findTrade.getTradeStatus() == TradeStatus.AFTER_ACCEPT) {
+			throw new IllegalArgumentException("이미 교환 완료된 상품입니다.");
+		}
+		findTrade.setTradeStatus(TradeStatus.AFTER_ACCEPT);
+		tradeOffer.setTradeOfferStatus(TradeOfferStatus.REQUEST_ACCEPTED);
+		return tradeOfferRepository.rejectTradeOfferStatus(tradeOfferId, findTrade);
+
 	}
 }
