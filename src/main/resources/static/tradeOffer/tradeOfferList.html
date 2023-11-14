@@ -110,12 +110,17 @@
                 var tradeOffers = data.tradeOffers.content;
                 if (tradeOffers) {
                     tradeOffers.forEach(function (tradeOffer) {
+                        console.log(tradeOffer.tradeOfferStatus);
+                        var buttonOrStatus = tradeOffer.tradeOfferStatus === 'REQUEST_ON_HOLD' ?
+                            '<button class="btn btn-primary" onclick="fn_acceptTradeOffer(' + tradeOffer.id + ')">수락</button>' :
+                            tradeOffer.tradeOfferStatus;
+
                         var tradeOfferItem = '<tr class="trade-offer-item table-list" data-trade-offer-id="' + tradeOffer.id + '">' +
                             '<th scope="row">' + tradeOffer.id + '</th>' +
                             '<td>' + tradeOffer.title + '</td>' +
                             '<td>' + tradeOffer.createdBy + '</td>' +
                             '<td>' + tradeOffer.createdDate + '</td>' +
-                            '<td>' + '<button class="btn btn-primary" onclick="fn_acceptTradeOffer(' + tradeOffer.id + ')">수락</button>' + '</td>' +
+                            '<td>' + buttonOrStatus + '</td>' +
                             '</tr>';
                         $('#tradeOfferList').append(tradeOfferItem);
                     });
@@ -126,14 +131,17 @@
                 var currentPage = data.tradeOffers.number;
                 updatePagination(currentPage, totalPages);
 
-                $('.trade-offer-item').click(function () {
-                    var json = {
-                        "tradeId" : param.tradeId,
-                        "tradeOfferId" : $(this).data('trade-offer-id'),
-                        "tradeTitle" : param.tradeTitle,
-                        "nickname" : param.nickname
+                $('.trade-offer-item').click(function (event) {
+                    // Check if the clicked element is not the button
+                    if (!$(event.target).is('button')) {
+                        var json = {
+                            "tradeId": param.tradeId,
+                            "tradeOfferId": $(this).data('trade-offer-id'),
+                            "tradeTitle": param.tradeTitle,
+                            "nickname": param.nickname
+                        };
+                        authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId=' + json.tradeOfferId + "&tradeTitle=" + json.tradeTitle + "&nickname=" + json.nickname + "&tradeId=" + json.tradeId);
                     }
-                    authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId='+json.tradeOfferId+"&tradeTitle="+json.tradeTitle+"&nickname="+json.nickname+"&tradeId="+json.tradeId);
                 });
             },
             error: function () {
@@ -152,8 +160,8 @@
             },
             contentType: 'application/json',
             success: function (data) {
-                alert("교환 요청을 수락하였습니다.");
-                authorize('/trade/tradeList.html');
+                console.log("accept success");
+                fn_getTradeOfferList(0);
             },
             error: function () {
                 console.log('fail : trade offer 수락');

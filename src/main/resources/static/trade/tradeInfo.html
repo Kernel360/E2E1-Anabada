@@ -117,6 +117,9 @@
                 } else {
                     $('#tradeImage').append("", $('#image').val())
                 }
+                if (data.tradeStatus != 'BEFORE_ACCEPT') {
+                    $('#tradeOfferCreateButton').hide();
+                }
 
                 param.nickname = data.nickname;
                 param.tradeTitle = data.tradeTitle;
