@@ -10,9 +10,8 @@ import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-	Optional<Member> findOneWithAuthoritiesByEmail(String username);
+	Optional<Member> findByEmail(String email);
 
-	Optional<Member> findBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId);
 	boolean existsByEmail(String email);
 	boolean existsByNickname(String nickname);
 

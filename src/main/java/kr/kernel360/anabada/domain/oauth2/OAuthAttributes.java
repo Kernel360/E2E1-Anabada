@@ -38,12 +38,11 @@ public class OAuthAttributes {
 	public static Member toEntity(SocialProvider socialProvider, OAuth2MemberInfo oAuth2MemberInfo) {
 		return Member.builder()
 			.socialProvider(socialProvider)
-			.socialId(oAuth2MemberInfo.getId())
 			.password(String.valueOf(oAuth2MemberInfo.getId().hashCode()))
-			.email(socialProvider.getDescription() + oAuth2MemberInfo.getEmail())
+			.email(oAuth2MemberInfo.getEmail())
 			.authorities("ROLE_USER")
 			.accountStatus(true)
-			.nickname(oAuth2MemberInfo.getNickname())
+			.nickname(socialProvider.getDescription() + oAuth2MemberInfo.getNickname())
 			.gender(oAuth2MemberInfo.getGender())
 			.birth(oAuth2MemberInfo.getBirth())
 			.build();

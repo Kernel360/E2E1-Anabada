@@ -3,11 +3,7 @@ package kr.kernel360.anabada.domain.oauth2.service;
 import java.util.Collections;
 import java.util.Map;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -15,23 +11,17 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import kr.kernel360.anabada.domain.auth.dto.LoginRequest;
-import kr.kernel360.anabada.domain.auth.dto.LoginResponse;
-import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import kr.kernel360.anabada.domain.oauth2.CustomOAuth2User;
 import kr.kernel360.anabada.domain.oauth2.OAuthAttributes;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
-import kr.kernel360.anabada.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 	private final MemberRepository memberRepository;
-
-	private static final String KAKAO = "kakao";
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -63,13 +53,19 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
 	}
 
 	private Member findMember(OAuthAttributes attributes, SocialProvider socialProvider) {
-		Member member = memberRepository.findBySocialProviderAndSocialId(socialProvider
-			, attributes.getOAuth2MemberInfo().getId()).orElse(null);
+		Member member = memberRepository
+			.findByEmail(attributes
+			.getOAuth2MemberInfo()
+			.getEmail())
+			.orElse(null);
 
 		if (member == null) {
 			return saveMember(attributes, socialProvider);
+		} else if (member.getSocialProvider() == SocialProvider.LOCAL) {
+			throw new OAuth2AuthenticationException("이미 회원가입된 이메일입니다.");
+		} else {
+			return member;
 		}
-		return member;
 	}
 
 	private Member saveMember(OAuthAttributes attributes, SocialProvider socialProvider) {

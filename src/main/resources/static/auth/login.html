@@ -37,7 +37,16 @@
         });
 
         function fn_init() {
+            var queryString = window.location.search;
+
+            if (queryString.includes("error=memberAlreadyExistsInService")) {
+                fn_memberAlreadyExist_alert();
+            }
             fn_setEvent(); // 이벤트 초기화 함수 호출
+        }
+
+        function fn_memberAlreadyExist_alert() {
+            alert("회원가입한 계정으로 로그인해주세요.");
         }
 
         function fn_setEvent() {

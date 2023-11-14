@@ -6,15 +6,12 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
-import kr.kernel360.anabada.global.commons.domain.SocialMemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class CustomOAuth2User extends DefaultOAuth2User {
-
-	private SocialMemberStatus socialMemberStatus = SocialMemberStatus.GUEST;
 
 	private String email;
 
@@ -36,8 +33,6 @@ public class CustomOAuth2User extends DefaultOAuth2User {
 	public boolean equals(Object obj) {
 		return super.equals(obj);
 	}
-
-
 
 	@Override
 	public int hashCode() {
