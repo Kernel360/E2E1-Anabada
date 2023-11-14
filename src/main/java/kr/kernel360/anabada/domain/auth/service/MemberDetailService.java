@@ -1,8 +1,6 @@
 package kr.kernel360.anabada.domain.auth.service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +20,7 @@ public class MemberDetailService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-		return memberRepository.findOneWithAuthoritiesByEmail(username)
+		return memberRepository.findByEmail(username)
 			.map(member -> createUser(username, member))
 			.orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원 정보 입니다."));
 	}

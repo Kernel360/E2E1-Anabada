@@ -93,7 +93,7 @@ public class MemberService {
 	}
 
 	private Member findByEmail(String findEmailByJwt) {
-		return memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+		return memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 	}
 }

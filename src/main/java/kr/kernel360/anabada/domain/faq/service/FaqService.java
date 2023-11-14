@@ -35,7 +35,7 @@ public class FaqService {
 	@Transactional
 	public CreateFaqResponse create(CreateFaqRequest createFaqRequest) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+		Member member = memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Faq faq = faqRepository.save(CreateFaqRequest.toEntity(createFaqRequest, member));

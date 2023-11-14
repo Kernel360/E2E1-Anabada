@@ -26,7 +26,7 @@ public class AuthService {
 	private final MemberRepository memberRepository;
 
 	public LoginResponse authenticate(LoginRequest loginRequest) {
-		Member findMember = memberRepository.findOneWithAuthoritiesByEmail(loginRequest.getEmail())
+		Member findMember = memberRepository.findByEmail(loginRequest.getEmail())
 			.orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
 
 		validateLogin(loginRequest, findMember);
@@ -69,7 +69,7 @@ public class AuthService {
 	@Transactional
 	public Long signUp(SignUpRequest signUpRequest) {
 		signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-		Member member = memberRepository.save(signUpRequest.toEntity(signUpRequest));
+		Member member = memberRepository.save(SignUpRequest.toEntity(signUpRequest));
 		return member.getId();
 	}
 

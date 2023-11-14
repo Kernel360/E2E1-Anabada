@@ -49,7 +49,7 @@ public class TradeOfferService {
 	@Transactional
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long tradeId) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+		Member member = memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Trade trade = findTradeById(tradeId);
