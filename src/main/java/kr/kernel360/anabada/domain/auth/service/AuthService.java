@@ -84,4 +84,7 @@ public class AuthService {
 		return tokenProvider.reissueToken(requestTokenDto);
 	}
 
+	public void logout(String refreshToken) {
+		tokenProvider.removeRedisRefreshToken(refreshToken);
+	}
 }

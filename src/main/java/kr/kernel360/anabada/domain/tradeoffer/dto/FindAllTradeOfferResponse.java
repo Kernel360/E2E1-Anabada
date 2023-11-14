@@ -1,6 +1,6 @@
 package kr.kernel360.anabada.domain.tradeoffer.dto;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllTradeOfferResponse {
-	List<FindTradeOfferDto> tradeOffers;
+	Page<FindTradeOfferDto> tradeOffers;
 
-	public static FindAllTradeOfferResponse of(List<FindTradeOfferDto> tradeOffers) {
+	public static FindAllTradeOfferResponse of(Page<FindTradeOfferDto> tradeOffers) {
 		return FindAllTradeOfferResponse.builder()
 			.tradeOffers(tradeOffers)
 			.build();

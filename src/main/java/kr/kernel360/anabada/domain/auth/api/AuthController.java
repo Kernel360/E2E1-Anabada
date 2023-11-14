@@ -1,6 +1,7 @@
 package kr.kernel360.anabada.domain.auth.api;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +36,15 @@ public class AuthController {
 	}
 
 	@PostMapping("/v1/auth/isEmailUnique")
-	public ResponseEntity isEmailUnique(@RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<Void> isEmailUnique(@RequestBody SignUpRequest signUpRequest) {
 		authService.isEmailUnique(signUpRequest.getEmail());
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/v1/auth/isNicknameUnique")
-	public ResponseEntity isNicknameUnique(@RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<Void> isNicknameUnique(@RequestBody SignUpRequest signUpRequest) {
 		authService.isNickname(signUpRequest.getNickname());
-		return ResponseEntity.ok().build();
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/v1/auth/signUp")
@@ -57,5 +58,11 @@ public class AuthController {
 	public ResponseEntity<TokenDto> reissueAccessToken(@RequestBody TokenDto requestTokenDto) {
 		TokenDto responseTokenDto = authService.reissueAccessToken(requestTokenDto);
 		return ResponseEntity.ok().body(responseTokenDto);
+	}
+
+	@PostMapping("/v1/auth/logout")
+	public ResponseEntity<Void> logout(@RequestBody Map<String,String> map) {
+		authService.logout(map.get("refreshToken"));
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -1,7 +1,7 @@
 <div class="pagetitle">
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
+            <li class="breadcrumb-item"><a href="/static">AnabadA</a></li>
             <li class="breadcrumb-item "><a onclick="authorize('/trade/tradeList.html')">교환</a></li>
             <li class="breadcrumb-item"><a id="infoPageButton">상세조회</a></li>
             <li class="breadcrumb-item active">거래요청</li>
@@ -80,7 +80,7 @@
 
     function fn_setEvent() {
         $('#infoPageButton').click(function () {
-            authorize('/trade/tradeInfo.html?tradeNo=' + param.tradeNo);
+            authorize('/trade/tradeInfo.html?tradeId=' + param.tradeId);
         });
 
         // "요청하기" 버튼 클릭 이벤트 핸들러
@@ -108,16 +108,18 @@
     }
 
     function fn_saveTradeInfo() {
+        console.log("fn_saveTradeInfo");
         var formData = new FormData();
         formData.append("title", $('#requestTitle').val());
         formData.append('imageFile', $('#imageFile')[0].files[0]);
         formData.append("content", $('#requestContent').val());
         formData.append("memberId", 1);
-        formData.append("tradeId", param.tradeNo);
+        formData.append("tradeId", param.tradeId);
 
         for (var pair of formData.entries()) {
             console.log(pair[0], pair[1]);
         }
+
 
         $.ajax({
             url: '/api/v1/trade-offers',
@@ -130,7 +132,7 @@
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                authorize('/trade/tradeList.html');
+                authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId=' + data + "&tradeTitle=" + param.tradeTitle + "&nickname=" + param.nickname + "&tradeId=" + param.tradeId);
             },
             error: function () {
                 console.log('fail : trade offer 생성');
