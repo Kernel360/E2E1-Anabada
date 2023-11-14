@@ -64,8 +64,9 @@ public class TradeOfferController {
 	}
 
 	@PutMapping("/v1/trade-offers/{tradeOfferId}/accept")
-	public void accept(@PathVariable Long tradeOfferId) {
+	public ResponseEntity<Void> accept(@PathVariable Long tradeOfferId) {
 		tradeOfferService.accept(tradeOfferId);
+		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/v1/trade-offers/{tradeOfferId}")
