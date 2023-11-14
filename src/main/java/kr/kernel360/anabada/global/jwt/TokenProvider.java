@@ -211,7 +211,7 @@ public class TokenProvider implements InitializingBean {
 		}
 	}
 
-	private void removeRedisRefreshToken(String refreshToken) {
+	public void removeRedisRefreshToken(String refreshToken) {
 		redisTemplate.opsForValue().getOperations().delete("refreshToken:" + refreshToken);
 	}
 

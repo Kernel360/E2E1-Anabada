@@ -34,11 +34,12 @@
         var param = {};
         $(document).ready(function () {
             fn_init();
-            $('main[content="container"]').empty();
-            loadHtmlAndExecuteScript("/main.html", param);
         });
 
         function fn_init() {
+            $('main[content="container"]').empty();
+            loadHtmlAndExecuteScript("/main.html", param);
+
             if (null != localStorage.getItem("accessToken")) {
                 fn_getMemberInfo();
                 fn_getLocationInfo();
@@ -226,8 +227,27 @@
         }
 
         function fn_logout() {
-            localStorage.clear();
-            window.location.href = "/";
+            var paramJson = {
+                refreshToken: localStorage.getItem("refreshToken")
+            }
+            $.ajax({
+                url: '/api/v1/auth/logout',
+                method: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(paramJson),
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                cache: false,  // 이 부분을 추가해보세요
+                success : function (data) {
+                    localStorage.clear();
+                    window.location.href = "/";
+                },
+                error: function (data) {
+                    console.error("fail : 로그아웃", data);
+                }
+            });
         }
     </script>
 </head>
