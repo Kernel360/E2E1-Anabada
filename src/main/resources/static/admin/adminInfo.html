@@ -242,12 +242,16 @@
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                var param = {
-                    female: data.female,
-                    male: data.male
-                };
+                var genderList = data.genderList;
+                var genders = [];
+                var counts = [];
+                for (var i = 0; i < genderList.length; i++) {
+                    var now = genderList[i];
+                    genders.push(now.gender === "F" ? "여성" : "남성");
+                    counts.push(now.count);
+                }
 
-                createGenderChart(param);
+                createGenderChart(genders, counts);
             },
             error: function () {
                 console.log('fail : 성별 회원수 가져오기 실패');
@@ -255,21 +259,21 @@
         });
     }
 
-    function createGenderChart(param) {
+    function createGenderChart(genders, counts) {
         new Chart(document.querySelector('#genderStats'), {
             type: 'doughnut',
             data: {
-                labels: ['여성', '남성'],
+                labels: genders,
                 datasets: [{
                     label: '성별 회원 통계',
-                    data: [param.female, param.male],
+                    data: counts,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)'
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
                     ],
                     borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)'
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 99, 132)'
                     ],
                     hoverOffset: 4
                 }]

@@ -12,6 +12,7 @@ import kr.kernel360.anabada.domain.member.dto.FindAllMemberByAgeGroupResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberByGenderResponse;
 import kr.kernel360.anabada.domain.member.dto.FindAllMemberResponse;
 import kr.kernel360.anabada.domain.member.dto.FindMemberResponse;
+import kr.kernel360.anabada.domain.member.dto.GenderDto;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
@@ -58,16 +59,9 @@ public class MemberService {
 	}
 
 	public FindAllMemberByGenderResponse countMembersByGender() {
-		List<Object[]> genderCounts = memberRepository.countMembersByGender();
-		FindAllMemberByGenderResponse findAllMemberByGenderResponse = new FindAllMemberByGenderResponse();
-		for (Object[] genderCount : genderCounts) {
-			if (((String)genderCount[0]).equals("M")) {
-				findAllMemberByGenderResponse.setMale((Long)genderCount[1]);
-			} else {
-				findAllMemberByGenderResponse.setFemale((Long)genderCount[1]);
-			}
-		}
-		return findAllMemberByGenderResponse;
+		List<GenderDto> genderList = memberRepository.countMembersByGender();
+
+		return FindAllMemberByGenderResponse.of(genderList);
 	}
 
 	public FindAllMemberByAgeGroupResponse countMembersByAgeGroup() {
