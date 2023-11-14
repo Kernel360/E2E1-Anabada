@@ -27,7 +27,8 @@ public class MemberService {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
 		Member member = findByEmail(findEmailByJwt);
 
-		member.update(updateMemberRequest.getGender(), updateMemberRequest.getBirth());
+		member.update(updateMemberRequest.getNickname(), updateMemberRequest.getGender(),
+			updateMemberRequest.getBirth());
 		return member.getId();
 	}
 

@@ -38,18 +38,21 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <label class="form-label" id="myNickname-label"></label>
-                                    <div class="input-group has-validation">
-                                        <span class="input-group-text"><i class="bi bi bi-person-check-fill"></i></span>
-                                        <input type="text" class="form-control" id="nickname" readonly>
-                                    </div>
-                                </div>
-
                                 <br>
                                 <h5 class="card-title">개인정보 수정</h5>
                                 <!-- General Form Elements -->
                                 <form>
+                                    <div class="col-12">
+                                        <label class="form-label" id="myNickname-label"></label>
+                                        <div class="input-group has-validation">
+                                            <span class="input-group-text"><i class="bi bi bi-person-check-fill"></i></span>
+                                            <input type="text" class="form-control" id="nickname">
+                                            <div id="nickname-feedback" class="invalid-feedback">닉네임을 입력하세요.</div>
+                                        </div>
+                                    </div>
+
+                                    <br>
+
                                     <div class="col-12">
                                         <div class="input-group has-validation">
                                             <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
@@ -88,7 +91,7 @@
                                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                             <input type="password" name="password" class="form-control" id="password"
                                                    placeholder="새로운 비밀번호을 입력해 주세요." autocomplete="current-password">
-                                            <button id="passwordUpdateButton" class="btn btn-primary btn-sm">변경</button>
+                                            <button id="passwordUpdateButton" class="btn btn-primary btn-sm" >변경</button>
                                         </div>
                                     </div>
                                 </form>
@@ -247,7 +250,7 @@
 
                 for (var i = 0; i < tradeOffers.length; i++) {
                     var tradeOffer = tradeOffers[i];
-                    var tradeOfferItem = '<tr class="trade-item table-list" data-tradeOffer-id="' + tradeOffer.id + '">' +
+                    var tradeOfferItem = '<tr class="trade-offer-item table-list" data-trade-offer-id="' + tradeOffer.id + '">' +
                         '<th scope="row">' + tradeOffer.id + '</th>' +
                         '<td>' + tradeOffer.title + '</td>' +
                         '<td>' + (tradeOffer.tradeOfferStatus === "REQUEST_ON_HOLD" ? "요청대기": (tradeOffer.tradeOfferStatus === "REQUEST_ACCEPTED" ? "요청수락" : "요청만료"))+ '</td>' +
@@ -256,10 +259,10 @@
                     $('#tradeOfferList').append(tradeOfferItem);
                 }
 
-                // $('.trade-item').click(function () {
-                //     var tradeId = $(this).data('trade-id');
-                //     authorize('/trade/tradeInfo.html?tradeNo='+tradeId);
-                // });
+                $('.trade-offer-item').click(function () {
+                    var tradeOfferId = $(this).data('trade-offer-id');
+                    authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId='+tradeOfferId);
+                });
             },
             error: function () {
                 console.log('fail : trade 목록 조회');
@@ -268,9 +271,33 @@
     }
 
     function fn_setEvent() {
+        $('#nickname').on('blur', function () {
+            $("#nickname-feedback").hide();
+            const nicknameValue = $(this).val().trim();
+            if (nicknameValue.length!=0 && !(4 <= nicknameValue.length &&  10 >= nicknameValue.length)) {
+                alert("닉네임은 4자리 ~ 10자리만 가능합니다.");
+                $('#nickname').val("");
+                return;
+            }
+            $.ajax({
+                url: '/api/v1/auth/isNicknameUnique',
+                method: 'POST',
+                data: JSON.stringify({ nickname: nicknameValue }),
+                contentType: 'application/json',
+                success: function (data) {
+                },
+                error: function () {
+                    $("#nickname-feedback").text("사용할 수 없는 닉네임 입니다.");
+                    $("#nickname-feedback").show();
+                    $("#nickname").val("");
+                }
+            });
+        });
+
         $('#memberInfoUpdateButton').click(function (e) {
             e.preventDefault()
             var param = {
+                "nickname": $("#nickname").val(),
                 "birth": $("#birth").val(),
                 "gender": $("input[name='gender']:checked").val()
             }
@@ -285,6 +312,7 @@
                 },
                 success: function (data) {
                     alert("회원정보가 수정되었습니다.");
+                    $(".member-nickname").text($("#nickname").val());
                 },
                 error: function () {
                     console.log('fail : 회원 정보 변경');

@@ -78,7 +78,8 @@ public class Member extends BaseEntity {
 		this.birth = birth;
 	}
 
-	public void update(String gender, String birth) {
+	public void update(String nickname, String gender, String birth) {
+		this.nickname = nickname;
 		this.gender = gender;
 		this.birth = birth;
 	}
