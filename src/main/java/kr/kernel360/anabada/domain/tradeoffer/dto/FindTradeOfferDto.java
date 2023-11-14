@@ -2,16 +2,18 @@ package kr.kernel360.anabada.domain.tradeoffer.dto;
 
 import java.time.LocalDateTime;
 
-import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
+import com.querydsl.core.annotations.QueryProjection;
+
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
-
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class FindTradeOfferDto {
 		private Long id;
 
@@ -31,20 +33,20 @@ public class FindTradeOfferDto {
 
 		private LocalDateTime createdDate;
 
-	public static FindTradeOfferDto of(TradeOffer tradeOffer) {
-		return FindTradeOfferDto.builder()
-			.id(tradeOffer.getId())
-			.title(tradeOffer.getTitle())
-			.imagePath(tradeOffer.getImagePath())
-			.tradeOfferStatus(tradeOffer.getTradeOfferStatus())
-			.deletedStatus(tradeOffer.getDeletedStatus())
-			.content(tradeOffer.getContent())
-			.createdBy(tradeOffer.getMember().getNickname())
-			.tradeId(tradeOffer.getTrade().getId())
-			.createdDate(tradeOffer.getCreatedDate())
-			.build();
+	@QueryProjection
+	@Builder
+	public FindTradeOfferDto(Long id, String title, TradeOfferStatus tradeOfferStatus, DeletedStatus deletedStatus,
+		String createdBy, Long tradeId, LocalDateTime createdDate) {
+		this.id = id;
+		this.title = title;
+		this.tradeOfferStatus = tradeOfferStatus;
+		this.deletedStatus = deletedStatus;
+		this.createdBy = createdBy;
+		this.tradeId = tradeId;
+		this.createdDate = createdDate;
 	}
 
+	@QueryProjection
 	@Builder
 	public FindTradeOfferDto(Long id, String title, String content, String imagePath, TradeOfferStatus tradeOfferStatus,
 		DeletedStatus deletedStatus, String createdBy, LocalDateTime createdDate, Long tradeId) {
