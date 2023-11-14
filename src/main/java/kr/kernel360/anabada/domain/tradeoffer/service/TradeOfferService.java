@@ -1,5 +1,7 @@
 package kr.kernel360.anabada.domain.tradeoffer.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,14 +14,13 @@ import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
 import kr.kernel360.anabada.domain.tradeoffer.dto.CreateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferRequest;
+import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferRequest;
 import kr.kernel360.anabada.domain.tradeoffer.dto.UpdateTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
-import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
-import kr.kernel360.anabada.global.commons.domain.TradeOfferSearchType;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,19 +31,15 @@ public class TradeOfferService {
 	private final MemberRepository memberRepository;
 	private final TradeRepository tradeRepository;
 
-	public Page<FindTradeOfferDto> findAll(TradeOfferSearchType tradeOfferSearchType, FindAllTradeOfferRequest findAllTradeOfferRequest, Pageable pageable) {
-		DeletedStatus deletedStatus = DeletedStatus.FALSE;
-		Member member = findMemberById(findAllTradeOfferRequest.getMemberId());
-		Trade trade = findTradeById(findAllTradeOfferRequest.getTradeId());
-		return switch (tradeOfferSearchType) {
-			case MEMBER -> tradeOfferRepository.findByMemberAndDeletedStatus(member, deletedStatus, pageable).map(FindTradeOfferDto::of);
-			case TRADE -> tradeOfferRepository.findByTradeAndDeletedStatus(trade, deletedStatus, pageable).map(FindTradeOfferDto::of);
-		};
+	public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest, Pageable pageable) {
+		Page<FindTradeOfferDto> tradeOffers = tradeOfferRepository.findAll(findAllTradeOfferRequest, pageable);
+		return FindAllTradeOfferResponse.of(tradeOffers);
 	}
 
 	public FindTradeOfferResponse find(Long tradeOfferId) {
-		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
-		FindTradeOfferDto findTradeOfferDto = FindTradeOfferDto.of(tradeOffer);
+		FindTradeOfferDto findTradeOfferDto = Optional.ofNullable(tradeOfferRepository.find(tradeOfferId))
+			.orElseThrow(() -> new IllegalArgumentException("교환 요청이 존재하지 않습니다"));
+
 		return FindTradeOfferResponse.of(findTradeOfferDto);
 	}
 
@@ -79,10 +76,6 @@ public class TradeOfferService {
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환 요청이 없습니다."));
 	}
 
-	private Member findMemberById(Long memberId) {
-		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 없습니다."));
-	}
 
 	private Trade findTradeById(Long tradeId) {
 		return tradeRepository.findById(tradeId).orElseThrow(() -> new IllegalArgumentException(""));

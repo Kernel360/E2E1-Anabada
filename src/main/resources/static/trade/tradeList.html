@@ -202,7 +202,7 @@
 
                 $('.trade-item').click(function () {
                     var tradeId = $(this).data('trade-id');
-                    authorize('/trade/tradeInfo.html?tradeNo='+tradeId);
+                    authorize('/trade/tradeInfo.html?tradeId='+tradeId);
                 });
             },
             error: function () {
