@@ -6,6 +6,7 @@ import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.oauth2.memberinfo.KakaoOAuth2MemberInfo;
 import kr.kernel360.anabada.domain.oauth2.memberinfo.OAuth2MemberInfo;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
+import kr.kernel360.anabada.global.utils.AgeGroupParser;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -45,6 +46,7 @@ public class OAuthAttributes {
 			.nickname(socialProvider.getDescription() + oAuth2MemberInfo.getNickname())
 			.gender(oAuth2MemberInfo.getGender())
 			.birth(oAuth2MemberInfo.getBirth())
+			.ageGroup(AgeGroupParser.birthToAgeGroup(oAuth2MemberInfo.getBirth()))
 			.build();
 	}
 }

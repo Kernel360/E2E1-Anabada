@@ -263,7 +263,7 @@
                     window.location.href = "/";
                 },
                 error: function (data) {
-                    console.error("fail : 로그아웃", data);
+                    alert(data.responseJSON.message);
                 }
             });
         }

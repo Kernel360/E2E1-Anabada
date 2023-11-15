@@ -83,8 +83,8 @@
                     success: function (data) {
                         window.location.href = "/auth/login.html"
                     },
-                    error: function () {
-                        alert("로그인 정보를 확인하세요.")
+                    error: function (data) {
+                        alert(data.responseJSON.message);
                     }
                 });
             });
@@ -109,8 +109,9 @@
                     contentType: 'application/json',
                     success: function (data) {
                     },
-                    error: function () {
-                        $("#email-feedback").text("이미 존재하는 이메일 입니다.");
+                    error: function (data) {
+                        var response = data.responseJSON;
+                        $("#email-feedback").text(response.message);
                         $("#email-feedback").show();
                         $("#email").val("");
                     }
@@ -137,8 +138,9 @@
                     contentType: 'application/json',
                     success: function (data) {
                     },
-                    error: function () {
-                        $("#nickname-feedback").text("사용할 수 없는 닉네임 입니다.");
+                    error: function (data) {
+                        var response = data.responseJSON;
+                        $("#nickname-feedback").text(response.message);
                         $("#nickname-feedback").show();
                         $("#nickname").val("");
                     }

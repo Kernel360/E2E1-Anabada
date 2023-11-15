@@ -27,6 +27,7 @@ public class AuthController {
 	@PostMapping("/v1/auth/authenticate")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
 		LoginResponse loginResponse = authService.authenticate(loginRequest);
+
 		return ResponseEntity.ok().body(loginResponse);
 	}
 
@@ -38,12 +39,14 @@ public class AuthController {
 	@PostMapping("/v1/auth/isEmailUnique")
 	public ResponseEntity<Void> isEmailUnique(@RequestBody SignUpRequest signUpRequest) {
 		authService.isEmailUnique(signUpRequest.getEmail());
+
 		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping("/v1/auth/isNicknameUnique")
 	public ResponseEntity<Void> isNicknameUnique(@RequestBody SignUpRequest signUpRequest) {
 		authService.isNickname(signUpRequest.getNickname());
+
 		return ResponseEntity.noContent().build();
 	}
 
@@ -51,18 +54,21 @@ public class AuthController {
 	public ResponseEntity<Long> signUp(@RequestBody SignUpRequest signUpRequest) {
 		Long savedMemberId = authService.signUp(signUpRequest);
 		URI uri = URI.create("/api//v1/auth/signUp" + savedMemberId);
+
 		return ResponseEntity.created(uri).build();
 	}
 
 	@PostMapping("/v1/auth/reissue")
 	public ResponseEntity<TokenDto> reissueAccessToken(@RequestBody TokenDto requestTokenDto) {
-		TokenDto responseTokenDto = authService.reissueAccessToken(requestTokenDto);
-		return ResponseEntity.ok().body(responseTokenDto);
+		TokenDto tokenDto = authService.reissueAccessToken(requestTokenDto);
+
+		return ResponseEntity.ok().body(tokenDto);
 	}
 
 	@PostMapping("/v1/auth/logout")
 	public ResponseEntity<Void> logout(@RequestBody Map<String,String> map) {
 		authService.logout(map.get("refreshToken"));
+
 		return ResponseEntity.noContent().build();
 	}
 }

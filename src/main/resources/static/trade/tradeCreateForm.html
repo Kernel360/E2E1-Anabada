@@ -116,8 +116,8 @@
                     $('#categoryId').append(categoryItem);
                 }
             },
-            error: function () {
-                console.log('fail : 카테고리 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -245,8 +245,8 @@
             success: function (data) {
                 authorize('/trade/tradeList.html');
             },
-            error: function () {
-                console.log('fail : trade 생성');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }

@@ -27,6 +27,8 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.service.TradeService;
 import kr.kernel360.anabada.global.FileHandler;
+import kr.kernel360.anabada.global.error.code.TradeErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,14 +43,16 @@ public class TradeController {
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
 														@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		FindAllTradeResponse trades = tradeService.findAll(tradeSearchCondition, pageable);
-		return ResponseEntity.ok(trades);
+		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, pageable);
+
+		return ResponseEntity.ok(findAllTradeResponse);
 	}
 
 	@GetMapping("/v1/trades/{tradeId}")
 	public ResponseEntity<FindTradeResponse> find(@PathVariable Long tradeId) {
-		FindTradeResponse trade = tradeService.find(tradeId);
-		return ResponseEntity.ok(trade);
+		FindTradeResponse findTradeResponse = tradeService.find(tradeId);
+
+		return ResponseEntity.ok(findTradeResponse);
 	}
 
 	@PostMapping(path = "/v1/trades", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,14 +60,16 @@ public class TradeController {
 		@ModelAttribute CreateTradeRequest createTradeRequest,
 		@ModelAttribute PlaceDto placeDto,
 		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
-
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"trade");
 			createTradeRequest.setImagePath(imagePath);
 		}
 
+
 		Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
+
 		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
+
 		return ResponseEntity.created(uri).build();
 	}
 
@@ -73,9 +79,8 @@ public class TradeController {
 			Path file = rootLocation.resolve(imageName);
 			UrlResource resource = new UrlResource(file.toUri());
 			return ResponseEntity.ok().body(resource);
-
 		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException("잘못된 형식의 URL 입니다");
+			throw new BusinessException(TradeErrorCode.NOT_FOUND_FILE_PATH);
 		}
 	}
 }

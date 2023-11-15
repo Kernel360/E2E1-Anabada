@@ -35,35 +35,37 @@ public class FaqController {
 	public ResponseEntity<CreateFaqResponse> create(@RequestBody CreateFaqRequest createFaqRequest) {
 		CreateFaqResponse createFaqResponse = faqService.create(createFaqRequest);
 		URI url = URI.create("api/v1/faqs/" + createFaqResponse.getId());
-		return ResponseEntity.created(url).body(createFaqResponse);
 
+		return ResponseEntity.created(url).body(createFaqResponse);
 	}
 
 	@GetMapping("/v1/faqs")
 	public ResponseEntity<FindAllFaqResponse> findAll(FaqSearchCondition faqSearchCondition,
 													  @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		FindAllFaqResponse faqs = faqService.findAll(faqSearchCondition, pageable);
-		return ResponseEntity.ok(faqs);
+		FindAllFaqResponse findAllFaqResponse = faqService.findAll(faqSearchCondition, pageable);
+		
+		return ResponseEntity.ok(findAllFaqResponse);
 	}
 
 	@GetMapping("/v1/faqs/{faqId}")
 	public ResponseEntity<FindFaqResponse> find(@PathVariable Long faqId) {
-		FindFaqResponse faq = faqService.find(faqId);
-		return ResponseEntity.ok(faq);
+		FindFaqResponse findFaqResponse = faqService.find(faqId);
+
+		return ResponseEntity.ok(findFaqResponse);
 	}
 
 	@PutMapping("/v1/faqs")
-	public ResponseEntity<UpdateFaqResponse> update(@RequestBody UpdateFaqRequest updateFaqRequest) {
+	public ResponseEntity<UpdateFaqResponse> update(@RequestBody UpdateFaqRequest updateFaqRequest) {;
 		UpdateFaqResponse updateFaqResponse = faqService.update(updateFaqRequest);
+
 		return ResponseEntity.ok(updateFaqResponse);
 	}
 
 	@DeleteMapping("/v1/faqs/{faqId}")
-	public ResponseEntity remove(@PathVariable Long faqId) {
-		faqService.delete(faqId);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<Long> remove(@PathVariable Long faqId) {
+		Long deletedFaqId = faqService.delete(faqId);
 
+		return ResponseEntity.ok().body(deletedFaqId);
 	}
-
 }

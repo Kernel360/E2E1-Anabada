@@ -131,8 +131,8 @@
                 });
 
             },
-            error: function () {
-                console.log('fail : faq 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
