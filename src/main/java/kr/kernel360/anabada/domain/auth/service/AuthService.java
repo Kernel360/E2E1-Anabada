@@ -14,6 +14,8 @@ import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
+import kr.kernel360.anabada.global.error.code.AuthErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import kr.kernel360.anabada.global.jwt.TokenProvider;
 import kr.kernel360.anabada.global.utils.AgeGroupParser;
 import lombok.RequiredArgsConstructor;
@@ -29,55 +31,24 @@ public class AuthService {
 
 	public LoginResponse authenticate(LoginRequest loginRequest) {
 		Member findMember = memberRepository.findByEmail(loginRequest.getEmail())
-			.orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
-
-		if (findMember.getSocialProvider() != SocialProvider.LOCAL) {
-			throw new IllegalArgumentException("소셜로 가입한 회원입니다. 소셜로 로그인 해주세요.");
-		}
-
+			.orElseThrow(() -> new BusinessException(AuthErrorCode.INVALID_ACCOUNT));
 		validateLogin(loginRequest, findMember);
-
 		UsernamePasswordAuthenticationToken authenticationToken =
 			new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(authenticationToken);
-
 		TokenDto token = tokenProvider.createToken(authentication);
 
 		return LoginResponse.of(findMember.getEmail(), authentication.getAuthorities(), token);
-	}
-
-	private void validateLogin(LoginRequest loginRequest, Member member) {
-		checkPassword(loginRequest.getPassword(), member.getPassword());
-	}
-
-	private void checkPassword(String loginPassword, String encodeUserPassword) {
-		if (!passwordEncoder.matches(loginPassword, encodeUserPassword)) {
-			// todo : 추후 exception 타입 변경 필요
-			throw new IllegalArgumentException("비밀번호가 다릅니다.");
-		}
-	}
-
-	public void isEmailUnique(String email) {
-		if (memberRepository.existsByEmail(email)) {
-			// todo : 추후 exception 타입 변경 필요
-			throw new IllegalArgumentException("사용중인 이메일입니다.");
-		}
-	}
-
-	public void isNickname(String nickname) {
-		if (memberRepository.existsByNickname(nickname)) {
-			// todo : 추후 exception 타입 변경 필요
-			throw new IllegalArgumentException("사용중인 닉네임입니다.");
-		}
 	}
 
 	@Transactional
 	public Long signUp(SignUpRequest signUpRequest) {
 		signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 		signUpRequest.setAgeGroup(AgeGroupParser.birthToAgeGroup(signUpRequest.getBirth()));
-		Member member = memberRepository.save(SignUpRequest.toEntity(signUpRequest));
-		return member.getId();
+		Member savedMember = memberRepository.save(SignUpRequest.toEntity(signUpRequest));
+
+		return savedMember.getId();
 	}
 
 	public TokenDto reissueAccessToken(TokenDto requestTokenDto) {
@@ -86,5 +57,34 @@ public class AuthService {
 
 	public void logout(String refreshToken) {
 		tokenProvider.removeRedisRefreshToken(refreshToken);
+	}
+
+	private void isAlreadySocialLogin(Member findMember) {
+		if (findMember.getSocialProvider() != SocialProvider.LOCAL) {
+			throw  new BusinessException(AuthErrorCode.ALREADY_SOCIAL_LOGIN);
+		}
+	}
+
+	private void validateLogin(LoginRequest loginRequest, Member member) {
+		isAlreadySocialLogin(member);
+		checkPassword(loginRequest.getPassword(), member.getPassword());
+	}
+
+	private void checkPassword(String loginPassword, String encodeUserPassword) {
+		if (!passwordEncoder.matches(loginPassword, encodeUserPassword)) {
+			throw new BusinessException(AuthErrorCode.INVALID_PASSWORD);
+		}
+	}
+
+	public void isEmailUnique(String email) {
+		if (memberRepository.existsByEmail(email)) {
+			throw new BusinessException(AuthErrorCode.ALREADY_SAVED_EMAIL);
+		}
+	}
+
+	public void isNickname(String nickname) {
+		if (memberRepository.existsByNickname(nickname)) {
+			throw new BusinessException(AuthErrorCode.ALREADY_SAVED_NICKNAME);
+		}
 	}
 }

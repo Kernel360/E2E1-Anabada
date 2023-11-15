@@ -75,8 +75,8 @@
                         localStorage.setItem("refreshToken", data.tokenDto.refreshToken);
                         window.location.href = "/";
                     },
-                    error: function () {
-                        alert("로그인 정보를 확인하세요.")
+                    error: function (data) {
+                        alert(data.responseJSON.message);
                     }
                 });
             });

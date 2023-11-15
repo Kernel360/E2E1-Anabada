@@ -39,6 +39,8 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.auth.entity.RefreshToken;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
+import kr.kernel360.anabada.global.error.code.TokenErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -164,22 +166,18 @@ public class TokenProvider implements InitializingBean {
 	}
 
 	/** Access Token 유효성 검증을 수행 **/
-	public boolean validateAccessToken(String token, ServletRequest request) {
+	public boolean validateAccessToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (SecurityException | MalformedJwtException e) {
-			// log.info("잘못된 JWT 서명입니다");
-			throw new IllegalArgumentException("잘못된 JWT 서명입니다"); // todo : 추후 Exception 변경
+			throw new BusinessException(TokenErrorCode.INVALID_TOKEN);
 		} catch (ExpiredJwtException e) {
-			// log.info("만료된 JWT 토큰입니다");
-			throw new IllegalArgumentException("만료된 JWT 토큰입니다"); // todo : 추후 Exception 변경
+			throw new BusinessException(TokenErrorCode.EXPIRED_TOKEN);
 		} catch (UnsupportedJwtException e) {
-			// log.info("지원하지 않는 JWT 토큰입니다");
-			throw new IllegalArgumentException("지원하지 않는 JWT 토큰입니다"); // todo : 추후 Exception 변경
+			throw new BusinessException(TokenErrorCode.UNAUTHORIZED_TOKEN);
 		} catch (IllegalArgumentException e) {
-			// log.info("잘못된 JWT 토큰입니다");
-			throw new IllegalArgumentException("잘못된 JWT 토큰입니다"); // todo : 추후 Exception 변경
+			throw new BusinessException(TokenErrorCode.WRONG_TOKEN);
 		}
 	}
 

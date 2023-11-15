@@ -12,7 +12,6 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
-import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
@@ -20,6 +19,8 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
+import kr.kernel360.anabada.global.error.code.TradeErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,34 +30,29 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final MemberRepository memberRepository;
 	private final CategoryRepository categoryRepository;
-	private final PlaceRepository placeRepository;
-
 
 	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
 		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, pageable);
+
 		return FindAllTradeResponse.of(findTrades);
 	}
 
 	public FindTradeResponse find(Long tradeId) {
-		FindTradeDto findTradeDto = Optional.of(tradeRepository.findTrade(tradeId))
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환이 없습니다."));
+		FindTradeDto findTradeDto = Optional.ofNullable(tradeRepository.findTrade(tradeId))
+			.orElseThrow(() -> new BusinessException(TradeErrorCode.NOT_FOUND_TRADE));
+
 		return FindTradeResponse.of(findTradeDto);
 	}
 
 	@Transactional
 	public Long create(CreateTradeRequest createTradeRequest) {
-
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
+		Member findMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
+		Category findCategory = categoryRepository.findById(createTradeRequest.getCategoryId())
+			.orElseThrow(() -> new BusinessException(TradeErrorCode.NOT_FOUND_CATEGORY));
+		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, findCategory, findMember));
 
-		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 카테고리가 없습니다."));
-
-		// Place place = placeRepository.save(placeDto.toEntity(placeDto));
-
-		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member));
 		return savedTrade.getId();
 	}
-
 }

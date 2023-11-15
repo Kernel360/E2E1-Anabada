@@ -144,8 +144,8 @@
                     }
                 });
             },
-            error: function () {
-                console.log('fail : trade 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -163,8 +163,8 @@
                 console.log("accept success");
                 fn_getTradeOfferList(0);
             },
-            error: function () {
-                console.log('fail : trade offer 수락');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }

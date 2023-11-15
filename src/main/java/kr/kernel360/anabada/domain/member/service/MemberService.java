@@ -16,6 +16,8 @@ import kr.kernel360.anabada.domain.member.dto.GenderDto;
 import kr.kernel360.anabada.domain.member.dto.UpdateMemberRequest;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.global.error.code.MemberErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,35 +27,38 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 
 	private final PasswordEncoder passwordEncoder;
+
 	@Transactional
 	public Long update(UpdateMemberRequest updateMemberRequest) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = findByEmail(findEmailByJwt);
-
-		member.update(updateMemberRequest.getNickname(), updateMemberRequest.getGender(),
+		Member findMember = findByEmail(findEmailByJwt);
+		findMember.update(updateMemberRequest.getNickname(), updateMemberRequest.getGender(),
 			updateMemberRequest.getBirth());
-		return member.getId();
+
+		return findMember.getId();
 	}
 
 	@Transactional
 	public Long updatePassword(String password) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = findByEmail(findEmailByJwt);
+		Member findMember = findByEmail(findEmailByJwt);
+		findMember.updatePassword(passwordEncoder.encode(password));
 
-		member.updatePassword(passwordEncoder.encode(password));
-		return member.getId();
+		return findMember.getId();
 	}
 
 	public FindMemberResponse find() {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = findByEmail(findEmailByJwt);
+		Member findMember = findByEmail(findEmailByJwt);
 
-		return FindMemberResponse.of(member);
+		return FindMemberResponse.of(findMember);
 	}
 
 	public FindAllMemberResponse findAll() {
-		List<Member> members = memberRepository.findAll();
-		List<FindMemberResponse> responses = members.stream().map(FindMemberResponse::of).toList();
+		List<Member> findMembers = memberRepository.findAll();
+		List<FindMemberResponse> responses = findMembers.stream()
+			.map(FindMemberResponse::of)
+			.toList();
 
 		return FindAllMemberResponse.of(responses);
 	}
@@ -73,14 +78,14 @@ public class MemberService {
 	@Transactional
 	public Long remove(Long id) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = findByEmail(findEmailByJwt);
+		Member findMember = findByEmail(findEmailByJwt);
+		memberRepository.delete(findMember);
 
-		memberRepository.delete(member);
 		return id;
 	}
 
 	private Member findByEmail(String findEmailByJwt) {
 		return memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+			.orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
 	}
 }
