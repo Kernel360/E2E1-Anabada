@@ -27,40 +27,51 @@ public class MemberController {
 
 	@PutMapping("/v1/members")
 	public ResponseEntity<Long> update(@RequestBody UpdateMemberRequest updateMemberRequest) {
-		return ResponseEntity.ok(memberService.update(updateMemberRequest));
+		Long updatedMemberId = memberService.update(updateMemberRequest);
+
+		return ResponseEntity.ok(updatedMemberId);
 	}
 
 	@PutMapping("/v1/members/password")
 	public ResponseEntity<Long> updatePassword(@RequestBody Map<String,String> password) {
-		return ResponseEntity.ok(memberService.updatePassword(password.get("password")));
+		Long updatedPassword = memberService.updatePassword(password.get("password"));
+
+		return ResponseEntity.ok(updatedPassword);
 	}
 
 	@GetMapping("/v1/members/info")
 	public ResponseEntity<FindMemberResponse> find() {
 		FindMemberResponse findMemberResponse = memberService.find();
+
 		return ResponseEntity.ok(findMemberResponse);
 	}
 
 	@GetMapping("/v1/members")
 	public ResponseEntity<FindAllMemberResponse> findAll() {
 		FindAllMemberResponse findAllMemberResponse = memberService.findAll();
+
 		return ResponseEntity.ok(findAllMemberResponse);
 	}
 
 	@GetMapping("/v1/members/gender")
 	public ResponseEntity<FindAllMemberByGenderResponse> countMemberByGender() {
 		FindAllMemberByGenderResponse findAllMemberByGenderResponse = memberService.countMembersByGender();
+
 		return ResponseEntity.ok(findAllMemberByGenderResponse);
 	}
 
 	@GetMapping("/v1/members/age-group")
 	public ResponseEntity<FindAllMemberByAgeGroupResponse> countMemberByAgeGroup() {
 		FindAllMemberByAgeGroupResponse findAllMemberByAgeGroupResponse = memberService.countMembersByAgeGroup();
+
 		return ResponseEntity.ok(findAllMemberByAgeGroupResponse);
 	}
 
 	@DeleteMapping("/v1/members/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
-		return ResponseEntity.ok(memberService.remove(id));
+		Long removedMemberId = memberService.remove(id);
+
+		return ResponseEntity.ok(removedMemberId);
+
 	}
 }

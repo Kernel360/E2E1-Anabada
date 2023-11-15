@@ -134,9 +134,8 @@
             success: function (data) {
                 authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId=' + data + "&tradeTitle=" + param.tradeTitle + "&nickname=" + param.nickname + "&tradeId=" + param.tradeId);
             },
-            error: function () {
-                console.log('fail : trade offer 생성');
-
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }

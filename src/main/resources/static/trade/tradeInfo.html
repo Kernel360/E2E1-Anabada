@@ -124,8 +124,8 @@
                 param.nickname = data.nickname;
                 param.tradeTitle = data.tradeTitle;
             },
-            error: function () {
-                console.log('fail : trade 상세 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }

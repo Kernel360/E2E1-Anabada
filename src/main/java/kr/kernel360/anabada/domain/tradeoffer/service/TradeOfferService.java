@@ -21,6 +21,8 @@ import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
+import kr.kernel360.anabada.global.error.code.TradeOfferErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,12 +35,13 @@ public class TradeOfferService {
 
 	public FindAllTradeOfferResponse findAll(FindAllTradeOfferRequest findAllTradeOfferRequest, Pageable pageable) {
 		Page<FindTradeOfferDto> tradeOffers = tradeOfferRepository.findAll(findAllTradeOfferRequest, pageable);
+		
 		return FindAllTradeOfferResponse.of(tradeOffers);
 	}
 
 	public FindTradeOfferResponse find(Long tradeOfferId) {
 		FindTradeOfferDto findTradeOfferDto = Optional.ofNullable(tradeOfferRepository.find(tradeOfferId))
-			.orElseThrow(() -> new IllegalArgumentException("교환 요청이 존재하지 않습니다"));
+			.orElseThrow(() -> new BusinessException(TradeOfferErrorCode.NOT_FOUND_TRADE_OFFER));
 
 		return FindTradeOfferResponse.of(findTradeOfferDto);
 	}
@@ -46,42 +49,45 @@ public class TradeOfferService {
 	@Transactional
 	public Long create(CreateTradeOfferRequest createTradeOfferRequest, Long tradeId) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
+		Member findMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new BusinessException(TradeOfferErrorCode.NOT_FOUND_MEMBER));
+		Trade findTrade = findTradeById(tradeId);
 
-		Trade trade = findTradeById(tradeId);
-
-		return tradeOfferRepository.save(CreateTradeOfferRequest.toEntity(createTradeOfferRequest, member, trade)).getId();
+		return tradeOfferRepository.save(CreateTradeOfferRequest.toEntity(createTradeOfferRequest, findMember, findTrade)).getId();
 	}
 
 	@Transactional
-	public void remove(Long tradeOfferId) {
-		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
-
-		tradeOffer.remove();
+	public Long remove(Long tradeOfferId) {
+		TradeOffer findTradeOffer = findTradeOfferById(tradeOfferId);
+		findTradeOffer.remove();
+		
+		return tradeOfferId;
 	}
 
 	private TradeOffer findTradeOfferById(Long id) {
 		return tradeOfferRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환 요청이 없습니다."));
+			.orElseThrow(() -> new BusinessException(TradeOfferErrorCode.NOT_FOUND_TRADE_OFFER));
 	}
 
 
 	private Trade findTradeById(Long tradeId) {
-		return tradeRepository.findById(tradeId).orElseThrow(() -> new IllegalArgumentException(""));
+		return tradeRepository.findById(tradeId)
+			.orElseThrow(() -> new BusinessException(TradeOfferErrorCode.NOT_FOUND_TRADE));
 	}
 
 	@Transactional
 	public void accept(Long tradeOfferId) {
-		TradeOffer tradeOffer = findTradeOfferById(tradeOfferId);
-		Trade findTrade = tradeOffer.getTrade();
-
-		if (findTrade.getTradeStatus() == TradeStatus.AFTER_ACCEPT) {
-			throw new IllegalArgumentException("이미 교환 완료된 상품입니다.");
-		}
+		TradeOffer findTradeOffer = findTradeOfferById(tradeOfferId);
+		Trade findTrade = findTradeOffer.getTrade();
+		isAlreadyAfterAccept(findTrade);
 		findTrade.update(TradeStatus.AFTER_ACCEPT);
-		tradeOffer.update(TradeOfferStatus.REQUEST_ACCEPTED);
+		findTradeOffer.update(TradeOfferStatus.REQUEST_ACCEPTED);
 		tradeOfferRepository.updateTradeOffersByTradeOfferIdNeAndTradeEq(tradeOfferId, findTrade);
+	}
 
+	private void isAlreadyAfterAccept(Trade findTrade) {
+		if (findTrade.getTradeStatus() == TradeStatus.AFTER_ACCEPT) {
+			throw new BusinessException(TradeOfferErrorCode.ALREADY_AFTER_ACCEPT);
+		}
 	}
 }

@@ -27,6 +27,8 @@ import kr.kernel360.anabada.domain.tradeoffer.dto.FindAllTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferResponse;
 import kr.kernel360.anabada.domain.tradeoffer.service.TradeOfferService;
 import kr.kernel360.anabada.global.FileHandler;
+import kr.kernel360.anabada.global.error.code.TradeOfferErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -39,45 +41,45 @@ public class TradeOfferController {
 
 
 	@GetMapping("/v1/trade-offers")
-	public ResponseEntity<FindAllTradeOfferResponse> findAll(
-		FindAllTradeOfferRequest findAllTradeOfferRequest,
-		@RequestParam(value="pageNo", defaultValue="1") int pageNo
-	) {
+	public ResponseEntity<FindAllTradeOfferResponse> findAll(FindAllTradeOfferRequest findAllTradeOfferRequest,
+		    											     @RequestParam(value="pageNo", defaultValue="1") int pageNo) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		FindAllTradeOfferResponse tradeOffers = tradeOfferService.findAll(findAllTradeOfferRequest, pageable);
-		return ResponseEntity.ok(tradeOffers);
+		FindAllTradeOfferResponse findAllTradeOfferResponse = tradeOfferService.findAll(findAllTradeOfferRequest, pageable);
+
+		return ResponseEntity.ok(findAllTradeOfferResponse);
 	}
 
 	@PostMapping(path = "/v1/trade-offers", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Long> create(
-		@ModelAttribute CreateTradeOfferRequest createTradeOfferRequest,
-		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
-
+	public ResponseEntity<Long> create(@ModelAttribute CreateTradeOfferRequest createTradeOfferRequest,
+		 							   @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"tradeOffer");
 			createTradeOfferRequest.setImagePath(imagePath);
 		}
+		Long createdTradeOfferId = tradeOfferService.create(createTradeOfferRequest, createTradeOfferRequest.getTradeId());
+		URI url = URI.create("api/v1/trades/trade_offers/" + createdTradeOfferId);
 
-		Long id = tradeOfferService.create(createTradeOfferRequest, createTradeOfferRequest.getTradeId());
-		URI url = URI.create("api/v1/trades/trade_offers/" + id);
-		return ResponseEntity.created(url).body(id);
+		return ResponseEntity.created(url).body(createdTradeOfferId);
 	}
 
 	@PutMapping("/v1/trade-offers/{tradeOfferId}/accept")
 	public ResponseEntity<Void> accept(@PathVariable Long tradeOfferId) {
 		tradeOfferService.accept(tradeOfferId);
+
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/v1/trade-offers/{tradeOfferId}")
 	public ResponseEntity<Long> remove(@PathVariable Long tradeOfferId) {
-		tradeOfferService.remove(tradeOfferId);
-		return ResponseEntity.ok(tradeOfferId);
+		Long removedTradeOfferId = tradeOfferService.remove(tradeOfferId);
+
+		return ResponseEntity.ok(removedTradeOfferId);
 	}
 
 	@GetMapping("/v1/trade-offers/{tradeOfferId}")
 	public ResponseEntity<FindTradeOfferResponse> find(@PathVariable Long tradeOfferId) {
 		FindTradeOfferResponse findTradeOfferResponse = tradeOfferService.find(tradeOfferId);
+
 		return ResponseEntity.ok(findTradeOfferResponse);
 	}
 
@@ -87,9 +89,8 @@ public class TradeOfferController {
 			Path file = rootLocation.resolve(imageName);
 			UrlResource resource = new UrlResource(file.toUri());
 			return ResponseEntity.ok().body(resource);
-
 		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException("잘못된 형식의 URL 입니다");
+			throw new BusinessException(TradeOfferErrorCode.NOT_FOUND_FILE_PATH);
 		}
 	}
 }
