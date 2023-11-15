@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,17 +34,20 @@ public class SignUpRequest {
 	@NotBlank
 	private String birth;
 
-	private final String authorities = "USER_ROLE";
+	private final String authorities = "ROLE_USER";
 
 	private final Boolean accountStatus = true;
 
-	private final String socialProvider = "N";
+	private final SocialProvider socialProvider = SocialProvider.LOCAL;
+
+	private String ageGroup;
 
 	public static Member toEntity(SignUpRequest signUpRequest) {
 		return Member.builder()
 			.email(signUpRequest.email)
 			.nickname(signUpRequest.nickname)
 			.password(signUpRequest.password)
+			.ageGroup(signUpRequest.ageGroup)
 			.authorities(signUpRequest.authorities)
 			.gender(signUpRequest.gender)
 			.birth(signUpRequest.birth)

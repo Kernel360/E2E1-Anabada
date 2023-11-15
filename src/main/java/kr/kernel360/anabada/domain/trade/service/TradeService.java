@@ -47,7 +47,7 @@ public class TradeService {
 	public Long create(CreateTradeRequest createTradeRequest) {
 
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+		Member member = memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 
 		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())

@@ -1,4 +1,4 @@
-package kr.kernel360.anabada.global.dto;
+package kr.kernel360.anabada.global.kakao.dto;
 
 import java.util.List;
 

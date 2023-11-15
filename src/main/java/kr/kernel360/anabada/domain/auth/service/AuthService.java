@@ -13,7 +13,9 @@ import kr.kernel360.anabada.domain.auth.dto.SignUpRequest;
 import kr.kernel360.anabada.domain.auth.dto.TokenDto;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 import kr.kernel360.anabada.global.jwt.TokenProvider;
+import kr.kernel360.anabada.global.utils.AgeGroupParser;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,8 +28,12 @@ public class AuthService {
 	private final MemberRepository memberRepository;
 
 	public LoginResponse authenticate(LoginRequest loginRequest) {
-		Member findMember = memberRepository.findOneWithAuthoritiesByEmail(loginRequest.getEmail())
+		Member findMember = memberRepository.findByEmail(loginRequest.getEmail())
 			.orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
+
+		if (findMember.getSocialProvider() != SocialProvider.LOCAL) {
+			throw new IllegalArgumentException("소셜로 가입한 회원입니다. 소셜로 로그인 해주세요.");
+		}
 
 		validateLogin(loginRequest, findMember);
 
@@ -69,7 +75,8 @@ public class AuthService {
 	@Transactional
 	public Long signUp(SignUpRequest signUpRequest) {
 		signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-		Member member = memberRepository.save(signUpRequest.toEntity(signUpRequest));
+		signUpRequest.setAgeGroup(AgeGroupParser.birthToAgeGroup(signUpRequest.getBirth()));
+		Member member = memberRepository.save(SignUpRequest.toEntity(signUpRequest));
 		return member.getId();
 	}
 

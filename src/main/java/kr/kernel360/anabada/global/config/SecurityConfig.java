@@ -9,6 +9,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import kr.kernel360.anabada.domain.oauth2.handler.OAuth2LoginFailureHandler;
+import kr.kernel360.anabada.domain.oauth2.handler.OAuth2LoginSuccessHandler;
+import kr.kernel360.anabada.domain.oauth2.service.CustomOAuth2MemberService;
 import kr.kernel360.anabada.global.jwt.JwtAccessDeniedHandler;
 import kr.kernel360.anabada.global.jwt.JwtAuthenticationEntryPoint;
 import kr.kernel360.anabada.global.jwt.JwtSecurityConfig;
@@ -22,6 +25,9 @@ public class SecurityConfig {
 	private final TokenProvider tokenProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+	private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+	private final CustomOAuth2MemberService customOAuth2MemberService;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -50,10 +56,10 @@ public class SecurityConfig {
 				"/api/v1/auth/signUp",
 				"/api/v1/auth/socialSignUp",
 				"/api/v1/auth/callback",
-				"https://kauth.kakao.com/oauth/authorize",
 				"/api/v1/auth/reissue",
 				"/images/**",
-				"/api/images/**"
+				"/api/images/**",
+				"/oauth2/authorization/kakao"
 			).permitAll()
 			.anyRequest().authenticated()
 
@@ -70,7 +76,13 @@ public class SecurityConfig {
 
 			.and()
 			/** JwtSecurityConfig 적용 **/
-			.apply(new JwtSecurityConfig(tokenProvider));
+			.apply(new JwtSecurityConfig(tokenProvider))
+
+			.and()
+			.oauth2Login()
+			.successHandler(oAuth2LoginSuccessHandler)
+			.failureHandler(oAuth2LoginFailureHandler)
+			.userInfoEndpoint().userService(customOAuth2MemberService);
 
 		return httpSecurity.build();
 	}

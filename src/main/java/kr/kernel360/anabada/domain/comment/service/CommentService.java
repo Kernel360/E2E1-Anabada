@@ -28,7 +28,7 @@ public class CommentService {
 	@Transactional
 	public Long create(CreateCommentRequest createCommentRequest, Long tradeId) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findOneWithAuthoritiesByEmail(findEmailByJwt)
+		Member member = memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
 		Trade trade = findTrade(tradeId);
 		Comment savedComment = commentRepository.save(CreateCommentRequest.toEntity(createCommentRequest, member, trade));

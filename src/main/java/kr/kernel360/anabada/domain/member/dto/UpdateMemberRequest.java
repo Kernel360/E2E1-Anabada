@@ -12,6 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateMemberRequest {
+	private String nickname;
+
 	private String gender;
+
 	private String birth;
 }
