@@ -86,20 +86,20 @@
                 $('#createdDate').val(data.createdDate);
 
             },
-            error: function () {
-                console.log('fail : faq 상세 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
 
     function fn_setEvent() {
         // "수정" 버튼을 초기화
-        $('#faqUpdateButton').click(function () {
+        $('#faqUpdateButton').click(function() {
             event.preventDefault();
             authorize('/faq/faqUpdateForm.html?faqId='+param.faqId);
         });
 
-        $('#faqDeleteButton').click(function () {
+        $('#faqDeleteButton').click(function() {
             event.preventDefault();
             if (confirm("이 FAQ를 삭제하시겠습니까?")) {
                 $.ajax({
@@ -111,8 +111,8 @@
                     success: function (data) {
                         authorize('/faq/faqList.html')
                     },
-                    error: function () {
-                        console.log('fail : faq 삭제');
+                    error: function (data) {
+                        alert(data.responseJSON.message);
                     }
                 });
             }

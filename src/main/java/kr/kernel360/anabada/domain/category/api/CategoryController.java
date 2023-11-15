@@ -27,24 +27,28 @@ public class CategoryController {
 	public ResponseEntity<CreateCategoryResponse> create(@RequestBody CreateCategoryRequest createCategoryRequest) {
 		CreateCategoryResponse createCategoryResponse = categoryService.create(createCategoryRequest);
 		URI url = URI.create("api/v1/categories/" + createCategoryResponse.getId());
+
 		return ResponseEntity.created(url).body(createCategoryResponse);
 	}
 
 	@GetMapping("/v1/categories")
 	public ResponseEntity<FindAllCategoryResponse> findAll(){
 		FindAllCategoryResponse findAllCategoryResponse = categoryService.findAll();
+
 		return ResponseEntity.ok(findAllCategoryResponse);
 	}
 
 	@GetMapping("/v1/categories/active")
 	public ResponseEntity<FindAllCategoryResponse> findAllByDeletedStatusFalse(){
 		FindAllCategoryResponse findAllCategoryResponse = categoryService.findByDeletedStatusFalse();
+
 		return ResponseEntity.ok(findAllCategoryResponse);
 	}
 
 	@DeleteMapping("v1/categories/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
 		categoryService.remove(id);
+
 		return ResponseEntity.ok(id);
 	}
 }

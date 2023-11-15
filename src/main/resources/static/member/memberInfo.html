@@ -196,8 +196,8 @@
                     $('input:radio[name=gender][value=F]').prop('checked', true);
                 }
             },
-            error: function () {
-                console.log('fail : member 상세 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -231,8 +231,8 @@
                     authorize('/trade/tradeInfo.html?tradeId='+tradeId);
                 });
             },
-            error: function () {
-                console.log('fail : trade 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -264,8 +264,8 @@
                     authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId='+tradeOfferId);
                 });
             },
-            error: function () {
-                console.log('fail : trade 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -286,8 +286,8 @@
                 contentType: 'application/json',
                 success: function (data) {
                 },
-                error: function () {
-                    $("#nickname-feedback").text("사용할 수 없는 닉네임 입니다.");
+                error: function (data) {
+                    $("#nickname-feedback").text(data.responseJSON.message);
                     $("#nickname-feedback").show();
                     $("#nickname").val("");
                 }
@@ -314,8 +314,8 @@
                     alert("회원정보가 수정되었습니다.");
                     $(".member-nickname").text($("#nickname").val());
                 },
-                error: function () {
-                    console.log('fail : 회원 정보 변경');
+                error: function (data) {
+                    alert(data.responseJSON.message);
                 }
             });
         });
@@ -339,8 +339,8 @@
                     alert("비밀번호가 변경되었습니다.");
                     $("#password").val("");
                 },
-                error: function (xhr, status, error) {
-                    console.log('fail : 비밀번호 변경', xhr);
+                error: function(data) {
+                    alert(data.responseJSON.message);
                 }
             });
         });

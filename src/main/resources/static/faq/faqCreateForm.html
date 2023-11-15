@@ -80,8 +80,8 @@
                 success: function (data) {
                     authorize('/faq/faqList.html');
                 },
-                error: function () {
-                    console.log('fail : faq 생성');
+                error: function (data) {
+                    alert(data.responseJSON.message);
                 }
             });
         });

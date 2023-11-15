@@ -22,10 +22,9 @@
                 $('#faqTitle').val(data.title);
                 $('#faqContent').val(data.content);
             },
-            error: function () {
-                console.log('fail : faq 수정-조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
-
         });
     }
 
@@ -64,8 +63,8 @@
                 success: function (data) {
                     authorize('/faq/faqInfo.html?faqId=' + param.faqId);
                 },
-                error: function () {
-                    console.log("fail : faq 수정")
+                error: function (data) {
+                    alert(data.responseJSON.message);
                 }
             });
         });

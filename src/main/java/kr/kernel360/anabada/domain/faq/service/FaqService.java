@@ -20,6 +20,8 @@ import kr.kernel360.anabada.domain.faq.entity.Faq;
 import kr.kernel360.anabada.domain.faq.repository.FaqRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.global.error.code.FaqErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,41 +31,44 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FaqService {
 	private final FaqRepository faqRepository;
-
 	private final MemberRepository memberRepository;
 
 	@Transactional
 	public CreateFaqResponse create(CreateFaqRequest createFaqRequest) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
+		Member findMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new BusinessException(FaqErrorCode.NOT_FOUND_MEMBER));
+		Faq savedFaq = faqRepository.save(CreateFaqRequest.toEntity(createFaqRequest, findMember));
 
-		Faq faq = faqRepository.save(CreateFaqRequest.toEntity(createFaqRequest, member));
-
-		return CreateFaqResponse.of(faq);
+		return CreateFaqResponse.of(savedFaq);
 	}
 
 	public FindAllFaqResponse findAll(FaqSearchCondition faqSearchCondition, Pageable pageable){
 		Page<FindFaqDto> findFaqs = faqRepository.findFaqs(faqSearchCondition, pageable);
+
 		return FindAllFaqResponse.of(findFaqs);
 	}
 
 	public FindFaqResponse find(Long faqId){
-		FindFaqDto faq = Optional.ofNullable(faqRepository.findFaq(faqId))
-			.orElseThrow(() -> new IllegalArgumentException("faq가 존재하지 않습니다"));
-		return FindFaqResponse.of(faq);
+		FindFaqDto findFaq = Optional.ofNullable(faqRepository.findFaq(faqId))
+			.orElseThrow(() -> new BusinessException(FaqErrorCode.NOT_FOUND_FAQ));
+
+		return FindFaqResponse.of(findFaq);
 	}
 
 	@Transactional
 	public UpdateFaqResponse update(UpdateFaqRequest updateFaqRequest){
-		Faq faq = faqRepository.findById(updateFaqRequest.getFaqId())
-			.orElseThrow(()-> new IllegalArgumentException("faq가 존재하지 않습니다"));
-		faq.update(updateFaqRequest.getTitle(),updateFaqRequest.getContent());
-		return UpdateFaqResponse.of(faq);
+		Faq findFaq = faqRepository.findById(updateFaqRequest.getFaqId())
+			.orElseThrow(()-> new BusinessException(FaqErrorCode.NOT_FOUND_FAQ));
+		findFaq.update(updateFaqRequest.getTitle(),updateFaqRequest.getContent());
+
+		return UpdateFaqResponse.of(findFaq);
 	}
 
 	@Transactional
-	public void delete(Long faqId){
+	public Long delete(Long faqId){
 		faqRepository.deleteById(faqId);
+
+		return faqId;
 	}
 }

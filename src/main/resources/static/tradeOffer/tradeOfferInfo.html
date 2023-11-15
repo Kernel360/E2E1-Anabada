@@ -121,8 +121,8 @@
                 console.log("accept success");
                 fn_getTradeOfferInfo();
             },
-            error: function () {
-                console.log('fail : trade offer 수락');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -158,8 +158,8 @@
                     $('#tradeOfferDeleteButton').hide();
                 }
             },
-            error: function () {
-                console.log('fail : tradeOffer 상세 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         });
     }
@@ -176,8 +176,8 @@
                 console.log("delete success");
                 authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
             },
-            error: function () {
-                console.log('fail : tradeOffer 삭제');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
         })
 

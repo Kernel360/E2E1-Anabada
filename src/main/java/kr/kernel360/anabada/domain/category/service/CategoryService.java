@@ -12,6 +12,8 @@ import kr.kernel360.anabada.domain.category.dto.FindCategoryResponse;
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
+import kr.kernel360.anabada.global.error.code.CategoryErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,20 +25,23 @@ public class CategoryService {
 	@Transactional
 	public CreateCategoryResponse create(CreateCategoryRequest createCategoryRequest) {
 		 validateNameUnique(createCategoryRequest.getName());
-		 Category category = categoryRepository.save(CreateCategoryRequest.toEntity(createCategoryRequest));
-		 return CreateCategoryResponse.of(category);
+		 Category savedCategory = categoryRepository.save(CreateCategoryRequest.toEntity(createCategoryRequest));
+
+		 return CreateCategoryResponse.of(savedCategory);
 	}
 
 	public FindAllCategoryResponse findAll() {
-		List<Category> categories = categoryRepository.findAll();
-		List<FindCategoryResponse> responses = categories.stream().map(FindCategoryResponse::of).toList();
+		List<Category> findCategories = categoryRepository.findAll();
+		List<FindCategoryResponse> responses = findCategories.stream()
+			.map(FindCategoryResponse::of)
+			.toList();
 
 		return FindAllCategoryResponse.of(responses);
 	}
 
 	public FindAllCategoryResponse findByDeletedStatusFalse() {
-		List<Category> categories = categoryRepository.findAll();
-		List<FindCategoryResponse> responses = categories.stream()
+		List<Category> findCategories = categoryRepository.findAll();
+		List<FindCategoryResponse> responses = findCategories.stream()
 			.filter(c -> c.getDeletedStatus() == DeletedStatus.FALSE)
 			.map(FindCategoryResponse::of)
 			.toList();
@@ -45,20 +50,21 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public void remove(Long id) {
-		Category category = categoryRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));
-		if (category.getDeletedStatus().equals(DeletedStatus.FALSE)) {
-			categoryRepository.delete(category);
-		} else {
-			category.activate();
+	public Long remove(Long categoryId) {
+		Category findCategory = categoryRepository.findById(categoryId)
+			.orElseThrow(() -> new BusinessException(CategoryErrorCode.NOT_FOUND_CATEGORY));
+		if (findCategory.getDeletedStatus() == DeletedStatus.TRUE) {
+			findCategory.activate();
+			return categoryId;
 		}
+		categoryRepository.delete(findCategory);
+
+		return categoryId;
 	}
 
 	public void validateNameUnique(String name) {
 		if (categoryRepository.existsByName(name)) {
-			// todo : 추후 exception 타입 변경 필요
-			throw new IllegalArgumentException("사용중인 카테고리명 입니다.");
+			throw new BusinessException(CategoryErrorCode.ALREADY_SAVED_CATEGORY);
 		}
 	}
 }
