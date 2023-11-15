@@ -35,6 +35,7 @@ public class FaqController {
 	public ResponseEntity<CreateFaqResponse> create(@RequestBody CreateFaqRequest createFaqRequest) {
 		CreateFaqResponse createFaqResponse = faqService.create(createFaqRequest);
 		URI url = URI.create("api/v1/faqs/" + createFaqResponse.getId());
+
 		return ResponseEntity.created(url).body(createFaqResponse);
 	}
 
@@ -49,16 +50,22 @@ public class FaqController {
 
 	@GetMapping("/v1/faqs/{faqId}")
 	public ResponseEntity<FindFaqResponse> find(@PathVariable Long faqId) {
-		return ResponseEntity.ok(faqService.find(faqId));
+		FindFaqResponse findFaqResponse = faqService.find(faqId);
+
+		return ResponseEntity.ok(findFaqResponse);
 	}
 
 	@PutMapping("/v1/faqs")
 	public ResponseEntity<UpdateFaqResponse> update(@RequestBody UpdateFaqRequest updateFaqRequest) {;
-		return ResponseEntity.ok(faqService.update(updateFaqRequest));
+		UpdateFaqResponse updateFaqResponse = faqService.update(updateFaqRequest);
+
+		return ResponseEntity.ok(updateFaqResponse);
 	}
 
 	@DeleteMapping("/v1/faqs/{faqId}")
 	public ResponseEntity<Long> remove(@PathVariable Long faqId) {
-		return ResponseEntity.ok().body(faqService.delete(faqId));
+		Long deletedFaqId = faqService.delete(faqId);
+
+		return ResponseEntity.ok().body(deletedFaqId);
 	}
 }
