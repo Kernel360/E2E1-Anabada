@@ -21,7 +21,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	public List<AgeGroupDto> countMembersByAgeGroup() {
 		return queryFactory.select(new QAgeGroupDto(
 			member.ageGroup,
-			member.id.count().as("count")
+			member.count()
 		))
 			.from(member)
 			.groupBy(member.ageGroup)
@@ -33,7 +33,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	public List<GenderDto> countMembersByGender() {
 		return queryFactory.select(new QGenderDto(
 			member.gender,
-			member.id.count().as("count")
+			member.count()
 		))
 			.from(member)
 			.groupBy(member.gender)
