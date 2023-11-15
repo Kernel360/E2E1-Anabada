@@ -37,10 +37,12 @@ public class FindTradeDto {
 
 	private String imagePath;
 
+	private String tradeOfferCreatedBy;
+
 	@QueryProjection
 	@Builder
 	public FindTradeDto(Long tradeId, TradeType tradeType, TradeStatus tradeStatus, DeletedStatus deletedStatus, String categoryName, String tradeTitle, String nickname,
-		LocalDateTime createdDate) {
+		LocalDateTime createdDate, String tradeOfferCreatedBy) {
 		this.tradeId = tradeId;
 		this.tradeType = tradeType;
 		this.tradeStatus = tradeStatus;
@@ -49,6 +51,7 @@ public class FindTradeDto {
 		this.tradeTitle = tradeTitle;
 		this.nickname = nickname;
 		this.createdDate = DateParser.dateToString(createdDate);
+		this.tradeOfferCreatedBy = tradeOfferCreatedBy;
 	}
 
 	@QueryProjection
@@ -67,4 +70,5 @@ public class FindTradeDto {
 		this.content = content;
 		this.imagePath = imagePath;
 	}
+
 }

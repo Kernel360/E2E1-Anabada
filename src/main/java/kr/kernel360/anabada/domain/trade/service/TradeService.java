@@ -12,6 +12,11 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
+import kr.kernel360.anabada.domain.place.entity.Place;
+import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
+
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
@@ -38,20 +43,28 @@ public class TradeService {
 	}
 
 	public FindTradeResponse find(Long tradeId) {
-		FindTradeDto findTradeDto = Optional.ofNullable(tradeRepository.findTrade(tradeId))
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member findLoginMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
+		FindTradeDto findTradeDto = Optional.of(tradeRepository.findTrade(tradeId))
 			.orElseThrow(() -> new BusinessException(TradeErrorCode.NOT_FOUND_TRADE));
+		Member findTradeOwner = memberRepository.findByNickname(findTradeDto.getNickname())
+			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
+		FindTradeResponse findTradeResponse = FindTradeResponse.of(findTradeDto);
+		findTradeResponse.setIsTradeOwner(findLoginMember.getEmail().equals(findTradeOwner.getEmail()));
 
-		return FindTradeResponse.of(findTradeDto);
+		return findTradeResponse;
 	}
 
 	@Transactional
-	public Long create(CreateTradeRequest createTradeRequest) {
+	public Long create(CreateTradeRequest createTradeRequest, PlaceDto placeDto) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
 		Member findMember = memberRepository.findByEmail(findEmailByJwt)
 			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
 		Category findCategory = categoryRepository.findById(createTradeRequest.getCategoryId())
 			.orElseThrow(() -> new BusinessException(TradeErrorCode.NOT_FOUND_CATEGORY));
-		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, findCategory, findMember));
+		Place findPlace = placeRepository.save(PlaceDto.toEntity(placeDto));
+		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, findCategory, findMember, findPlace));
 
 		return savedTrade.getId();
 	}

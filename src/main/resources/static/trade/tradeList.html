@@ -190,6 +190,7 @@
                             '<td>' + trade.tradeTitle + '</td>' +
                             '<td>' + trade.nickname + '</td>' +
                             '<td>' + trade.createdDate + '</td>' +
+                            '<td>' + trade.tradeOfferCreatedBy + '</td>' +
                             '</tr>';
                         $('#tradeList').append(tradeItem);
                     });
@@ -200,9 +201,25 @@
                 var currentPage = data.trades.number;
                 updatePagination(currentPage, totalPages);
 
+
+
                 $('.trade-item').click(function () {
                     var tradeId = $(this).data('trade-id');
-                    authorize('/trade/tradeInfo.html?tradeId='+tradeId);
+                    var tradeNickname = $(this).data('nickname');
+                    var tradeOfferNickname = $(this).data('trade-offer-nickname');
+
+                    var loginMemberNickname = $(".member-nickname").val();
+
+                    console.log("tradeNickname : " + tradeNickname);
+                    console.log("tradeOfferNickname : " + tradeOfferNickname);
+                    console.log("loginMemberNickname : " + loginMemberNickname);
+
+                    if (loginMemberNickname == tradeNickname || loginMemberNickname == tradeOfferNickname) {
+                        authorize('/trade/tradeInfo.html?tradeId='+tradeId);
+                    } else {
+                        alert("본인이 작성하였거나 요청 수락된 글만 조회 가능합니다.");
+                        return;
+                    }
                 });
             },
             error: function (data) {

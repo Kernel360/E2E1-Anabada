@@ -76,6 +76,35 @@
                     </form><!-- End General Form Elements -->
 
                 </div>
+
+
+                <div class="card-body">
+
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th scope="col">NO</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">댓글내용</th>
+                        </tr>
+                        </thead>
+                        <tbody id="commentList">
+                        </tbody>
+                    </table>
+                    <div class="row mb-3">
+                        <div class="col-sm-10">
+                            <label for="commentContent" class="col-sm-2 col-form-label">댓글<span class="required-star">*</span></label>
+                            <div class="col-sm-10 d-flex">
+                                <input style="margin-right: 5px;" placeholder="댓글 입력하세요." type="text"
+                                       class="form-control" id="commentContent" name="commentContent" required>
+                                <button style="white-space: nowrap" id="commentCreateButton" class="btn btn-primary">
+                                    댓글 등록
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>
@@ -90,6 +119,7 @@
     function fn_init() {
         getTradeInfo(); // 교환 정보 조회
         fn_setEvent(); // 이벤트 초기화 함수 호출
+
     }
 
     function getTradeInfo() {
@@ -117,8 +147,12 @@
                 } else {
                     $('#tradeImage').append("", $('#image').val())
                 }
-                if (data.tradeStatus != 'BEFORE_ACCEPT') {
+
+                if (data.isTradeOwner || data.tradeStatus == 'AFTER_ACCEPT') {
                     $('#tradeOfferCreateButton').hide();
+                }
+                if (!data.isTradeOwner) {
+                    $('#viewTradeOfferButton').hide();
                 }
 
                 param.nickname = data.nickname;
@@ -140,6 +174,72 @@
         $('#viewTradeOfferButton').click(function (e) {
             e.preventDefault();
             authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
+        });
+    }
+
+
+    function fn_getcommentList() {
+        // JSON 데이터를 가져오는 비동기 요청
+        var url = '/api/v1/trades/' + param.tradeId + '/comments';
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
+            success: function (data) {
+                $("#commentList").empty();
+                var comments = data.findCommentDto;
+
+                for (var i = 0; i < comments.length; i++) {
+                    var comment = comments[i];
+                    var commentItem = '<tr class="comment-item table-list" data-comment-id="' + comment.id + '">' +
+                        '<td>' + comment.id + '</td>' +
+                        '<td>' + comment.memberNickname + '</td>' +
+                        '<td>' + comment.content + '</td>'
+
+                    commentItem += '</tr>';
+
+                    $('#commentList').append(commentItem);
+                }
+            },
+            error: function () {
+                console.log('fail : 카테고리 목록 조회');
+            }
+        });
+    }
+
+    function fn_setcommentEvent() {
+
+        $('#commentCreateButton').click(function (e) {
+            e.preventDefault();
+            if ("" == $('#commentContent').val()) {
+                alert("댓글을 입력해주세요.");
+                return;
+            }
+            var url = '/api/v1/trades/' + param.tradeId + '/comments';
+            var content = $('#commentContent').val();
+
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: JSON.stringify({"content": $('#commentContent').val()}),
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
+                    $('#commentContent').val("");
+                    fn_getcommentList();
+                },
+                error: function () {
+                    // todo : 추후 exception 별 분기 필요
+                    alert("존재하는 카테고리명 입니다.");
+                    console.log('fail : comment 생성');
+                }
+            });
         });
     }
 </script>

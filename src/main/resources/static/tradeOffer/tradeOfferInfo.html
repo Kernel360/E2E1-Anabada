@@ -4,7 +4,7 @@
             <li class="breadcrumb-item"><a href="/static">AnabadA</a></li>
             <li class="breadcrumb-item "><a onclick="authorize('/trade/tradeList.html')">교환</a></li>
             <li class="breadcrumb-item"><a id="infoPageButton">교환상세</a></li>
-            <li class="breadcrumb-item"><a id="OfferListPageButton">교환요청</a></li>
+            <li class="breadcrumb-item" id="OfferListPage"><a id="OfferListPageButton">교환요청목록</a></li>
             <li class="breadcrumb-item active">교환요청상세</li>
         </ol>
     </nav>
@@ -63,6 +63,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -136,6 +137,7 @@
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
+                console.log(data);
 
                 $('#title').val(data.findTradeOfferDto.title);
                 $('#content').val(data.findTradeOfferDto.content);
@@ -150,12 +152,16 @@
                 } else {
                     $('#tradeImage').append("", $('#image').val())
                 }
-                if(data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD'){
+
+                if(data.findTradeOfferDto.tradeOfferStatus !== 'REQUEST_ON_HOLD' || data.isOfferOwner){
                     $('#tradeOfferAcceptButton').hide();
                 }
                 // 요청 대기 아니고 , 내가 쓴 요청글 아니면 삭제버튼 hide
-                if (data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD') {
+                if (data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD' || !data.isOfferOwner) {
                     $('#tradeOfferDeleteButton').hide();
+                }
+                if (data.isOfferOwner) {
+                    $('#OfferListPage').hide();
                 }
             },
             error: function (data) {
@@ -182,6 +188,8 @@
         })
 
     }
+
+
 
 </script>
 
