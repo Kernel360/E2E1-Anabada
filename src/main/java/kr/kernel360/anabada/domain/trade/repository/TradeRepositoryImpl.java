@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.trade.repository;
 import static kr.kernel360.anabada.domain.category.entity.QCategory.*;
 import static kr.kernel360.anabada.domain.member.entity.QMember.*;
 import static kr.kernel360.anabada.domain.trade.entity.QTrade.*;
+import static kr.kernel360.anabada.domain.tradeoffer.entity.QTradeOffer.*;
 import static org.springframework.util.StringUtils.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.QFindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
+import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
 import lombok.RequiredArgsConstructor;
 
@@ -35,12 +37,16 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 				trade.deletedStatus,
 				category.name,
 				trade.title,
-				member.nickname,
-				trade.createdDate
+				trade.member.nickname,
+				trade.createdDate,
+				tradeOffer.member.nickname
 			))
 			.from(trade)
 			.leftJoin(trade.category, category)
 			.leftJoin(trade.member, member)
+			.leftJoin(trade.tradeOffers, tradeOffer)
+			.on(tradeOffer.tradeOfferStatus.eq(TradeOfferStatus.REQUEST_ACCEPTED))
+			.leftJoin(tradeOffer.member, member)
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),

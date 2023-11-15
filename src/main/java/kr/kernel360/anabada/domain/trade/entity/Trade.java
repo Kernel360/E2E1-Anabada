@@ -20,6 +20,7 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.place.entity.Place;
+import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
@@ -74,6 +75,9 @@ public class Trade extends BaseEntity {
 	@OneToMany(mappedBy = "trade")
 	private List<Comment> comments = new ArrayList<>();
 
+	@OneToMany(mappedBy = "trade")
+	private List<TradeOffer> tradeOffers = new ArrayList<>();
+
 	@Builder
 	public Trade(String title, String content, TradeType tradeType, String imagePath,
 		DeletedStatus deletedStatus, TradeStatus tradeStatus, Member member, Category category, Place place) {
@@ -86,6 +90,7 @@ public class Trade extends BaseEntity {
 		this.category = category;
 		this.member = member;
 		this.place = place;
+
 	}
 
 	public void update(TradeStatus tradeStatus) {

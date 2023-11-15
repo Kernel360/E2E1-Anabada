@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.trade.dto;
 
 import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.member.entity.Member;
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
+import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
@@ -31,7 +33,7 @@ public class CreateTradeRequest {
 
 	private Long categoryId;
 
-	public static Trade toEntity(CreateTradeRequest createTradeRequest, Category category, Member member) {
+	public static Trade toEntity(CreateTradeRequest createTradeRequest, Category category, Member member, Place place) {
 		return Trade.builder()
 			.title(createTradeRequest.title)
 			.content(createTradeRequest.content)
@@ -41,6 +43,7 @@ public class CreateTradeRequest {
 			.deletedStatus(createTradeRequest.deletedStatus)
 			.category(category)
 			.member(member)
+			.place(place)
 			.build();
 	}
 }

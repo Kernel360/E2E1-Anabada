@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
@@ -56,12 +58,16 @@ public class TradeController {
 	@PostMapping(path = "/v1/trades", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Long> create(
 		@ModelAttribute CreateTradeRequest createTradeRequest,
+		@ModelAttribute PlaceDto placeDto,
 		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"trade");
 			createTradeRequest.setImagePath(imagePath);
 		}
-		Long savedTradeId = tradeService.create(createTradeRequest);
+
+
+		Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
+
 		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 
 		return ResponseEntity.created(uri).build();

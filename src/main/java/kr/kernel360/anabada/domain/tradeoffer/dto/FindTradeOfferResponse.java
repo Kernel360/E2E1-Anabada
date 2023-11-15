@@ -14,6 +14,8 @@ import lombok.Setter;
 public class FindTradeOfferResponse {
 	private FindTradeOfferDto findTradeOfferDto;
 
+	private Boolean isOfferOwner;
+
 	@Builder
 	public static FindTradeOfferResponse of(FindTradeOfferDto findTradeOfferDto) {
 		return FindTradeOfferResponse.builder()
