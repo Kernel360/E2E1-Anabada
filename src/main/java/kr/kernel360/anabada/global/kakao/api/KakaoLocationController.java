@@ -1,4 +1,9 @@
-package kr.kernel360.anabada.global.api;
+package kr.kernel360.anabada.global.kakao.api;
+
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
+import kr.kernel360.anabada.global.kakao.service.KakaoLocationService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,20 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.kernel360.anabada.domain.place.dto.PlaceDto;
-import kr.kernel360.anabada.global.service.KakaoService;
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class KakaoController {
+public class KakaoLocationController {
 
-	private final KakaoService kakaoService;
+	private final KakaoLocationService kakaoLocationService;
 
 	@GetMapping("/findLocation")
 	public ResponseEntity<PlaceDto> findPlaceByCoordinates(@RequestParam("x") double x, @RequestParam("y") double y) {
-		PlaceDto placeDto = kakaoService.findPlaceByCoordinates(x, y);
+		PlaceDto placeDto = kakaoLocationService.findPlaceByCoordinates(x, y);
 
 		return ResponseEntity.ok().body(placeDto);
 	}

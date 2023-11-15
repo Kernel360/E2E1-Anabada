@@ -31,14 +31,37 @@ spring:
       access-token-validity-in-seconds: 86_400     # 1일
       refresh-token-validity-in-seconds: 1_209_600  # 2주
 
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${REST_API_KEY}
+            client-secret: ${CLIENT_SECRET}
+            scope:
+              - account_email
+              - gender
+              - birthday
+              - profile_nickname
+            client-authentication-method: POST
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: kakao_account
+
+
 kakao:
-  authorizeUrl: https://kauth.kakao.com/oauth/authorize
+  authorize-url: https://kauth.kakao.com/oauth/authorize
   authUrl: https://kauth.kakao.com/oauth/token
   userApiUrl: https://kapi.kakao.com/v2/user/me
-  placeApiUrl: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
+  place-api-uri: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
   restapiKey: ${REST_API_KEY}
-  redirectUrl: api/v1/auth/callback
-
+  redirect-uri: https://localhost:8080/api/v1/auth/callback
 
 logging.level:
   org.hibernate.SQL: debug

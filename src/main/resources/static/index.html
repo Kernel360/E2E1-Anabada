@@ -39,7 +39,11 @@
         function fn_init() {
             $('main[content="container"]').empty();
             loadHtmlAndExecuteScript("/main.html", param);
+            var queryString = window.location.search;
 
+            if (queryString.includes('accessToken') && queryString.includes('refreshToken')) {
+                setToken(queryString);
+            }
             if (null != localStorage.getItem("accessToken")) {
                 fn_getMemberInfo();
                 fn_getLocationInfo();
@@ -204,6 +208,20 @@
                 }
             });
         }
+
+            function setToken(queryString) {
+                var params = new URLSearchParams(queryString);
+
+                var accessToken = params.get('accessToken');
+                var refreshToken = params.get('refreshToken');
+
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+
+                history.replaceState({}, document.title, window.location.pathname);
+
+                window.location.href ='/';
+            }
 
         // 외부 스크립트 파일을 로드하고 실행하는 함수
         function loadAndExecuteScript(scriptSrc) {

@@ -7,7 +7,7 @@ public enum TradeOfferStatus {
 	REQUEST_ACCEPTED("요청수락"),
 	REQUEST_EXPIRED("요청만료");
 
-	@Getter private final String description;
+	private final String description;
 
 	TradeOfferStatus(String description) {
 		this.description = description;
