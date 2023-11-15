@@ -116,10 +116,6 @@
         formData.append("memberId", 1);
         formData.append("tradeId", param.tradeId);
 
-        for (var pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
-
 
         $.ajax({
             url: '/api/v1/trade-offers',

@@ -1,7 +1,5 @@
 package kr.kernel360.anabada.domain.trade.dto;
 
-import java.time.LocalDateTime;
-
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
@@ -34,6 +32,8 @@ public class FindTradeResponse {
 	private String content;
 
 	private String imagePath;
+
+	private Boolean isTradeOwner;
 
 	public static FindTradeResponse of(FindTradeDto findTradeDto) {
 		return FindTradeResponse.builder()

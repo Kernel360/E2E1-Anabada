@@ -12,6 +12,8 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
+import kr.kernel360.anabada.domain.place.dto.PlaceDto;
+import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
@@ -38,13 +40,24 @@ public class TradeService {
 	}
 
 	public FindTradeResponse find(Long tradeId) {
+		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
+		Member loginMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
+
 		FindTradeDto findTradeDto = Optional.of(tradeRepository.findTrade(tradeId))
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 교환이 없습니다."));
-		return FindTradeResponse.of(findTradeDto);
+
+		Member tradeOwner = memberRepository.findByNickname(findTradeDto.getNickname())
+			.orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+		FindTradeResponse findTradeResponse = FindTradeResponse.of(findTradeDto);
+		findTradeResponse.setIsTradeOwner(loginMember.getEmail().equals(tradeOwner.getEmail()));
+
+		return findTradeResponse;
 	}
 
 	@Transactional
-	public Long create(CreateTradeRequest createTradeRequest) {
+	public Long create(CreateTradeRequest createTradeRequest, PlaceDto placeDto) {
 
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
 		Member member = memberRepository.findByEmail(findEmailByJwt)
@@ -53,9 +66,9 @@ public class TradeService {
 		Category category = categoryRepository.findById(createTradeRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 카테고리가 없습니다."));
 
-		// Place place = placeRepository.save(placeDto.toEntity(placeDto));
+		Place place = placeRepository.save(PlaceDto.toEntity(placeDto));
 
-		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member));
+		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, category, member, place));
 		return savedTrade.getId();
 	}
 
