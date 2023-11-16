@@ -191,6 +191,10 @@
         fn_getTradeListByMember(0); // 회원이 올린 교환 조회
         fn_getTradeOfferListByMember(0) // 회원이 올린 교환 요청 조회
         fn_setEvent(); // 이벤트 초기화 함수 호출
+
+        if (param.tradeOffer == "tradeOffer") {
+            $("#trade-offer-tab").click();
+        }
     }
 
     function fn_getMemberInfo() {

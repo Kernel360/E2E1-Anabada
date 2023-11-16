@@ -154,7 +154,7 @@
                     $('#tradeImage').append("", $('#image').val())
                 }
 
-                if(data.findTradeOfferDto.tradeOfferStatus !== 'REQUEST_ON_HOLD' || data.isOfferOwner){
+                if (data.findTradeOfferDto.tradeOfferStatus != 'REQUEST_ON_HOLD' || data.isOfferOwner) {
                     $('#tradeOfferAcceptButton').hide();
                 }
                 // 요청 대기 아니고 , 내가 쓴 요청글 아니면 삭제버튼 hide
@@ -179,9 +179,8 @@
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
-            success: function () {
-                console.log("delete success");
-                authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
+            success: function (data) {
+                authorize('/member/memberInfo.html?tradeOffer=tradeOffer');
             },
             error: function (data) {
                 alert(data.responseJSON.message);
