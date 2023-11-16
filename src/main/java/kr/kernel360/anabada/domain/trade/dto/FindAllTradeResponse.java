@@ -12,7 +12,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class FindAllTradeResponse {
-	@JsonProperty(value = "trades")
 	private Page<FindTradeDto> trades;
 
 	public static FindAllTradeResponse of(Page<FindTradeDto> trades) {

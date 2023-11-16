@@ -15,7 +15,6 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class FindAllCommentResponse {
-	@JsonProperty("comments")
 	List<FindCommentDto> comments;
 
 	public static FindAllCommentResponse of(List<FindCommentDto> comments) {

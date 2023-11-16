@@ -12,7 +12,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class FindAllFaqResponse {
-	@JsonProperty("faqs")
 	private Page<FindFaqDto> faqs;
 
 	public static FindAllFaqResponse of(Page<FindFaqDto> faqs) {

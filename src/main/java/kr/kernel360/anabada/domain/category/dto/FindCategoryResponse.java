@@ -21,7 +21,6 @@ public class FindCategoryResponse {
 	@ApiModelProperty(value = "카테고리 이름", example = "전자기기")
 	private String name;
 
-	@JsonProperty(value = "deleted_status")
 	@ApiModelProperty(value = "삭제 상태", dataType = "string", example = "정상")
 	private DeletedStatus deletedStatus;
 

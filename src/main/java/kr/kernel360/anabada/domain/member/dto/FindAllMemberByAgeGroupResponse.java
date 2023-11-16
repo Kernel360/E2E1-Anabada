@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllMemberByAgeGroupResponse {
-	@JsonProperty(value = "age_group_list")
 	private List<AgeGroupDto> ageGroupList;
 
 	public static FindAllMemberByAgeGroupResponse of(List<AgeGroupDto> ageGroupList) {

@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllMemberByGenderResponse {
-	@JsonProperty("gender_list")
 	List<GenderDto> genderList;
 
 	public static FindAllMemberByGenderResponse of(List<GenderDto> genderList) {

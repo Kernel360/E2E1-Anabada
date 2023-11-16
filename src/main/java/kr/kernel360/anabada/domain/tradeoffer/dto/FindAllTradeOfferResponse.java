@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllTradeOfferResponse {
-	@JsonProperty(value = "trade_offers")
 	Page<FindTradeOfferDto> tradeOffers;
 
 	public static FindAllTradeOfferResponse of(Page<FindTradeOfferDto> tradeOffers) {

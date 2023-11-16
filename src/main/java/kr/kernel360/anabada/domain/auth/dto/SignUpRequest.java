@@ -4,8 +4,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModelProperty;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
@@ -47,16 +45,13 @@ public class SignUpRequest {
 	@ApiModelProperty(value = "권한", example = "ROLE_USER")
 	private final String authorities = "ROLE_USER";
 
-	@JsonProperty(value = "account_status")
 	@ApiModelProperty(value = "계정 상태", example = "true")
 	private final Boolean accountStatus = true;
 
-	@JsonProperty(value = "social_provider")
 	@ApiModelProperty(value = "소셜 계정 정보 제공자 \n LOCAL이면 기본 회원가입을 통해 가입한 계정"
 		, example = "LOCAL")
 	private final SocialProvider socialProvider = SocialProvider.LOCAL;
 
-	@JsonProperty(value = "age_group")
 	@ApiModelProperty(value = "연령대", example = "90년대생")
 	private String ageGroup;
 

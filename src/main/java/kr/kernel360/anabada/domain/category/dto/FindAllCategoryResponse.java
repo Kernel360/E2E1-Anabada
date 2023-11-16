@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllCategoryResponse {
-	@JsonProperty(value = "categories")
 	@ApiModelProperty(value = "카테고리 목록"
 		, example = "[\"전자기기\", \"의류\", \"생활용품\", \"식품\"]")
 	List<FindCategoryResponse> categories;

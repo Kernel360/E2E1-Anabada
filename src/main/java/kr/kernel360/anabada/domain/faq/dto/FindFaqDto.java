@@ -2,7 +2,6 @@ package kr.kernel360.anabada.domain.faq.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -23,15 +22,12 @@ public class FindFaqDto {
 	@ApiModelProperty(value = "FAQ 내용", example = "페이지를 새로고침해주세요.", required = true)
 	private String content;
 
-	@JsonProperty(value = "deleted_status")
 	@ApiModelProperty(value = "FAQ 상태", example = "정상", required = true)
 	private DeletedStatus deletedStatus;
 
-	@JsonProperty(value = "created_by")
 	@ApiModelProperty(value = "FAQ 작성자", example = "집에가고싶은관리자", required = true)
 	private String createdBy;
 
-	@JsonProperty(value = "created_date")
 	@ApiModelProperty(value = "FAQ 작성일", example = "2023-11-10", required = true)
 	private String createdDate;
 

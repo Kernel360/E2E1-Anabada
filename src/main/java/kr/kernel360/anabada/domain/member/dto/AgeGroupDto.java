@@ -1,6 +1,5 @@
 package kr.kernel360.anabada.domain.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AgeGroupDto {
-	@JsonProperty(value = "age_group")
 	@ApiModelProperty(value = "연령대", name = "90년대생")
 	private String ageGroup;
 

@@ -24,11 +24,9 @@ public class FindCommentDto {
 	@ApiModelProperty(value = "댓글 내용", example = "어디서 만날까요?")
 	private String content;
 
-	@JsonProperty(value = "member_nickname")
 	@ApiModelProperty(value = "댓글 작성자", example = "가을전어김허수")
 	private String memberNickname;
 
-	@JsonProperty(value = "created_date")
 	@ApiModelProperty(value = "댓글 작성일", example = "2023-10-11")
 	private String createdDate;
 

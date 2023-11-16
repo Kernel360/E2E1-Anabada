@@ -1,7 +1,5 @@
 package kr.kernel360.anabada.domain.tradeoffer.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModelProperty;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
@@ -20,27 +18,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTradeOfferRequest {
-	@JsonProperty(value = "title")
 	@ApiModelProperty(value = "교환 요청 제목", example = "갤럭시 드려요.")
 	private String title;
 
 	@ApiModelProperty(value = "교환 요청 내용", example = "갤럭시랑 아이폰 바꾸자 이 녀석아!")
 	private String content;
 
-	@JsonProperty(value = "image_path")
 	@ApiModelProperty(value = "이미지 경로"
 		, example = "'src/main/resources/static/images/trade/23110916241318_카카오 로고 Yellow.png'")
 	private String imagePath;
 
-	@JsonProperty(value = "trade_offer_status")
 	@ApiModelProperty(value = "교환 요청 상태", example = "요청대기")
 	private final TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
 
-	@JsonProperty(value = "deleted_status")
 	@ApiModelProperty(value = "교환 요청 삭제 상태", example = "정상")
 	private final DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
-	@JsonProperty(value = "trade_id")
 	@ApiModelProperty(value = "교환 아이디", example = "1")
 	private Long tradeId;
 

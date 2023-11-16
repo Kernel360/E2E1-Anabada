@@ -21,11 +21,9 @@ public class LoginResponse {
 	@ApiModelProperty(value = "이메일", example = "anabada@example.com")
 	private String email;
 
-	@JsonProperty(value = "roles")
 	@ApiModelProperty(value = "권한", example = "[\"ROLE_USER\"]", dataType = "string[]")
 	private List<String> roles;
 
-	@JsonProperty(value = "token_dto")
 	@ApiModelProperty
 	private TokenDto tokenDto;
 

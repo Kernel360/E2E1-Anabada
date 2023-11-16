@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class FindAllMemberResponse {
-	@JsonProperty(value = "members")
 	List<FindMemberResponse> members;
 
 	public static FindAllMemberResponse of(List<FindMemberResponse> members) {

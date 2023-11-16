@@ -29,7 +29,6 @@ public class FindMemberResponse {
 	@ApiModelProperty(value = "생년월일", example = "1999-10-11")
 	private String birth;
 
-	@JsonProperty(value = "roles")
 	@ApiModelProperty(value = "권한", example = "[\"ROLE_USER\"]", dataType = "string[]")
 	private List<String> role;
 
