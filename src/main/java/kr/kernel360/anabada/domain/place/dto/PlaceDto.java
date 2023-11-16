@@ -1,6 +1,7 @@
 package kr.kernel360.anabada.domain.place.dto;
 
 
+import io.swagger.annotations.ApiModelProperty;
 import kr.kernel360.anabada.domain.place.entity.Place;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +15,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlaceDto {
+	@ApiModelProperty(value = "특별시, 도", example = "서울특별시")
 	private String state;
 
+	@ApiModelProperty(value = "구", example = "강남구")
 	private String city;
 
+	@ApiModelProperty(value = "동", example = "삼성동")
 	private String address1;
 
 	public static Place toEntity(PlaceDto placeDto) {

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.querydsl.core.annotations.QueryProjection;
 
+import io.swagger.annotations.ApiModelProperty;
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.utils.DateParser;
 import lombok.Getter;
@@ -12,16 +13,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FindFaqDto {
+	@ApiModelProperty(value = "FAQ 아이디", example = "1", required = true)
 	private Long id;
 
+	@ApiModelProperty(value = "FAQ 제목", example = "제가 쓴 글이 보이지 않아요.", required = true)
 	private String title;
 
+	@ApiModelProperty(value = "FAQ 내용", example = "페이지를 새로고침해주세요.", required = true)
 	private String content;
 
+	@ApiModelProperty(value = "FAQ 상태", example = "정상", required = true)
 	private DeletedStatus deletedStatus;
 
+	@ApiModelProperty(value = "FAQ 작성자", example = "집에가고싶은관리자", required = true)
 	private String createdBy;
 
+	@ApiModelProperty(value = "FAQ 작성일", example = "2023-11-10", required = true)
 	private String createdDate;
 
 	@QueryProjection

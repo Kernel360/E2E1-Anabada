@@ -4,42 +4,55 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModelProperty;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequest {
-	@Email
 	@NotBlank
+	@Email
+	@ApiModelProperty(value = "이메일", example = "anabada@example.com", required = true)
 	private String email;
 
-	@Size(min = 4, max = 10)
 	@NotBlank
+	@Size(min = 4, max = 10)
+	@ApiModelProperty(value = "닉네임", example = "user123", required = true)
 	private String nickname;
 
 	@NotBlank
 	@Size(min = 8, max = 16)
+	@ApiModelProperty(value = "비밀번호", example = "password_example", required = true)
 	private String password;
 
 	@NotBlank
+	@ApiModelProperty(value = "성별", example = "M", required = true)
 	private String gender;
 
 	@NotBlank
+	@ApiModelProperty(value = "생년월일", example = "1991-10-10", required = true)
 	private String birth;
 
+	@ApiModelProperty(value = "권한", example = "ROLE_USER")
 	private final String authorities = "ROLE_USER";
 
+	@ApiModelProperty(value = "계정 상태", example = "true")
 	private final Boolean accountStatus = true;
 
+	@ApiModelProperty(value = "소셜 계정 정보 제공자 \n LOCAL이면 기본 회원가입을 통해 가입한 계정"
+		, example = "LOCAL")
 	private final SocialProvider socialProvider = SocialProvider.LOCAL;
 
+	@ApiModelProperty(value = "연령대", example = "90년대생")
 	private String ageGroup;
 
 	public static Member toEntity(SignUpRequest signUpRequest) {

@@ -218,6 +218,4 @@ public class TokenProvider implements InitializingBean {
 			throw new IllegalArgumentException("해당 refreshToken의 accessToken이 아님");
 		}
 	}
-
-
 }

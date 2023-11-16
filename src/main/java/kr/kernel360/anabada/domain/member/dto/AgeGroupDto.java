@@ -2,14 +2,17 @@ package kr.kernel360.anabada.domain.member.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class AgeGroupDto {
+	@ApiModelProperty(value = "연령대", name = "90년대생")
 	private String ageGroup;
 
+	@ApiModelProperty(value = "회원 수", name = "50")
 	private Long count;
 
 	@QueryProjection

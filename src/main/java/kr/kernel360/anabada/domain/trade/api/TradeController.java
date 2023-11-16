@@ -14,11 +14,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,6 +39,7 @@ import kr.kernel360.anabada.global.error.code.TradeErrorCode;
 import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
+@Api(tags = "교환 API", description = "/api/v1/trades")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -42,6 +49,13 @@ public class TradeController {
 	ObjectMapper objectMapper = new ObjectMapper();
 	private final Path rootLocation = Paths.get("src/main/resources/static/images/trade");
 
+	@ApiOperation(value = "조건에 따른 모든 교환 조회 -- 사용할 수 있는 조건 : 제목, 작성자, 교환 타입, 카테고리 아이디")
+	@ApiResponses({@ApiResponse(code = 200, message = "조건에 따른 모든 교환 조회 성공"),
+		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
+		@ApiResponse(code = 404, message = "페이지가 존재하지 않습니다."),
+		@ApiResponse(code = 500, message = "서버 오류")})
+	@ApiImplicitParam(name = "page_number", required = true
+		, dataType = "int", paramType = "query", defaultValue = "1")
 	@GetMapping("/v1/trades")
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
 														@RequestParam("placeDto") String placeDtoJson,
@@ -58,6 +72,14 @@ public class TradeController {
 		}
 	}
 
+	@ApiOperation(value = "단일 교환 조회")
+	@ApiResponses({@ApiResponse(code = 200, message = "단일 교환 조회 성공"),
+		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
+		@ApiResponse(code = 403, message = "비활성화 상태 계정입니다."),
+		@ApiResponse(code = 404, message = "존재하지 않는 회원 입니다. \t\n 교환 정보를 찾을 수 없습니다."),
+		@ApiResponse(code = 500, message = "서버 오류")})
+	@ApiImplicitParam(name = "trade_id", required = true
+		, dataType = "int", paramType = "path", defaultValue = "1")
 	@GetMapping("/v1/trades/{tradeId}")
 	public ResponseEntity<FindTradeResponse> find(@PathVariable Long tradeId) {
 		FindTradeResponse findTradeResponse = tradeService.find(tradeId);
@@ -65,6 +87,14 @@ public class TradeController {
 		return ResponseEntity.ok(findTradeResponse);
 	}
 
+	@ApiOperation(value = "교환 추가")
+	@ApiResponses({@ApiResponse(code = 201, message = "교환 추가 성공"),
+		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
+		@ApiResponse(code = 403, message = "비활성화 상태 계정입니다."),
+		@ApiResponse(code = 404, message = "존재하지 않는 회원 입니다."),
+		@ApiResponse(code = 500, message = "서버 오류")})
+	@ApiImplicitParam(name = "image_file", required = true
+		, dataType = "MultipartFile", paramType = "query", defaultValue = "1")
 	@PostMapping(path = "/v1/trades", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Long> create(
 		@ModelAttribute CreateTradeRequest createTradeRequest,
@@ -86,6 +116,15 @@ public class TradeController {
 
 	}
 
+	@ApiOperation(value = "교환 이미지 디스플레이")
+	@ApiResponses({@ApiResponse(code = 200, message = "교환 이미지 디스플레이 성공"),
+		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
+		@ApiResponse(code = 403, message = "비활성화 상태 계정입니다."),
+		@ApiResponse(code = 404, message = "파일 경로를 찾을 수 없습니다."),
+		@ApiResponse(code = 500, message = "서버 오류")})
+	@ApiImplicitParam(name = "image_name", required = true
+		, dataType = "string", paramType = "path"
+		, defaultValue = "src/main/resources/static/images/trade/23110916241318_카카오 로고 Yellow.png")
 	@GetMapping("/images/trade/{imageName}")
 	public ResponseEntity<UrlResource> showImage(@PathVariable String imageName) {
 		try {

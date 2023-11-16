@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,10 +18,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
+	@ApiModelProperty(value = "이메일", example = "anabada@example.com")
 	private String email;
 
+	@ApiModelProperty(value = "권한", example = "[\"ROLE_USER\"]", dataType = "string[]")
 	private List<String> roles;
 
+	@ApiModelProperty
 	private TokenDto tokenDto;
 
 	public static LoginResponse of(String email, Collection<? extends GrantedAuthority> authorities, TokenDto tokenDto) {
