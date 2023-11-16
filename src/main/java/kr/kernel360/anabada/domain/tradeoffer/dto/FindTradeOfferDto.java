@@ -34,18 +34,9 @@ public class FindTradeOfferDto {
 
 		private String createdDate;
 
-	@QueryProjection
-	@Builder
-	public FindTradeOfferDto(Long id, String title, TradeOfferStatus tradeOfferStatus, DeletedStatus deletedStatus,
-		String createdBy, Long tradeId, LocalDateTime createdDate) {
-		this.id = id;
-		this.title = title;
-		this.tradeOfferStatus = tradeOfferStatus;
-		this.deletedStatus = deletedStatus;
-		this.createdBy = createdBy;
-		this.tradeId = tradeId;
-		this.createdDate = DateParser.dateTimeToString(createdDate);
-	}
+		private String tradeTitle;
+
+		private String tradeMemberNickname;
 
 	@QueryProjection
 	@Builder
@@ -60,5 +51,20 @@ public class FindTradeOfferDto {
 		this.createdBy = createdBy;
 		this.createdDate = DateParser.dateTimeToString(createdDate);
 		this.tradeId = tradeId;
+	}
+
+	@QueryProjection
+	@Builder
+	public FindTradeOfferDto(Long id, String title, TradeOfferStatus tradeOfferStatus, DeletedStatus deletedStatus,
+		String createdBy, Long tradeId, LocalDateTime createdDate, String tradeTitle, String tradeMemberNickname) {
+		this.id = id;
+		this.title = title;
+		this.tradeOfferStatus = tradeOfferStatus;
+		this.deletedStatus = deletedStatus;
+		this.createdBy = createdBy;
+		this.tradeId = tradeId;
+		this.createdDate = DateParser.dateTimeToString(createdDate);
+		this.tradeTitle = tradeTitle;
+		this.tradeMemberNickname = tradeMemberNickname;
 	}
 }

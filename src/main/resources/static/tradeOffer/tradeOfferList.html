@@ -86,7 +86,6 @@
         var paramJson = {
             "pageNo": pageNo,
             "tradeId": param.tradeId,
-            "nickname": param.nickname,
             "tradeTitle": param.tradeTitle
         };
 
@@ -100,11 +99,10 @@
             },
             contentType: 'application/json',
             success: function (data) {
-                console.log(data);
                 var tradeOffers = data.tradeOffers.content;
                 if (tradeOffers) {
                     tradeOffers.forEach(function (tradeOffer) {
-                        console.log(tradeOffer.tradeOfferStatus);
+                        console.log("?? ",tradeOffer.tradeOfferStatus);
                         var buttonOrStatus = tradeOffer.tradeOfferStatus === 'REQUEST_ON_HOLD' ?
                             '<button class="btn btn-primary" onclick="fn_acceptTradeOffer(' + tradeOffer.id + ')">수락</button>' :
                             (tradeOffer.tradeOfferStatus == "REQUEST_ON_HOLD" ? "대기"

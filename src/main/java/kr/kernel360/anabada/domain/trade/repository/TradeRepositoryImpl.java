@@ -128,6 +128,6 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 	}
 
 	private BooleanExpression tradeCreatedByEq(String createdBy) {
-		return hasText(createdBy) ? member.nickname.eq(createdBy) : null;
+		return hasText(createdBy) ? trade.member.nickname.eq(createdBy) : null;
 	}
 }
