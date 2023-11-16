@@ -57,7 +57,7 @@
                 longitude = position.coords.longitude;
 
                 $.ajax({
-                    url: '/api/v1/findLocation?x='+latitude+'&y='+longitude,
+                    url: '/api/v1/kakao/location?x='+latitude+'&y='+longitude,
                     method: 'GET',
                     dataType: 'json',
                     headers: {
