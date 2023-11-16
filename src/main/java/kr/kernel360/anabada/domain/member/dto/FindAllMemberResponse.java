@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.member.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class FindAllMemberResponse {
+	@JsonProperty(value = "members")
 	List<FindMemberResponse> members;
 
 	public static FindAllMemberResponse of(List<FindMemberResponse> members) {

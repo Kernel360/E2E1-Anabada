@@ -61,7 +61,7 @@ public class AuthService {
 
 	private void isAlreadySocialLogin(Member findMember) {
 		if (findMember.getSocialProvider() != SocialProvider.LOCAL) {
-			throw  new BusinessException(AuthErrorCode.ALREADY_SOCIAL_LOGIN);
+			throw new BusinessException(AuthErrorCode.ALREADY_SOCIAL_LOGIN);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class AuthService {
 		}
 	}
 
-	public void isNickname(String nickname) {
+	public void isNicknameUnique(String nickname) {
 		if (memberRepository.existsByNickname(nickname)) {
 			throw new BusinessException(AuthErrorCode.ALREADY_SAVED_NICKNAME);
 		}

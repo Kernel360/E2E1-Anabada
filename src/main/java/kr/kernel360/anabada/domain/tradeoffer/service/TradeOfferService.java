@@ -21,6 +21,7 @@ import kr.kernel360.anabada.domain.tradeoffer.entity.TradeOffer;
 import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeStatus;
+import kr.kernel360.anabada.global.error.code.MemberErrorCode;
 import kr.kernel360.anabada.global.error.code.TradeOfferErrorCode;
 import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,13 @@ public class TradeOfferService {
 	public FindTradeOfferResponse find(Long tradeOfferId) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
 		Member loginMember = memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
+			.orElseThrow(()-> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
 
 		FindTradeOfferDto findTradeOfferDto = Optional.ofNullable(tradeOfferRepository.find(tradeOfferId))
 			.orElseThrow(() -> new BusinessException(TradeOfferErrorCode.NOT_FOUND_TRADE_OFFER));
 
 		Member tradeOfferOwner = memberRepository.findByNickname(findTradeOfferDto.getCreatedBy())
-			.orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+			.orElseThrow(()-> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
 
 		FindTradeOfferResponse findTradeOfferResponse = FindTradeOfferResponse.of(findTradeOfferDto);
 		findTradeOfferResponse.setIsOfferOwner(loginMember.getEmail().equals(tradeOfferOwner.getEmail()));

@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.tradeoffer.dto;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllTradeOfferResponse {
+	@JsonProperty(value = "trade_offers")
 	Page<FindTradeOfferDto> tradeOffers;
 
 	public static FindAllTradeOfferResponse of(Page<FindTradeOfferDto> tradeOffers) {
