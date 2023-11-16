@@ -40,6 +40,7 @@ spring:
             scope:
               - account_email
               - gender
+              - birthyear
               - birthday
               - profile_nickname
             client-authentication-method: POST
@@ -54,14 +55,13 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: kakao_account
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 kakao:
-  authorize-url: https://kauth.kakao.com/oauth/authorize
-  authUrl: https://kauth.kakao.com/oauth/token
-  userApiUrl: https://kapi.kakao.com/v2/user/me
   place-api-uri: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
   restapiKey: ${REST_API_KEY}
-  redirect-uri: https://localhost:8080/api/v1/auth/callback
 
 logging.level:
   org.hibernate.SQL: debug
