@@ -9,8 +9,6 @@ import kr.kernel360.anabada.domain.tradeoffer.dto.FindTradeOfferDto;
 
 public interface TradeOfferRepositoryCustom {
 	Page<FindTradeOfferDto> findAll(FindAllTradeOfferRequest findAllTradeOfferRequest, Pageable pageable);
-
 	FindTradeOfferDto find(Long tradeOfferId);
-
 	void updateTradeOffersByTradeOfferIdNeAndTradeEq(Long tradeOfferId, Trade findTrade);
 }

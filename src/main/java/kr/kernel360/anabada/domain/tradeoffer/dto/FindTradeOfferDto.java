@@ -6,6 +6,7 @@ import com.querydsl.core.annotations.QueryProjection;
 
 import kr.kernel360.anabada.global.commons.domain.DeletedStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
+import kr.kernel360.anabada.global.utils.DateParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class FindTradeOfferDto {
 
 		private Long tradeId;
 
-		private LocalDateTime createdDate;
+		private String createdDate;
 
 	@QueryProjection
 	@Builder
@@ -43,7 +44,7 @@ public class FindTradeOfferDto {
 		this.deletedStatus = deletedStatus;
 		this.createdBy = createdBy;
 		this.tradeId = tradeId;
-		this.createdDate = createdDate;
+		this.createdDate = DateParser.dateTimeToString(createdDate);
 	}
 
 	@QueryProjection
@@ -57,7 +58,7 @@ public class FindTradeOfferDto {
 		this.tradeOfferStatus = tradeOfferStatus;
 		this.deletedStatus = deletedStatus;
 		this.createdBy = createdBy;
-		this.createdDate = createdDate;
+		this.createdDate = DateParser.dateTimeToString(createdDate);
 		this.tradeId = tradeId;
 	}
 }

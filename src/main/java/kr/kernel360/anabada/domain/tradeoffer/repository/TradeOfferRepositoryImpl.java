@@ -91,7 +91,6 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 
 	@Override
 	public void updateTradeOffersByTradeOfferIdNeAndTradeEq(Long tradeOfferId, Trade findTrade) {
-
 		queryFactory
 			.update(tradeOffer)
 			.set(tradeOffer.tradeOfferStatus, TradeOfferStatus.REQUEST_EXPIRED)
