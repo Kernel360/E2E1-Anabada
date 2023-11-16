@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
@@ -37,13 +39,17 @@ import lombok.RequiredArgsConstructor;
 public class TradeController {
 	private final TradeService tradeService;
 	private final FileHandler fileHandler;
+	ObjectMapper objectMapper = new ObjectMapper();
 	private final Path rootLocation = Paths.get("src/main/resources/static/images/trade");
 
 	@GetMapping("/v1/trades")
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
-														@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+														@RequestParam("placeDto") String placeDtoJson,
+														@RequestParam(value="pageNo", defaultValue="1") int pageNo
+		) throws JsonProcessingException {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, pageable);
+		PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
+		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
 
 		return ResponseEntity.ok(findAllTradeResponse);
 	}
@@ -58,16 +64,14 @@ public class TradeController {
 	@PostMapping(path = "/v1/trades", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Long> create(
 		@ModelAttribute CreateTradeRequest createTradeRequest,
-		@ModelAttribute PlaceDto placeDto,
-		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+		@RequestParam("placeDto") String placeDtoJson,
+		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"trade");
 			createTradeRequest.setImagePath(imagePath);
 		}
-
-
+		PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
 		Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
-
 		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 
 		return ResponseEntity.created(uri).build();

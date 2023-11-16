@@ -38,8 +38,9 @@ public class TradeService {
 	private final CategoryRepository categoryRepository;
 	private final PlaceRepository placeRepository;
 
-	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
-		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, pageable);
+	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, PlaceDto placeDto, Pageable pageable) {
+		Place findPlace = findPlaceByStateAndCityAndAddress1(placeDto);
+		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, findPlace, pageable);
 
 		return FindAllTradeResponse.of(findTrades);
 	}
@@ -66,9 +67,15 @@ public class TradeService {
 			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
 		Category findCategory = categoryRepository.findById(createTradeRequest.getCategoryId())
 			.orElseThrow(() -> new BusinessException(TradeErrorCode.NOT_FOUND_CATEGORY));
-		Place findPlace = placeRepository.save(PlaceDto.toEntity(placeDto));
+		Place findPlace = findPlaceByStateAndCityAndAddress1(placeDto);
 		Trade savedTrade = tradeRepository.save(CreateTradeRequest.toEntity(createTradeRequest, findCategory, findMember, findPlace));
 
 		return savedTrade.getId();
+	}
+
+	Place findPlaceByStateAndCityAndAddress1(PlaceDto placeDto) {
+
+		return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(), placeDto.getAddress1())
+			.orElseGet(() -> placeRepository.save(PlaceDto.toEntity(placeDto)));
 	}
 }
