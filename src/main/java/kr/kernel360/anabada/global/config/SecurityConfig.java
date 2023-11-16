@@ -28,7 +28,6 @@ public class SecurityConfig {
 	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 	private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 	private final CustomOAuth2MemberService customOAuth2MemberService;
-
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -59,7 +58,18 @@ public class SecurityConfig {
 				"/api/v1/auth/reissue",
 				"/images/**",
 				"/api/images/**",
-				"/oauth2/authorization/kakao"
+				"/oauth2/authorization/kakao",
+				/* swagger v2 */
+				"/v2/api-docs",
+				"/swagger-resources",
+				"/swagger-resources/**",
+				"/configuration/ui",
+				"/configuration/security",
+				"/swagger-ui.html",
+				"/webjars/**",
+				/* swagger v3 */
+				"/v3/api-docs/**",
+				"/swagger-ui/**"
 			).permitAll()
 			.anyRequest().authenticated()
 

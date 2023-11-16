@@ -2,6 +2,8 @@ package kr.kernel360.anabada.domain.tradeoffer.dto;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

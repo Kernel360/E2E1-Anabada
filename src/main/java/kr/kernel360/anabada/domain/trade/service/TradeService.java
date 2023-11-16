@@ -12,11 +12,9 @@ import kr.kernel360.anabada.domain.category.entity.Category;
 import kr.kernel360.anabada.domain.category.repository.CategoryRepository;
 import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
-
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
-
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
@@ -24,7 +22,6 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
-import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
 import kr.kernel360.anabada.global.error.code.TradeErrorCode;
 import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,7 @@ public class TradeService {
 	private final CategoryRepository categoryRepository;
 	private final PlaceRepository placeRepository;
 
+	@Transactional
 	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, PlaceDto placeDto, Pageable pageable) {
 		Place findPlace = findPlaceByStateAndCityAndAddress1(placeDto);
 		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, findPlace, pageable);
@@ -73,9 +71,14 @@ public class TradeService {
 		return savedTrade.getId();
 	}
 
-	Place findPlaceByStateAndCityAndAddress1(PlaceDto placeDto) {
-
-		return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(), placeDto.getAddress1())
-			.orElseGet(() -> placeRepository.save(PlaceDto.toEntity(placeDto)));
+	@Transactional
+	public Place findPlaceByStateAndCityAndAddress1(PlaceDto placeDto) {
+		if (!placeRepository.existsByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
+			placeDto.getAddress1())) {
+			return placeRepository.save(PlaceDto.toEntity(placeDto));
+		} else {
+			return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
+				placeDto.getAddress1()).orElseThrow(() -> new IllegalArgumentException("wd"));
+		}
 	}
 }

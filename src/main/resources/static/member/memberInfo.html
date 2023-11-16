@@ -226,7 +226,8 @@
 
         var param = {
             "pageNo": pageNo,
-            "createdBy": $("#header-member-nickname").text()
+            "createdBy": $("#header-member-nickname").text(),
+            "placeDto": localStorage.getItem("accessAddress")
         };
 
         var url = '/api/v1/trades?' + $.param(param);

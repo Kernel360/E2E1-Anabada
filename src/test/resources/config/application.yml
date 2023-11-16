@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: ${LOCAL_DB_URL}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+    url: jdbc:h2:mem:test;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
   servlet:
     multipart:
@@ -12,12 +12,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: create
     properties:
       hibernate:
-        #        show-sql: true
+        show_sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+
 
   redis:
     host: localhost
@@ -40,7 +42,6 @@ spring:
             scope:
               - account_email
               - gender
-              - birthyear
               - birthday
               - profile_nickname
             client-authentication-method: POST
@@ -55,16 +56,9 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: kakao_account
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+  logging.level:
+    org.hibernate.SQL: debug
 
 kakao:
   place-api-uri: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
   restapiKey: ${REST_API_KEY}
-
-logging.level:
-  org.hibernate.SQL: debug
-#  org.hibernate.type: trace
-  org.springframework.security: debug
-
