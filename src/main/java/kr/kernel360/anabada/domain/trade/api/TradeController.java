@@ -46,12 +46,16 @@ public class TradeController {
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
 														@RequestParam("placeDto") String placeDtoJson,
 														@RequestParam(value="pageNo", defaultValue="1") int pageNo
-		) throws JsonProcessingException {
+		) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
-		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
+		try {
+			PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
+			FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
 
-		return ResponseEntity.ok(findAllTradeResponse);
+			return ResponseEntity.ok(findAllTradeResponse);
+		} catch (JsonProcessingException e) {
+			throw new BusinessException(TradeErrorCode.NOT_FOUND_PLACE);
+		}
 	}
 
 	@GetMapping("/v1/trades/{tradeId}")
@@ -65,16 +69,21 @@ public class TradeController {
 	public ResponseEntity<Long> create(
 		@ModelAttribute CreateTradeRequest createTradeRequest,
 		@RequestParam("placeDto") String placeDtoJson,
-		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
+		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"trade");
 			createTradeRequest.setImagePath(imagePath);
 		}
-		PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
-		Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
-		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
+		try {
+			PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
+			Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
+			URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 
-		return ResponseEntity.created(uri).build();
+			return ResponseEntity.created(uri).build();
+		} catch (JsonProcessingException e) {
+			throw new BusinessException(TradeErrorCode.NOT_FOUND_PLACE);
+		}
+
 	}
 
 	@GetMapping("/images/trade/{imageName}")
