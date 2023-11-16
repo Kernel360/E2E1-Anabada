@@ -170,7 +170,8 @@
             "categoryId": $('#categoryList').val(),
             "tradeType": $('#tradeType').val(),
             "createdBy": $('#createdBy').val(),
-            "title": $('#title').val()
+            "title": $('#title').val(),
+            "placeDto": localStorage.getItem("accessAddress")
         };
 
         // URL에 쿼리 문자열을 추가
@@ -180,7 +181,7 @@
         $.ajax({
             url: url,
             method: 'GET',
-            dataType: 'json',
+            processData: false,
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
             },
