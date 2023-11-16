@@ -7,7 +7,7 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
                         data-bs-target="#bordered-profile" type="button" role="tab"
-                        aria-controls="profile" aria-selected="true" onclick=getMemberInfo()> 내정보
+                        aria-controls="profile" aria-selected="true" onclick=fn_getMemberInfo()> 내정보
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -146,20 +146,23 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <!-- Table with stripped rows -->
+
                             <table class="table align-middle">
                                 <thead>
                                 <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">제목</th>
-                                    <th scope="col">요청상태</th>
-                                    <th scope="col">작성일</th>
+                                    <th scope="col" style="width: 35%;">교환글제목</th>
+                                    <th scope="col" style="width: 35%;">요청제목</th>
+                                    <th scope="col" style="width: 10%;">요청상태</th>
+                                    <th scope="col" style="width: 20%;">작성일</th>
                                 </tr>
                                 </thead>
                                 <tbody id="tradeOfferList">
                                 </tbody>
                             </table>
-                            <!-- End Table with stripped rows -->
+
+                            <div class="pagination-container trade-offer-pagination-container col-md-9">
+                                <ul class="pagination"></ul>
+                            </div>
 
                         </div>
                     </div>
@@ -184,13 +187,13 @@
     });
 
     function fn_init() {
-        getMemberInfo(); // 회원 정보 조회
-        getTradeListByMember(0); // 회원이 올린 교환 조회
-        getTradeOfferListByMember() // 회원이 올린 교환 요청 조회
+        fn_getMemberInfo(); // 회원 정보 조회
+        fn_getTradeListByMember(0); // 회원이 올린 교환 조회
+        fn_getTradeOfferListByMember(0) // 회원이 올린 교환 요청 조회
         fn_setEvent(); // 이벤트 초기화 함수 호출
     }
 
-    function getMemberInfo() {
+    function fn_getMemberInfo() {
         $.ajax({
             url: '/api/v1/members/info',
             method: 'GET',
@@ -214,14 +217,14 @@
         });
     }
 
-    function getTradeListByMember(pageNo) {
+    function fn_getTradeListByMember(pageNo) {
         $('#tradeList').empty();
 
         var param = {
             "pageNo": pageNo,
             "createdBy": $("#header-member-nickname").text()
         };
-        
+
         var url = '/api/v1/trades?' + $.param(param);
 
         // JSON 데이터를 가져오는 비동기 요청
@@ -270,21 +273,28 @@
         });
     }
 
-    function getTradeOfferListByMember() {
+    function fn_getTradeOfferListByMember(pageNo) {
+        $('#tradeOfferList').empty();
+        var param = {
+            "pageNo": pageNo,
+            "nickname": $("#header-member-nickname").text()
+        };
+        var url = '/api/v1/trade-offers?' + $.param(param);
         $.ajax({
-            url: '/api/v1/trade-offers',
+            url: url,
             method: 'GET',
             dataType: 'json',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                var tradeOffers = data.tradeOffers;
+                console.log("data",data)
+                var tradeOffers = data.tradeOffers.content;
 
                 for (var i = 0; i < tradeOffers.length; i++) {
                     var tradeOffer = tradeOffers[i];
-                    var tradeOfferItem = '<tr class="trade-offer-item table-list" data-trade-offer-id="' + tradeOffer.id + '">' +
-                        '<th scope="row">' + tradeOffer.id + '</th>' +
+                    var tradeOfferItem = '<tr class="trade-offer-item table-list" data-trade-offer-id="' + tradeOffer.id + '" data-trade-id="' + tradeOffer.tradeId + '" data-trade-title="' + tradeOffer.tradeTitle + '" data-trade-member-nickname="' + tradeOffer.tradeMemberNickname + '">' +
+                        '<td>' + tradeOffer.tradeTitle + '</td>' +
                         '<td>' + tradeOffer.title + '</td>' +
                         '<td>' + (tradeOffer.tradeOfferStatus === "REQUEST_ON_HOLD" ? "요청대기": (tradeOffer.tradeOfferStatus === "REQUEST_ACCEPTED" ? "요청수락" : "요청만료"))+ '</td>' +
                         '<td>' + tradeOffer.createdDate + '</td>' +
@@ -292,9 +302,19 @@
                     $('#tradeOfferList').append(tradeOfferItem);
                 }
 
+                // 페이지네이션 처리
+                var totalPages = data.tradeOffers.totalPages;
+                var currentPage = data.tradeOffers.number;
+                updateTradeOfferPagination(currentPage, totalPages);
+
                 $('.trade-offer-item').click(function () {
-                    var tradeOfferId = $(this).data('trade-offer-id');
-                    authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId='+tradeOfferId);
+                    var json = {
+                        "tradeId": $(this).data('trade-id'),
+                        "tradeOfferId": $(this).data('trade-offer-id'),
+                        "tradeTitle": $(this).data('trade-title'),
+                        "nickname": $(this).data('trade-member-nickname')
+                    };
+                    authorize('/tradeOffer/tradeOfferInfo.html?tradeOfferId=' + json.tradeOfferId + "&tradeTitle=" + json.tradeTitle + "&nickname=" + json.nickname + "&tradeId=" + json.tradeId);
                 });
             },
             error: function (data) {
@@ -315,14 +335,14 @@
         // 이전 버튼
         paginationContainer.append(
             '<li class="page-item ' + ((currentPage+1) === 1 ? 'disabled' : '') + '">' +
-            '<a class="page-link" onclick="getTradeListByMember(' + ((currentPage+1) - 1) + ')">«</a>' +
+            '<a class="page-link" onclick="fn_getTradeListByMember(' + ((currentPage+1) - 1) + ')">«</a>' +
             '</li>'
         );
 
         for (var i = startPage; i <= endPage; i++) {
             var pageItem =
                 '<li class="page-item ' + (i === (currentPage+1) ? 'active' : '') + '">' +
-                '<a class="page-link" onclick="getTradeListByMember(' + i + ')">' + i + '</a>' +
+                '<a class="page-link" onclick="fn_getTradeListByMember(' + i + ')">' + i + '</a>' +
                 '</li>';
             paginationContainer.append(pageItem);
         }
@@ -330,7 +350,39 @@
         // 다음 버튼
         paginationContainer.append(
             '<li class="page-item ' + ((currentPage+1) === totalPages ? 'disabled' : '') + '">' +
-            '<a class="page-link" onclick="getTradeListByMember(' + ((currentPage+1) + 1) + ')">»</a>' +
+            '<a class="page-link" onclick="fn_getTradeListByMember(' + ((currentPage+1) + 1) + ')">»</a>' +
+            '</li>'
+        );
+    }
+
+    function updateTradeOfferPagination(currentPage, totalPages) {
+        // Pagination 부분 업데이트
+        var paginationContainer = $('.trade-offer-pagination-container ul');
+        paginationContainer.empty();
+
+        var pagesToShow = 10; // 한 번에 보여질 페이지 수
+        var startPage = Math.max(1, currentPage+1 - Math.floor(pagesToShow / 2));
+        var endPage = Math.min(totalPages, startPage + pagesToShow - 1);
+
+        // 이전 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === 1 ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getTradeOfferListByMember(' + ((currentPage+1) - 1) + ')">«</a>' +
+            '</li>'
+        );
+
+        for (var i = startPage; i <= endPage; i++) {
+            var pageItem =
+                '<li class="page-item ' + (i === (currentPage+1) ? 'active' : '') + '">' +
+                '<a class="page-link" onclick="fn_getTradeOfferListByMember(' + i + ')">' + i + '</a>' +
+                '</li>';
+            paginationContainer.append(pageItem);
+        }
+
+        // 다음 버튼
+        paginationContainer.append(
+            '<li class="page-item ' + ((currentPage+1) === totalPages ? 'disabled' : '') + '">' +
+            '<a class="page-link" onclick="fn_getTradeOfferListByMember(' + ((currentPage+1) + 1) + ')">»</a>' +
             '</li>'
         );
     }
