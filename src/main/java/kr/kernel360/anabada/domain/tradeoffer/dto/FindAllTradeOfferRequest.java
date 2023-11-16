@@ -26,4 +26,7 @@ public class FindAllTradeOfferRequest {
 
 	@ApiModelProperty(value = "교환 아이디", example = "1")
 	private Long tradeId;
+
+	@ApiModelProperty(value = "작성자 닉네임", example = "가을전어이윤선")
+	private String nickname;
 }
