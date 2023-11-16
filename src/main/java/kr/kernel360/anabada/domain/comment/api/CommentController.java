@@ -22,12 +22,14 @@ public class CommentController {
 	@PostMapping("v1/trades/{tradeId}/comments")
 	public ResponseEntity<Long> create(@PathVariable Long tradeId, @RequestBody CreateCommentRequest createCommentRequest) {
 		Long savedCommentId = commentService.create(createCommentRequest, tradeId);
+
 		return ResponseEntity.ok(savedCommentId);
 	}
 
 	@GetMapping("v1/trades/{tradeId}/comments")
 	public ResponseEntity<FindAllCommentResponse> findAll(@PathVariable Long tradeId) {
 		FindAllCommentResponse findAllCommentResponse = commentService.findAll(tradeId);
+
 		return ResponseEntity.ok(findAllCommentResponse);
 	}
 
