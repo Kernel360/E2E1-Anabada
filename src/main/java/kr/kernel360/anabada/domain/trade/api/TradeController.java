@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
@@ -42,6 +46,7 @@ import lombok.RequiredArgsConstructor;
 public class TradeController {
 	private final TradeService tradeService;
 	private final FileHandler fileHandler;
+	ObjectMapper objectMapper = new ObjectMapper();
 	private final Path rootLocation = Paths.get("src/main/resources/static/images/trade");
 
 	@ApiOperation(value = "조건에 따른 모든 교환 조회 -- 사용할 수 있는 조건 : 제목, 작성자, 교환 타입, 카테고리 아이디")
@@ -53,11 +58,18 @@ public class TradeController {
 		, dataType = "int", paramType = "query", defaultValue = "1")
 	@GetMapping("/v1/trades")
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
-														@RequestParam(value="pageNo", defaultValue="1") int pageNo) {
+														@RequestParam("placeDto") String placeDtoJson,
+														@RequestParam(value="pageNo", defaultValue="1") int pageNo
+		) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
-		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, pageable);
+		try {
+			PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
+			FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
 
-		return ResponseEntity.ok(findAllTradeResponse);
+			return ResponseEntity.ok(findAllTradeResponse);
+		} catch (JsonProcessingException e) {
+			throw new BusinessException(TradeErrorCode.NOT_FOUND_PLACE);
+		}
 	}
 
 	@ApiOperation(value = "단일 교환 조회")
@@ -86,19 +98,22 @@ public class TradeController {
 	@PostMapping(path = "/v1/trades", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Long> create(
 		@ModelAttribute CreateTradeRequest createTradeRequest,
-		@ModelAttribute PlaceDto placeDto,
+		@RequestParam("placeDto") String placeDtoJson,
 		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 		if (imageFile != null && !imageFile.isEmpty()) {
 			String imagePath = fileHandler.parseFileInfo(imageFile,"trade");
 			createTradeRequest.setImagePath(imagePath);
 		}
+		try {
+			PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
+			Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
+			URI uri = URI.create("/api/v1/trades/"+savedTradeId);
 
+			return ResponseEntity.created(uri).build();
+		} catch (JsonProcessingException e) {
+			throw new BusinessException(TradeErrorCode.NOT_FOUND_PLACE);
+		}
 
-		Long savedTradeId = tradeService.create(createTradeRequest, placeDto);
-
-		URI uri = URI.create("/api/v1/trades/"+savedTradeId);
-
-		return ResponseEntity.created(uri).build();
 	}
 
 	@ApiOperation(value = "교환 이미지 디스플레이")

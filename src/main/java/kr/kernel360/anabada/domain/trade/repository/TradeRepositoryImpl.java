@@ -2,6 +2,7 @@ package kr.kernel360.anabada.domain.trade.repository;
 
 import static kr.kernel360.anabada.domain.category.entity.QCategory.*;
 import static kr.kernel360.anabada.domain.member.entity.QMember.*;
+import static kr.kernel360.anabada.domain.place.entity.QPlace.*;
 import static kr.kernel360.anabada.domain.trade.entity.QTrade.*;
 import static kr.kernel360.anabada.domain.tradeoffer.entity.QTradeOffer.*;
 import static org.springframework.util.StringUtils.*;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.QFindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
@@ -28,7 +30,8 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<FindTradeDto> findTrades(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
+	public Page<FindTradeDto> findTrades(TradeSearchCondition tradeSearchCondition, Place placeCondition, Pageable pageable) {
+
 		List<FindTradeDto> content = queryFactory
 			.select(new QFindTradeDto(
 				trade.id,
@@ -47,11 +50,13 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.leftJoin(trade.tradeOffers, tradeOffer)
 			.on(tradeOffer.tradeOfferStatus.eq(TradeOfferStatus.REQUEST_ACCEPTED))
 			.leftJoin(tradeOffer.member, member)
+			.leftJoin(trade.place, place)
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),
 				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
-				tradeTitleContain(tradeSearchCondition.getTitle())
+				tradeTitleContain(tradeSearchCondition.getTitle()),
+				trade.place.eq(placeCondition)
 			)
 			.orderBy(trade.tradeStatus.desc(), trade.id.desc())
 			.offset(pageable.getOffset())
@@ -66,7 +71,8 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),
 				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
-				tradeTitleContain(tradeSearchCondition.getTitle())
+				tradeTitleContain(tradeSearchCondition.getTitle()),
+				trade.place.eq(placeCondition)
 			)
 			.fetchOne();
 
