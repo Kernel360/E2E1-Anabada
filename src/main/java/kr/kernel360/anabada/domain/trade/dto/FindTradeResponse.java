@@ -35,6 +35,8 @@ public class FindTradeResponse {
 
 	private Boolean isTradeOwner;
 
+	private Boolean isTradeOffer;
+
 	public static FindTradeResponse of(FindTradeDto findTradeDto) {
 		return FindTradeResponse.builder()
 			.tradeId(findTradeDto.getTradeId())
