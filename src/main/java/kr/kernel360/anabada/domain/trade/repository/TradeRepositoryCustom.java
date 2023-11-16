@@ -7,9 +7,8 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 
 public interface TradeRepositoryCustom {
-
 	Page<FindTradeDto> findTrades(TradeSearchCondition tradeSearchCondition, Pageable pageable);
-
 	FindTradeDto findTrade(Long tradeId);
+	Long countTradeOfferByTradeIdAndEmail(Long tradeId, String email);
 
 }

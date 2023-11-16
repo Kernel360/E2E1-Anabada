@@ -15,6 +15,8 @@ import kr.kernel360.anabada.domain.member.entity.Member;
 import kr.kernel360.anabada.domain.member.repository.MemberRepository;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
+import kr.kernel360.anabada.global.error.code.CommentErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,23 +30,26 @@ public class CommentService {
 	@Transactional
 	public Long create(CreateCommentRequest createCommentRequest, Long tradeId) {
 		String findEmailByJwt = SecurityContextHolder.getContext().getAuthentication().getName();
-		Member member = memberRepository.findByEmail(findEmailByJwt)
-			.orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다"));
-		Trade trade = findTrade(tradeId);
-		Comment savedComment = commentRepository.save(CreateCommentRequest.toEntity(createCommentRequest, member, trade));
+		Member findMember = memberRepository.findByEmail(findEmailByJwt)
+			.orElseThrow(()-> new BusinessException(CommentErrorCode.NOT_FOUND_MEMBER));
+		Trade findTrade = findTrade(tradeId);
+		Comment savedComment = commentRepository.save(CreateCommentRequest.toEntity(createCommentRequest, findMember, findTrade));
+
 		return savedComment.getId();
 	}
 
 	public FindAllCommentResponse findAll(Long tradeId) {
-		Trade trade = findTrade(tradeId);
-		List<Comment> comments = commentRepository.findCommentsByTrade(trade);
+		Trade findTrade = findTrade(tradeId);
+		List<Comment> findComments = commentRepository.findCommentsByTradeOrderByIdDesc(findTrade);
 
-		return FindAllCommentResponse.of(comments.stream().map(FindCommentDto::of).toList());
+		return FindAllCommentResponse.of(findComments.stream()
+			.map(FindCommentDto::of)
+			.toList());
 	}
 
 	private Trade findTrade(Long tradeId) {
 		return tradeRepository.findById(tradeId)
-			.orElseThrow(() -> new IllegalArgumentException("trade가 존재하지 않습니다"));
+			.orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_TRADE));
 	}
 
 }

@@ -8,5 +8,5 @@ import kr.kernel360.anabada.domain.comment.entity.Comment;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-	List<Comment> findCommentsByTrade(Trade trade);
+	List<Comment> findCommentsByTradeOrderByIdDesc(Trade trade);
 }

@@ -24,6 +24,7 @@ import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
+import kr.kernel360.anabada.domain.tradeoffer.repository.TradeOfferRepository;
 import kr.kernel360.anabada.global.error.code.TradeErrorCode;
 import kr.kernel360.anabada.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final MemberRepository memberRepository;
 	private final CategoryRepository categoryRepository;
+	private final PlaceRepository placeRepository;
 
 	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, Pageable pageable) {
 		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, pageable);
@@ -52,6 +54,7 @@ public class TradeService {
 			.orElseThrow(()-> new BusinessException(TradeErrorCode.NOT_FOUND_MEMBER));
 		FindTradeResponse findTradeResponse = FindTradeResponse.of(findTradeDto);
 		findTradeResponse.setIsTradeOwner(findLoginMember.getEmail().equals(findTradeOwner.getEmail()));
+		findTradeResponse.setIsTradeOffer(tradeRepository.countTradeOfferByTradeIdAndEmail(tradeId, findEmailByJwt) > 0 ? true : false);
 
 		return findTradeResponse;
 	}
