@@ -84,8 +84,11 @@
                             <div class="d-flex">
                                 <input style="margin-right: 5px;" placeholder="댓글 입력하세요." type="text"
                                        class="form-control" id="commentContent" name="commentContent" required>
-                                <button style="white-space: nowrap" id="commentCreateButton" class="btn btn-primary">
+                                <button style="white-space: nowrap; margin-right: 5px;" id="commentCreateButton" class="btn btn-primary">
                                     댓글 등록
+                                </button>
+                                <button style="white-space: nowrap;" id="commentRefreshButton" class="btn btn-success">
+                                    <i class="bi bi-arrow-clockwise"></i>
                                 </button>
                             </div>
                         </div>
@@ -188,6 +191,11 @@ console.log(123);
         $('#viewTradeOfferButton').click(function (e) {
             e.preventDefault();
             authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
+        });
+
+        $('#commentRefreshButton').click(function (e) {
+            e.preventDefault();
+            fn_getCommentList();
         });
 
         $('#commentCreateButton').click(function (e) {
