@@ -1,6 +1,7 @@
 package kr.kernel360.anabada.domain.tradeoffer.repository;
 
 import static kr.kernel360.anabada.domain.member.entity.QMember.*;
+import static kr.kernel360.anabada.domain.trade.entity.QTrade.*;
 import static kr.kernel360.anabada.domain.tradeoffer.entity.QTradeOffer.*;
 
 import java.util.List;
@@ -34,13 +35,18 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 				tradeOffer.deletedStatus,
 				member.nickname,
 				tradeOffer.trade.id,
-				tradeOffer.createdDate
+				tradeOffer.createdDate,
+				tradeOffer.trade.title,
+				tradeOffer.trade.member.nickname
 			))
 			.from(tradeOffer)
 			.leftJoin(tradeOffer.member, member)
+			.innerJoin(tradeOffer.trade, trade)
+			.innerJoin(trade.member, member)
 			.where(
 				memberIdEq(findAllTradeOfferRequest.getMemberId()),
 				tradeIdEq(findAllTradeOfferRequest.getTradeId()),
+				memberNicknameEq(findAllTradeOfferRequest.getNickname()),
 				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
 				)
 			.orderBy(tradeOffer.id.desc())
@@ -55,6 +61,7 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 			.where(
 				memberIdEq(findAllTradeOfferRequest.getMemberId()),
 				tradeIdEq(findAllTradeOfferRequest.getTradeId()),
+				memberNicknameEq(findAllTradeOfferRequest.getNickname()),
 				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
 			)
 			.fetchOne();
@@ -62,6 +69,12 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 		return new PageImpl<>(content, pageable, total);
 
 	}
+
+	private BooleanExpression memberNicknameEq(String nickname) {
+		return nickname != null ? tradeOffer.member.nickname.eq(nickname) : null;
+	}
+
+	// todo : memberId를 어디서 가져오나?
 	private BooleanExpression memberIdEq(Long memberId) {
 		return memberId != null ? member.id.eq(memberId) : null;
 	}

@@ -22,4 +22,6 @@ public class FindAllTradeOfferRequest {
 
 	private Long tradeId;
 
+	private String nickname;
+
 }
