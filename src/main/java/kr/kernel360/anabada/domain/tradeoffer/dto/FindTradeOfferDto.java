@@ -45,8 +45,10 @@ public class FindTradeOfferDto {
 		@ApiModelProperty(value = "작성일", example = "2023-11-11")
 		private String createdDate;
 
+		@ApiModelProperty(value = "교환 제목", example = "아이폰 받고 갤럭시 드려요")
 		private String tradeTitle;
 
+		@ApiModelProperty(value = "교환 작성자", example = "가을전어장호윤")
 		private String tradeMemberNickname;
 
 	@QueryProjection

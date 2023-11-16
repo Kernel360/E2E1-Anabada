@@ -16,10 +16,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FindAllTradeOfferRequest {
 	@ApiModelProperty(value = "교환 요청 상태", example = "요청대기")
-	private TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
+	private final TradeOfferStatus tradeOfferStatus = TradeOfferStatus.REQUEST_ON_HOLD;
 
 	@ApiModelProperty(value = "교환 삭제 상태", example = "false")
-	private DeletedStatus deletedStatus = DeletedStatus.FALSE;
+	private final DeletedStatus deletedStatus = DeletedStatus.FALSE;
 
 	@ApiModelProperty(value = "회원 아이디", example = "1")
 	private Long memberId;
