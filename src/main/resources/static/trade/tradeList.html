@@ -74,11 +74,11 @@
                             <table class="table align-middle">
                                 <thead>
                                 <tr>
-                                    <th scope="col">No</th>
                                     <th scope="col">교환구분</th>
                                     <th scope="col">카테고리</th>
                                     <th scope="col">제목</th>
                                     <th scope="col">작성자</th>
+                                    <th scope="col">상태</th>
                                     <th scope="col">작성일</th>
                                 </tr>
                                 </thead>
@@ -86,9 +86,17 @@
                                 </tbody>
                             </table>
                             <!-- End Table with stripped rows -->
-
-                            <div class="pagination-container">
-                                <ul class="pagination"></ul>
+                            <div class="row">
+                                <div class="pagination-container col-md-9">
+                                    <ul class="pagination"></ul>
+                                </div>
+                                <div class="col-md-3" style="text-align: right">
+                                    <span class="badge bg-before-accept" style="font-size: 9px; --bs-badge-padding-x: 0.65em !important;--bs-badge-padding-y: 0.3em !important;--bs-badge-border-radius: 100px!important;">&nbsp;</span>
+                                    <span style="font-size: 14px;">거래수락</span>
+                                    <br>
+                                    <span class="badge bg-after-accept" style="font-size: 9px; --bs-badge-padding-x: 0.65em !important;--bs-badge-padding-y: 0.3em !important;--bs-badge-border-radius: 100px!important;">&nbsp;</span>
+                                    <span style="font-size: 14px;">거래대기</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,17 +189,20 @@
                 var trades = data.trades.content;
                 if (trades) {
                     trades.forEach(function (trade) {
-                        var classname = trade.tradeType == "TRADE" ? "badge bg-primary" : (trade.tradeType == "REQUEST" ? "badge bg-success" : "badge bg-danger");
+                        var typeClassname = trade.tradeType == "TRADE" ? "badge bg-primary" : (trade.tradeType == "REQUEST" ? "badge bg-success" : "badge bg-danger");
+
+                        var stateClassname = trade.tradeStatus == "BEFORE_ACCEPT" ? "badge bg-before-accept" : "badge bg-after-accept";
                         var text = trade.tradeType === "TRADE" ? "바꿔요" : (trade.tradeType === "REQUEST" ? "원해요" : "드려요");
-                        var tradeItem = '<tr class="trade-item table-list" data-trade-id="' + trade.tradeId + '">' +
-                            '<th scope="row">' + trade.tradeId + '</th>' +
-                            '<td><span class="' + classname + '">' + text + '</span></td>' +
+                        var tradeItem = '<tr class="trade-item table-list" data-trade-id="' + trade.tradeId + '" data-trade-status="'+trade.tradeStatus +'" data-trade-offer-createdby="'+ trade.tradeOfferCreatedBy +'" data-trade-createdby="'+trade.nickname +'">' +
+                            '<td><span class="' + typeClassname + '">' + text + '</span></td>' +
                             '<td>' + trade.categoryName + '</td>' +
                             '<td>' + trade.tradeTitle + '</td>' +
                             '<td>' + trade.nickname + '</td>' +
+                            '<td><span class="' + stateClassname + '" style="--bs-badge-padding-x: 0.65em !important;--bs-badge-padding-y: 0.3em !important;--bs-badge-border-radius: 100px!important;">&nbsp;</span></td>' +
                             '<td>' + trade.createdDate + '</td>' +
-                            '<td>' + trade.tradeOfferCreatedBy + '</td>' +
+                            // '<td>' + trade.tradeOfferCreatedBy + '</td>' +
                             '</tr>';
+
                         $('#tradeList').append(tradeItem);
                     });
                 }
@@ -201,25 +212,28 @@
                 var currentPage = data.trades.number;
                 updatePagination(currentPage, totalPages);
 
-
-
                 $('.trade-item').click(function () {
                     var tradeId = $(this).data('trade-id');
-                    var tradeNickname = $(this).data('nickname');
-                    var tradeOfferNickname = $(this).data('trade-offer-nickname');
+                    var tradeCreateBy = $(this).data('trade-createdby');
 
-                    var loginMemberNickname = $(".member-nickname").val();
-
-                    console.log("tradeNickname : " + tradeNickname);
-                    console.log("tradeOfferNickname : " + tradeOfferNickname);
+                    var loginMemberNickname = $("#header-member-nickname").text();
+                    var tradeStatus = $(this).data('trade-status');
+                    var tradeOfferCreatedBy = $(this).data('trade-offer-createdby');
+                    console.log("tradeStatus : " + tradeStatus);
+                    console.log("tradeCreateBy : " + tradeCreateBy);
+                    console.log("tradeOfferCreatedBy : " + tradeOfferCreatedBy);
                     console.log("loginMemberNickname : " + loginMemberNickname);
 
-                    if (loginMemberNickname == tradeNickname || loginMemberNickname == tradeOfferNickname) {
-                        authorize('/trade/tradeInfo.html?tradeId='+tradeId);
-                    } else {
-                        alert("본인이 작성하였거나 요청 수락된 글만 조회 가능합니다.");
+                    if (tradeStatus == "AFTER_ACCEPT") {
+                        if (loginMemberNickname == tradeOfferCreatedBy || loginMemberNickname == tradeCreateBy) {
+                            authorize('/trade/tradeInfo.html?tradeId='+tradeId);
+                            return;
+                        }
+                        alert("거래가 매칭된 게시글 입니다.\n본인이 작성하였거나 거래요청 수락된 게시글만 조회할 수 있습니다.");
                         return;
                     }
+
+                    authorize('/trade/tradeInfo.html?tradeId='+tradeId);
                 });
             },
             error: function (data) {

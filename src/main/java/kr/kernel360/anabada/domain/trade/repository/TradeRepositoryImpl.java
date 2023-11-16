@@ -53,7 +53,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
 				tradeTitleContain(tradeSearchCondition.getTitle())
 			)
-			.orderBy(trade.id.desc())
+			.orderBy(trade.tradeStatus.desc(), trade.id.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -92,6 +92,20 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.leftJoin(trade.category, category)
 			.leftJoin(trade.member, member)
 			.where(trade.id.eq(tradeId))
+			.fetchOne();
+	}
+
+	@Override
+	public Long countTradeOfferByTradeIdAndEmail(Long tradeId, String email) {
+		return queryFactory
+			.select(trade.count())
+			.from(trade)
+			.leftJoin(trade.tradeOffers, tradeOffer)
+			.leftJoin(tradeOffer.member, member)
+			.where(
+				tradeOffer.trade.id.eq(tradeId)
+					.and(member.email.in(email))
+			)
 			.fetchOne();
 	}
 

@@ -63,46 +63,48 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-sm-10">
-                                <button id="tradeOfferCreateButton" class="btn btn-primary">거래 요청하기</button>
-                            </div>
-
-                            <div class="col-sm-10">
-                                <button id="viewTradeOfferButton" class="btn btn-primary">요청 목록 조회</button>
-                            </div>
+                        <div>
+                            <button id="tradeOfferCreateButton" class="btn btn-primary" style="display:none;">거래 요청하기</button>
+                            <button id="viewTradeOfferButton" class="btn btn-primary" style="display:none;">요청 목록 조회</button>
+                        </div>
+                        <div id="tradeOfferText" style="display: none; margin: 35px 0px 10px 0px;">
+                            <span class="badge border-danger border-1 text-danger" style="font-size: medium;">글 작성자가 아직 거래를 수락하지 않았습니다.</span>
+                            <br>
+                            <span class="badge border-danger border-1 text-danger" style="font-size: medium;">내가 작성한 거래요청내역은 마이페이지에서 확인할 수 있습니다.</span>
                         </div>
 
                     </form><!-- End General Form Elements -->
 
                 </div>
 
-
-                <div class="card-body">
+                <div id="commentArea" class="card-body" style="display: none;">
+                    <hr>
+                    <div class="row mb-3">
+                        <div>
+                            <div class="d-flex">
+                                <input style="margin-right: 5px;" placeholder="댓글 입력하세요." type="text"
+                                       class="form-control" id="commentContent" name="commentContent" required>
+                                <button style="white-space: nowrap; margin-right: 5px;" id="commentCreateButton" class="btn btn-primary">
+                                    댓글 등록
+                                </button>
+                                <button style="white-space: nowrap;" id="commentRefreshButton" class="btn btn-success">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <table class="table align-middle">
                         <thead>
                         <tr>
-                            <th scope="col">NO</th>
-                            <th scope="col">작성자</th>
-                            <th scope="col">댓글내용</th>
+                            <th scope="col"style="width: 75%;" >댓글내용</th>
+                            <th scope="col" style="width: 15%;">작성자</th>
+                            <th scope="col" style="width: 10%;">작성일시</th>
                         </tr>
                         </thead>
                         <tbody id="commentList">
                         </tbody>
                     </table>
-                    <div class="row mb-3">
-                        <div class="col-sm-10">
-                            <label for="commentContent" class="col-sm-2 col-form-label">댓글<span class="required-star">*</span></label>
-                            <div class="col-sm-10 d-flex">
-                                <input style="margin-right: 5px;" placeholder="댓글 입력하세요." type="text"
-                                       class="form-control" id="commentContent" name="commentContent" required>
-                                <button style="white-space: nowrap" id="commentCreateButton" class="btn btn-primary">
-                                    댓글 등록
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
             </div>
@@ -119,7 +121,6 @@
     function fn_init() {
         getTradeInfo(); // 교환 정보 조회
         fn_setEvent(); // 이벤트 초기화 함수 호출
-
     }
 
     function getTradeInfo() {
@@ -148,15 +149,32 @@
                     $('#tradeImage').append("", $('#image').val())
                 }
 
-                if (data.isTradeOwner || data.tradeStatus == 'AFTER_ACCEPT') {
-                    $('#tradeOfferCreateButton').hide();
+console.log(123);
+
+                if (data.tradeStatus == 'BEFORE_ACCEPT') {
+                    if (data.isTradeOwner) {
+                        // 자신이 작성한 글이면 요청 목록 조회 button show
+                        $('#viewTradeOfferButton').show();
+                    } else {
+                        // 자신이 작성한 글 아니면 거래 요청 button show
+                        $('#tradeOfferCreateButton').show();
+                    }
+                    if (data.isTradeOffer) {
+                        // 게시글에 거래 요청을 한 내역이 있으면
+                        $('#tradeOfferText').show();
+                    }
+
                 }
-                if (!data.isTradeOwner) {
-                    $('#viewTradeOfferButton').hide();
+
+
+                if (data.tradeStatus == 'AFTER_ACCEPT') {
+                    // 거래 수락 상태일 때
+                    fn_getCommentList();
                 }
 
                 param.nickname = data.nickname;
                 param.tradeTitle = data.tradeTitle;
+
             },
             error: function (data) {
                 alert(data.responseJSON.message);
@@ -165,7 +183,6 @@
     }
 
     function fn_setEvent() {
-        // "거래 요청" 버튼을 초기화
         $('#tradeOfferCreateButton').click(function (e) {
             e.preventDefault();
             authorize('/tradeOffer/tradeOfferCreateForm.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
@@ -175,11 +192,41 @@
             e.preventDefault();
             authorize('/tradeOffer/tradeOfferList.html?tradeId='+param.tradeId+'&nickname='+param.nickname+'&tradeTitle='+param.tradeTitle);
         });
+
+        $('#commentRefreshButton').click(function (e) {
+            e.preventDefault();
+            fn_getCommentList();
+        });
+
+        $('#commentCreateButton').click(function (e) {
+            e.preventDefault();
+            if ("" == $('#commentContent').val()) {
+                alert("댓글을 입력해주세요.");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/v1/trades/' + param.tradeId + '/comments',
+                method: 'POST',
+                data: JSON.stringify({"content": $('#commentContent').val()}),
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+                },
+                success: function (data) {
+                    fn_getCommentList();
+                },
+                error: function (data) {
+                    alert(data.responseJSON.message);
+                }
+            });
+        });
     }
 
 
-    function fn_getcommentList() {
-        // JSON 데이터를 가져오는 비동기 요청
+    function fn_getCommentList() {
+        $('#commentContent').val("");
+        $("#commentArea").show();
         var url = '/api/v1/trades/' + param.tradeId + '/comments';
         $.ajax({
             url: url,
@@ -190,56 +237,22 @@
             },
             success: function (data) {
                 $("#commentList").empty();
-                var comments = data.findCommentDto;
+                var comments = data.comments;
 
                 for (var i = 0; i < comments.length; i++) {
                     var comment = comments[i];
                     var commentItem = '<tr class="comment-item table-list" data-comment-id="' + comment.id + '">' +
-                        '<td>' + comment.id + '</td>' +
+                        '<td>' + comment.content + '</td>' +
                         '<td>' + comment.memberNickname + '</td>' +
-                        '<td>' + comment.content + '</td>'
-
+                        '<td>' + comment.createdDate + '</td>';
                     commentItem += '</tr>';
 
                     $('#commentList').append(commentItem);
                 }
             },
-            error: function () {
-                console.log('fail : 카테고리 목록 조회');
+            error: function (data) {
+                alert(data.responseJSON.message);
             }
-        });
-    }
-
-    function fn_setcommentEvent() {
-
-        $('#commentCreateButton').click(function (e) {
-            e.preventDefault();
-            if ("" == $('#commentContent').val()) {
-                alert("댓글을 입력해주세요.");
-                return;
-            }
-            var url = '/api/v1/trades/' + param.tradeId + '/comments';
-            var content = $('#commentContent').val();
-
-
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: JSON.stringify({"content": $('#commentContent').val()}),
-                contentType: 'application/json',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-                },
-                success: function (data) {
-                    $('#commentContent').val("");
-                    fn_getcommentList();
-                },
-                error: function () {
-                    // todo : 추후 exception 별 분기 필요
-                    alert("존재하는 카테고리명 입니다.");
-                    console.log('fail : comment 생성');
-                }
-            });
         });
     }
 </script>

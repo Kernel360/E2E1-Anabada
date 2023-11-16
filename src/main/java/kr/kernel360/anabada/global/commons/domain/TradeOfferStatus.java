@@ -1,7 +1,5 @@
 package kr.kernel360.anabada.global.commons.domain;
 
-import lombok.Getter;
-
 public enum TradeOfferStatus {
 	REQUEST_ON_HOLD("요청대기"),
 	REQUEST_ACCEPTED("요청수락"),
