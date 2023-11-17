@@ -58,15 +58,21 @@ public class TradeController {
 		, dataType = "int", paramType = "query", defaultValue = "1")
 	@GetMapping("/v1/trades")
 	public ResponseEntity<FindAllTradeResponse> findAll(TradeSearchCondition tradeSearchCondition,
-														@RequestParam("placeDto") String placeDtoJson,
+														@RequestParam(value = "placeDto", required = false) String placeDtoJson,
 														@RequestParam(value="pageNo", defaultValue="1") int pageNo
 		) {
 		Pageable pageable = PageRequest.of(pageNo<1 ? 0 : pageNo-1, 10);
+		PlaceDto placeDto = parseJsonToPlaceDto(placeDtoJson);
+		FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
+
+		return ResponseEntity.ok(findAllTradeResponse);
+	}
+
+	private PlaceDto parseJsonToPlaceDto(String placeDtoJson) {
+		if (placeDtoJson == null) return null;
 		try {
 			PlaceDto placeDto = objectMapper.readValue(placeDtoJson, PlaceDto.class);
-			FindAllTradeResponse findAllTradeResponse = tradeService.findAll(tradeSearchCondition, placeDto, pageable);
-
-			return ResponseEntity.ok(findAllTradeResponse);
+			return placeDto;
 		} catch (JsonProcessingException e) {
 			throw new BusinessException(TradeErrorCode.NOT_FOUND_PLACE);
 		}

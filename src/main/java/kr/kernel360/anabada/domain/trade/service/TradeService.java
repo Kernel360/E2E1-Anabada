@@ -37,7 +37,7 @@ public class TradeService {
 
 	@Transactional
 	public FindAllTradeResponse findAll(TradeSearchCondition tradeSearchCondition, PlaceDto placeDto, Pageable pageable) {
-		Place findPlace = findPlaceByStateAndCityAndAddress1(placeDto);
+		Place findPlace = placeDto == null ? null :findPlaceByStateAndCityAndAddress1(placeDto);
 		Page<FindTradeDto> findTrades = tradeRepository.findTrades(tradeSearchCondition, findPlace, pageable);
 
 		return FindAllTradeResponse.of(findTrades);
@@ -76,9 +76,8 @@ public class TradeService {
 		if (!placeRepository.existsByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
 			placeDto.getAddress1())) {
 			return placeRepository.save(PlaceDto.toEntity(placeDto));
-		} else {
-			return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
-				placeDto.getAddress1()).orElseThrow(() -> new IllegalArgumentException("wd"));
 		}
+		return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(), placeDto.getAddress1())
+			.orElseThrow(() -> new IllegalArgumentException("wd"));
 	}
 }
