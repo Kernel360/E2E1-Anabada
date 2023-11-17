@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="col-sm-1">
-                            <button id="faqCreateButton" class="btn btn-primary">등록</button>
+                            <button id="faqCreateButton" class="btn btn-primary" style="display: none;">등록</button>
                         </div>
                     </div>
                 </div>
@@ -75,6 +75,10 @@
     function fn_init() {
         fn_getFaqList(0); // FAQ 목록 조회
         fn_setEvent();
+
+        if (fn_findRolesByJWT().includes("ROLE_ADMIN")) {
+            $('#faqCreateButton').show();
+        }
     }
 
     function fn_setEvent() {

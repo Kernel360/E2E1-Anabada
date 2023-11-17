@@ -116,18 +116,38 @@
                     $('main[content="container"]').empty();
                     loadHtmlAndExecuteScript(url, param);
                 },
-                error: function (xhr, status, error) {
+                error: function (data) {
                     console.log("토큰에러!");
                     // 엑세스 토큰 만료
                     if (null != localStorage.getItem("accessToken")) {
                         reissueAccessToken(url);
                     }
-                    // 권한 없이 접근
+                    // 권한 없이 접근정
                     else {
+                        alert(data.responseJSON.message);
                         alert("로그인 정보가 없거나 권한 정보가 없습니다.") // todo : 추후 exception 별 분기 필요
                     }
                 }
             });
+        }
+
+        function fn_findRolesByJWT() {
+            const accessToken = localStorage.getItem('accessToken');
+            const base64Payload = accessToken.split('.')[1];
+            const base64 = base64Payload.replace(/-/g, '+').replace(/_/g, '/');
+            const decodedJWT = JSON.parse(
+                decodeURIComponent(
+                    window
+                        .atob(base64)
+                        .split('')
+                        .map(function (c) {
+                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                        })
+                        .join('')
+                )
+            );
+            const roles =  decodedJWT.auth;
+            return roles;
         }
 
         function reissueAccessToken(url) {
