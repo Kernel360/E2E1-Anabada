@@ -19,9 +19,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.QFindTradeDto;
+import kr.kernel360.anabada.domain.trade.dto.QStateCountDto;
+import kr.kernel360.anabada.domain.trade.dto.StateCountDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.global.commons.domain.TradeOfferStatus;
 import kr.kernel360.anabada.global.commons.domain.TradeType;
+import kr.kernel360.anabada.global.utils.OrderByNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -113,6 +116,19 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 					.and(member.email.in(email))
 			)
 			.fetchOne();
+	}
+
+	@Override
+	public List<StateCountDto> countTradeByState() {
+		return queryFactory
+			.select(new QStateCountDto(
+				trade.place.state,
+				trade.count()
+			))
+				.from(trade)
+				.groupBy(trade.place.state)
+				.orderBy(OrderByNull.DEFAULT)
+				.fetch();
 	}
 
 	private BooleanExpression tradeTypeEq(String tradeType) {

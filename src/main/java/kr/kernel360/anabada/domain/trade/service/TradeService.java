@@ -1,5 +1,6 @@
 package kr.kernel360.anabada.domain.trade.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -17,8 +18,10 @@ import kr.kernel360.anabada.domain.place.entity.Place;
 import kr.kernel360.anabada.domain.place.repository.PlaceRepository;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindAllTradesByStateResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeDto;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.StateCountDto;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.entity.Trade;
 import kr.kernel360.anabada.domain.trade.repository.TradeRepository;
@@ -71,6 +74,12 @@ public class TradeService {
 		return savedTrade.getId();
 	}
 
+	public FindAllTradesByStateResponse countTradeByStatus() {
+		List<StateCountDto> stateCountList = tradeRepository.countTradeByState();
+
+		return FindAllTradesByStateResponse.of(stateCountList);
+	}
+
 	@Transactional
 	public Place findPlaceByStateAndCityAndAddress1(PlaceDto placeDto) {
 		if (!placeRepository.existsByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
@@ -78,7 +87,7 @@ public class TradeService {
 			return placeRepository.save(PlaceDto.toEntity(placeDto));
 		} else {
 			return placeRepository.findByStateAndCityAndAddress1(placeDto.getState(), placeDto.getCity(),
-				placeDto.getAddress1()).orElseThrow(() -> new IllegalArgumentException("wd"));
+				placeDto.getAddress1()).orElseThrow(() -> new IllegalArgumentException(""));
 		}
 	}
 }

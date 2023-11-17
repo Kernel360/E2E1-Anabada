@@ -2,6 +2,8 @@ package kr.kernel360.anabada.global.kakao.service;
 
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.place.dto.PlaceResponse;
+import kr.kernel360.anabada.global.error.code.KakaoErrorCode;
+import kr.kernel360.anabada.global.error.exception.BusinessException;
 import kr.kernel360.anabada.global.kakao.client.KakaoLocationClient;
 import kr.kernel360.anabada.global.kakao.dto.KakaoPlaceResponse;
 
@@ -44,7 +46,7 @@ public class KakaoLocationService {
                             .getRegionType()
                             .equals("B"))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("찾는 지역 정보가 존재하지 않습니다."));
+                    .orElseThrow(() -> new BusinessException(KakaoErrorCode.NOT_FOUND_PLACE));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

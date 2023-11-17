@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindAllMemberByGenderResponse {
-	List<GenderDto> genderList;
+	private List<GenderDto> genderList;
 
 	public static FindAllMemberByGenderResponse of(List<GenderDto> genderList) {
 		return FindAllMemberByGenderResponse.builder()
