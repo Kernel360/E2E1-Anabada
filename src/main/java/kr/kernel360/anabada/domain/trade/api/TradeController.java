@@ -10,27 +10,28 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.kernel360.anabada.domain.place.dto.PlaceDto;
 import kr.kernel360.anabada.domain.trade.dto.CreateTradeRequest;
 import kr.kernel360.anabada.domain.trade.dto.FindAllTradeResponse;
+import kr.kernel360.anabada.domain.trade.dto.FindAllTradesByStateResponse;
 import kr.kernel360.anabada.domain.trade.dto.FindTradeResponse;
 import kr.kernel360.anabada.domain.trade.dto.TradeSearchCondition;
 import kr.kernel360.anabada.domain.trade.service.TradeService;
@@ -140,6 +141,18 @@ public class TradeController {
 		} catch (MalformedURLException e) {
 			throw new BusinessException(TradeErrorCode.NOT_FOUND_FILE_PATH);
 		}
+	}
+
+	@ApiOperation(value = "시도별 교환 수 조회")
+	@ApiResponses({@ApiResponse(code = 200, message = "시도별 회원 수 조회 성공"),
+		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
+		@ApiResponse(code = 500, message = "서버 오류")})
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/v1/trades/state")
+	public ResponseEntity<FindAllTradesByStateResponse> countTradeByState() {
+		FindAllTradesByStateResponse findAllTradesByStateResponse = tradeService.countTradeByStatus();
+
+		return ResponseEntity.ok(findAllTradesByStateResponse);
 	}
 }
 
