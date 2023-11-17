@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.category.api;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class CategoryController {
 		@ApiResponse(code = 404, message = "페이지를 찾을 수 없습니다."),
 		@ApiResponse(code = 409, message = "동일한 카테고리가 존재합니다."),
 		@ApiResponse(code = 500, message = "서버 오류")})
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/v1/categories")
 	public ResponseEntity<CreateCategoryResponse> create(@RequestBody CreateCategoryRequest createCategoryRequest) {
 		CreateCategoryResponse createCategoryResponse = categoryService.create(createCategoryRequest);
@@ -78,6 +80,7 @@ public class CategoryController {
 		@ApiResponse(code = 500, message = "서버 오류")})
 	@ApiImplicitParam(name = "categoryId", required = true
 		, dataType = "int", paramType = "path", defaultValue = "1")
+	@Secured("ROLE_ADMIN")
 	@DeleteMapping("v1/categories/{id}")
 	public ResponseEntity<Long> remove(@PathVariable Long id) {
 		categoryService.remove(id);
