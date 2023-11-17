@@ -1,0 +1,3 @@
+[submodule "libs"]
+	path = libs
+	url = https://github.com/Kernel360/E2E1-Anabada-Secret.git
