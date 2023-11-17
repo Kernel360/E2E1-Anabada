@@ -3,6 +3,7 @@ package kr.kernel360.anabada.domain.member.api;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,6 +75,7 @@ public class MemberController {
 	@ApiResponses({@ApiResponse(code = 200, message = "모든 회원 수 조회 성공"),
 		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
 		@ApiResponse(code = 500, message = "서버 오류")})
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/v1/members")
 	public ResponseEntity<FindAllMemberResponse> findAll() {
 		FindAllMemberResponse findAllMemberResponse = memberService.findAll();
@@ -85,6 +87,7 @@ public class MemberController {
 	@ApiResponses({@ApiResponse(code = 200, message = "성별 회원 수 조회 성공"),
 		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
 		@ApiResponse(code = 500, message = "서버 오류")})
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/v1/members/gender")
 	public ResponseEntity<FindAllMemberByGenderResponse> countMemberByGender() {
 		FindAllMemberByGenderResponse findAllMemberByGenderResponse = memberService.countMembersByGender();
@@ -96,6 +99,7 @@ public class MemberController {
 	@ApiResponses({@ApiResponse(code = 200, message = "연령별 회원 수 조회 성공"),
 		@ApiResponse(code = 401, message = "접근 권한이 없습니다."),
 		@ApiResponse(code = 500, message = "서버 오류")})
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/v1/members/age-group")
 	public ResponseEntity<FindAllMemberByAgeGroupResponse> countMemberByAgeGroup() {
 		FindAllMemberByAgeGroupResponse findAllMemberByAgeGroupResponse = memberService.countMembersByAgeGroup();
