@@ -129,7 +129,7 @@
                                     height: 400px; width: 735px;" width="1470" height="800"></canvas>
                                 <!-- Doughnut Chart -->
                                 <script>
-                                    fn_getChartByLocal();
+                                    fn_getChartByState();
                                 </script>
                             </div>
                         </div>
@@ -333,75 +333,52 @@
         });
     }
 
-    function fn_getChartByLocal() {
+    function fn_getChartByState() {
+        $.ajax({
+            url: '/api/v1/trades/state',
+            method: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
+            },
+            success: function (data) {
+                var stateList = data.states;
+                var states = [];
+                var counts = [];
+                for (var i = 0; i < stateList.length; i++) {
+                    var now = stateList[i];
+                    states.push(now.state);
+                    counts.push(now.count);
+                }
+
+                createStateChart(states, counts);
+            },
+            error: function (data) {
+                alert(data.responseJSON.message);
+            }
+        });
+    }
+
+    function createStateChart(states, counts) {
+        function getRandomColor() {
+            const getRandom255 = () => Math.floor(Math.random() * 256);
+
+            return `rgba(${getRandom255()}, ${getRandom255()}, ${getRandom255()}, 0.2)`;
+        }
+
+        const backgroundColors = Array.from({ length: states.length }, () => getRandomColor());
+        const borderColors = backgroundColors.map(color => color.replace('rgba', 'rgb').replace(', 0.2)', ')'));
+
+
         new Chart(document.querySelector('#LocalStats'), {
             type: 'doughnut',
             data: {
-                labels: [
-                    '경기도',
-                    '경상남도',
-                    '경상북도',
-                    '경기도',
-                    '강원특별자치도',
-                    '광주광역시',
-                    '대구광역시',
-                    '대전광역시',
-                    '부산광역시',
-                    '서울특별시',
-                    '세종특별자치시',
-                    '울산광역시',
-                    '인천광역시',
-                    '전라남도',
-                    '전라북도',
-                    '제주특별자치도',
-                    '충청남도',
-                    '충청북도',
-                ],
+                labels: states,
                 datasets: [{
                     label: '시도별 교환 통계',
-                    data: [300, 50, 105, 100, 100, 200,
-                        300, 50, 105, 100, 100, 200,
-                        300, 50, 105, 100, 100, 200],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                    ],
+                    data: counts,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
                     hoverOffset: 4
                 }]
             },
