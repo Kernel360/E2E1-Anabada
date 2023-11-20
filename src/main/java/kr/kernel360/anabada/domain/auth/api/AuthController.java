@@ -85,10 +85,10 @@ public class AuthController {
 		@ApiResponse(code = 403, message = "잘못된 접근입니다."),
 		@ApiResponse(code = 404, message = "페이지를 찾을 수 없습니다."),
 		@ApiResponse(code = 500, message = "서버 오류")})
-	@PostMapping("/v1/auth/signUp")
+	@PostMapping("/v1/auth/signup")
 	public ResponseEntity<Long> signUp(@RequestBody SignUpRequest signUpRequest) {
 		Long savedMemberId = authService.signUp(signUpRequest);
-		URI uri = URI.create("/api/v1/auth/signUp/" + savedMemberId);
+		URI uri = URI.create("/api/v1/auth/signup/" + savedMemberId);
 
 		return ResponseEntity.created(uri).build();
 	}

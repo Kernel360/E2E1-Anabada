@@ -76,7 +76,7 @@
                     "gender"  : $("input[name='gender']:checked").val()
                 }
                 $.ajax({
-                    url: '/api/v1/auth/signUp',
+                    url: '/api/v1/auth/signup',
                     method: 'POST',
                     data: JSON.stringify(param),
                     contentType: 'application/json',
