@@ -117,15 +117,13 @@
                     loadHtmlAndExecuteScript(url, param);
                 },
                 error: function (data) {
-                    console.log("토큰에러!");
                     // 엑세스 토큰 만료
                     if (null != localStorage.getItem("accessToken")) {
                         reissueAccessToken(url);
                     }
-                    // 권한 없이 접근정
+                    // 권한 없이 접근
                     else {
-                        alert(data.responseJSON.message);
-                        alert("로그인 정보가 없거나 권한 정보가 없습니다.") // todo : 추후 exception 별 분기 필요
+                        alert("로그인 정보가 없습니다.")
                     }
                 }
             });
@@ -166,8 +164,8 @@
                     localStorage.setItem("accessToken", data.accessToken);
                     authorize(url);
                 },
-                error: function (xhr, status, error) {
-                    alert("리플래시 토큰이 만료되었습니다."); // todo : 추후 exception 별 분기 필요
+                error: function (data) {
+                    alert(data.responseJSON.message);
                     localStorage.clear();
                     window.location.href = "/auth/login.html";
                 }
@@ -274,10 +272,6 @@
                 dataType: 'json',
                 data: JSON.stringify(paramJson),
                 contentType: 'application/json',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
-                },
-                cache: false,  // 이 부분을 추가해보세요
                 success : function (data) {
                     localStorage.clear();
                     window.location.href = "/";

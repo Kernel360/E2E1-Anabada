@@ -202,10 +202,11 @@ public class TokenProvider implements InitializingBean {
 		validateAccessTokenEmailByRefreshTokenEmail(accessTokenEmail, refreshToken.getEmail());
 	}
 
+	/** Refresh Token 만료기간 검증 **/
 	private void validateRefreshTokenExpirationDate(LocalDateTime expirationDate, String refreshToken) {
 		if (!expirationDate.isAfter(LocalDateTime.now())) {
 			removeRedisRefreshToken(refreshToken);
-			throw new IllegalArgumentException("만료일자가 지난 refreshToken");
+			throw new BusinessException(TokenErrorCode.EXPIRED_LOGIN_INFO);
 		}
 	}
 
@@ -213,9 +214,10 @@ public class TokenProvider implements InitializingBean {
 		redisTemplate.opsForValue().getOperations().delete("refreshToken:" + refreshToken);
 	}
 
+	/** Refresh Token의 Access Token이 맞는지 검증 **/
 	private void validateAccessTokenEmailByRefreshTokenEmail(String accessTokenEmail, String refreshTokenEmail) {
 		if (!accessTokenEmail.equals(refreshTokenEmail)) {
-			throw new IllegalArgumentException("해당 refreshToken의 accessToken이 아님");
+			throw new BusinessException(TokenErrorCode.INVALID_TOKEN);
 		}
 	}
 }
