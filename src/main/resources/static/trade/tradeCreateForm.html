@@ -1,7 +1,7 @@
 <div class="pagetitle">
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">AnabadA</a></li>
+            <li class="breadcrumb-item"><a onclick="authorize('/main.html')">AnabadA</a></li>
             <li class="breadcrumb-item"><a onclick="authorize('/trade/tradeList.html')">교환</a></li>
             <li class="breadcrumb-item active">등록</li>
         </ol>
@@ -219,14 +219,6 @@
         formData.append("tradeType", $('#tradeType').val());
         formData.append("categoryId", $('#categoryId').val());
         formData.append("placeDto", localStorage.getItem("accessAddress"));
-
-        // Append placeDto fields directly to the FormData
-        // var placeDto = JSON.parse(localStorage.getItem("accessAddress"));
-        // for (var key in placeDto) {
-        //     if (placeDto.hasOwnProperty(key)) {
-        //         formData.append("placeDto." + key, placeDto[key]);
-        //     }
-        // }
 
         for(var pair of formData.entries()){
             console.log(pair[0], pair[1]);
