@@ -28,7 +28,8 @@ public class FileHandler {
 			multipartFile.transferTo(file);
 		} catch (IOException e) {
 			// todo : 추후 exception 타입 변경 필요
-			throw new IllegalArgumentException("파일시스템 처리 중 에러가 발생하였습니다.");
+			e.printStackTrace();
+			//throw new IllegalArgumentException("파일시스템 처리 중 에러가 발생하였습니다.");
 		}
 
 		return "/images/" + detailPath + "/" + imageName;
