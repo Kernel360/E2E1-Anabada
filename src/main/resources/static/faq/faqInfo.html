@@ -46,8 +46,8 @@
 
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <button id="faqUpdateButton" class="btn btn-primary">수정</button>
-                                <button id="faqDeleteButton" class="btn btn-primary">삭제</button>
+                                <button id="faqUpdateButton" class="btn btn-primary" style="display: none;">수정</button>
+                                <button id="faqDeleteButton" class="btn btn-primary" style="display: none;">삭제</button>
                             </div>
                         </div>
 
@@ -66,8 +66,13 @@
     });
 
     function fn_init() {
+        fn_getMemberInfo();
         fn_getFaqInfo();
         fn_setEvent();
+        if (fn_findRolesByJWT().includes("ROLE_ADMIN")) {
+            $('#faqUpdateButton').show();
+            $('#faqDeleteButton').show();
+        }
     }
 
     function fn_getFaqInfo() {

@@ -61,4 +61,4 @@ spring:
 
 kakao:
   place-api-uri: https://dapi.kakao.com/v2/local/geo/coord2regioncode.json
-  restapiKey: ${REST_API_KEY}
+  rest-api-key: ${REST_API_KEY}
