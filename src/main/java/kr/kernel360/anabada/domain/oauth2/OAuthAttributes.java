@@ -43,7 +43,7 @@ public class OAuthAttributes {
 			.email(oAuth2MemberInfo.getEmail())
 			.authorities("ROLE_USER")
 			.accountStatus(true)
-			.nickname(socialProvider.getDescription() + oAuth2MemberInfo.getNickname())
+			.nickname(oAuth2MemberInfo.getNickname() + oAuth2MemberInfo.getId())
 			.gender(oAuth2MemberInfo.getGender())
 			.birth(oAuth2MemberInfo.getBirth())
 			.ageGroup(AgeGroupParser.birthToAgeGroup(oAuth2MemberInfo.getBirth()))
