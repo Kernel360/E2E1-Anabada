@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-    <property name="LOG_PATH" value="logs"/> <!-- 로그 파일이 저장될 경로 -->
+    <property name="LOG_PATH" value="../../logs"/> <!-- 로그 파일이 저장될 경로 -->
     <property name="LOG_FILE_NAME" value="application"/> <!-- 로그 파일 이름 -->
     <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/> <!-- 로그 출력 패턴 -->
 
     <!-- 로그 레벨 -->
     <!--1) ERROR : 오류 메시지 표시
-        2) WARN  : 경고성 메시지 표시
+        2) WARN  : 경고성 메시지
         3) INFO  : 정보성 메시지 표시
         4) DEBUG : 디버깅하기 위한 메시지 표시
         5) TRACE : Debug보다 훨씬 상세한 메시지 표시-->
