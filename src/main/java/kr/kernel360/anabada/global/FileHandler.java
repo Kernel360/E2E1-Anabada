@@ -2,6 +2,8 @@ package kr.kernel360.anabada.global;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -21,15 +23,15 @@ public class FileHandler {
 			return null;
 		}
 		String imageName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH24mmss")) + "_" + multipartFile.getOriginalFilename();
-		String imagePath = "src/main/resources/static/images/"+ detailPath;
-		File file = new File(imagePath, imageName).getAbsoluteFile();
+		String imagePath = "images/"+ detailPath;
+		String filePathString = new File(imagePath, imageName).getAbsoluteFile().toString().replace("/build/libs","");
+		File file = new File(filePathString);
 
 		try {
 			multipartFile.transferTo(file);
 		} catch (IOException e) {
 			// todo : 추후 exception 타입 변경 필요
 			e.printStackTrace();
-			//throw new IllegalArgumentException("파일시스템 처리 중 에러가 발생하였습니다.");
 		}
 
 		return "/images/" + detailPath + "/" + imageName;
