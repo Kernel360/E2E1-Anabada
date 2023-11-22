@@ -52,6 +52,10 @@
 
         function fn_getLocationInfo() {
             var latitude, longitude;
+            var options = {
+                enableHighAccuracy: false,
+                maximumAge: 600000,
+            };
             navigator.geolocation.getCurrentPosition(function (position) {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
@@ -67,7 +71,8 @@
                         console.log(data);
                         localStorage.setItem("accessAddress", JSON.stringify(data));
                         $("#accessAddress").text(data.state+" "+data.city+" "+data.address1);
-                    }
+                    },
+                    options
                 });
             })
         }
