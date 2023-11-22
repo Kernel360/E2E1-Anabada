@@ -48,7 +48,7 @@ public class TradeController {
 	private final TradeService tradeService;
 	private final FileHandler fileHandler;
 	ObjectMapper objectMapper = new ObjectMapper();
-	private final Path rootLocation = Paths.get("src/main/resources/static/images/trade");
+	private final Path rootLocation = Paths.get("../../images/trade");
 
 	@ApiOperation(value = "조건에 따른 모든 교환 조회 -- 사용할 수 있는 조건 : 제목, 작성자, 교환 타입, 카테고리 아이디")
 	@ApiResponses({@ApiResponse(code = 200, message = "조건에 따른 모든 교환 조회 성공"),

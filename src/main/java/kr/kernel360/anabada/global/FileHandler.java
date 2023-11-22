@@ -21,7 +21,7 @@ public class FileHandler {
 			return null;
 		}
 		String imageName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH24mmss")) + "_" + multipartFile.getOriginalFilename();
-		String imagePath = "src/main/resources/static/images/"+ detailPath;
+		String imagePath = "../../images/"+ detailPath;
 		File file = new File(imagePath, imageName).getAbsoluteFile();
 
 		try {
