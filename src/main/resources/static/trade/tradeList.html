@@ -220,10 +220,6 @@
                     var loginMemberNickname = $("#header-member-nickname").text();
                     var tradeStatus = $(this).data('trade-status');
                     var tradeOfferCreatedBy = $(this).data('trade-offer-createdby');
-                    console.log("tradeStatus : " + tradeStatus);
-                    console.log("tradeCreateBy : " + tradeCreateBy);
-                    console.log("tradeOfferCreatedBy : " + tradeOfferCreatedBy);
-                    console.log("loginMemberNickname : " + loginMemberNickname);
 
                     if (tradeStatus == "AFTER_ACCEPT") {
                         if (loginMemberNickname == tradeOfferCreatedBy || loginMemberNickname == tradeCreateBy) {
