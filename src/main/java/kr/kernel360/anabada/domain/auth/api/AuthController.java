@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
-
 	private final AuthService authService;
 
 	@ApiOperation(value = "로그인 인증")
