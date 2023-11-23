@@ -33,7 +33,7 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 				tradeOffer.title,
 				tradeOffer.tradeOfferStatus,
 				tradeOffer.deletedStatus,
-				member.nickname,
+				tradeOffer.member.nickname,
 				tradeOffer.trade.id,
 				tradeOffer.createdDate,
 				tradeOffer.trade.title,
