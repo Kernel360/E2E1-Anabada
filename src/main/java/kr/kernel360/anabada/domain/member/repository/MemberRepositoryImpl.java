@@ -10,6 +10,7 @@ import kr.kernel360.anabada.domain.member.dto.AgeGroupDto;
 import kr.kernel360.anabada.domain.member.dto.GenderDto;
 import kr.kernel360.anabada.domain.member.dto.QAgeGroupDto;
 import kr.kernel360.anabada.domain.member.dto.QGenderDto;
+import kr.kernel360.anabada.global.commons.domain.SocialProvider;
 import kr.kernel360.anabada.global.utils.OrderByNull;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		))
 			.from(member)
 			.groupBy(member.ageGroup)
+			.where(member.socialProvider.eq(SocialProvider.LOCAL))
 			.orderBy(OrderByNull.DEFAULT)
 			.fetch();
 	}
