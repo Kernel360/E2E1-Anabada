@@ -60,7 +60,10 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 				tradeTitleContain(tradeSearchCondition.getTitle()),
 				placeEq(placeCondition)
 			)
-			.orderBy(trade.tradeStatus.desc(), trade.id.desc())
+			.orderBy(
+				trade.tradeStatus.desc(),
+				trade.createdDate.desc()
+			)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();

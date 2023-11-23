@@ -49,7 +49,10 @@ public class TradeOfferRepositoryImpl implements TradeOfferRepositoryCustom{
 				memberNicknameEq(findAllTradeOfferRequest.getNickname()),
 				tradeOffer.deletedStatus.eq(DeletedStatus.FALSE)
 				)
-			.orderBy(tradeOffer.id.desc())
+			.orderBy(
+				tradeOffer.tradeOfferStatus.desc(),
+				tradeOffer.createdDate.desc()
+			)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
