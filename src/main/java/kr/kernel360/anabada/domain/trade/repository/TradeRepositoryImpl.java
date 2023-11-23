@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -57,7 +56,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),
-				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
+				tradeCreatedByContain(tradeSearchCondition.getCreatedBy()),
 				tradeTitleContain(tradeSearchCondition.getTitle()),
 				placeEq(placeCondition)
 			)
@@ -73,7 +72,7 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 			.where(
 				tradeTypeEq(tradeSearchCondition.getTradeType()),
 				categoryIdEq(tradeSearchCondition.getCategoryId()),
-				tradeCreatedByEq(tradeSearchCondition.getCreatedBy()),
+				tradeCreatedByContain(tradeSearchCondition.getCreatedBy()),
 				tradeTitleContain(tradeSearchCondition.getTitle()),
 				placeEq(placeCondition)
 			)
@@ -143,8 +142,8 @@ public class TradeRepositoryImpl implements TradeRepositoryCustom {
 		return hasText(title) ? trade.title.contains(title) : null;
 	}
 
-	private BooleanExpression tradeCreatedByEq(String createdBy) {
-		return hasText(createdBy) ? trade.member.nickname.eq(createdBy) : null;
+	private BooleanExpression tradeCreatedByContain(String createdBy) {
+		return hasText(createdBy) ? trade.member.nickname.contains(createdBy) : null;
 	}
 
 	private BooleanExpression placeEq(Place placeCondition) {

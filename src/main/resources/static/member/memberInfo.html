@@ -128,10 +128,10 @@
                                 </div>
                                 <div class="col-md-3" style="text-align: right">
                                     <span class="badge bg-before-accept" style="font-size: 9px; --bs-badge-padding-x: 0.65em !important;--bs-badge-padding-y: 0.3em !important;--bs-badge-border-radius: 100px!important;">&nbsp;</span>
-                                    <span style="font-size: 14px;">거래수락</span>
+                                    <span style="font-size: 14px;">거래대기</span>
                                     <br>
                                     <span class="badge bg-after-accept" style="font-size: 9px; --bs-badge-padding-x: 0.65em !important;--bs-badge-padding-y: 0.3em !important;--bs-badge-border-radius: 100px!important;">&nbsp;</span>
-                                    <span style="font-size: 14px;">거래대기</span>
+                                    <span style="font-size: 14px;">거래수락</span>
                                 </div>
                             </div>
 
@@ -292,7 +292,6 @@
                 'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
             },
             success: function (data) {
-                console.log("data",data)
                 var tradeOffers = data.tradeOffers.content;
 
                 for (var i = 0; i < tradeOffers.length; i++) {
@@ -422,7 +421,6 @@
                 "birth": $("#birth").val(),
                 "gender": $("input[name='gender']:checked").val()
             }
-            console.log(param);
             $.ajax({
                 url: 'api/v1/members',
                 method: 'PUT',

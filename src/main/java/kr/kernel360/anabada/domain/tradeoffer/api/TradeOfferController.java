@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class TradeOfferController {
 	private final TradeOfferService tradeOfferService;
 	private final FileHandler fileHandler;
-	private final Path rootLocation = Paths.get("src/main/resources/static/images/tradeOffer");
+	private final Path rootLocation = Paths.get("../../images/tradeOffer");
 
 	@ApiOperation(value = "조건에 따른 모든 교환 요청 조회 -- 사용할 수 있는 조건 : 교환 요청 상태, 교환 요청 삭제 상태, 회원 아이디, 교환 아이디")
 	@ApiResponses({@ApiResponse(code = 200, message = "조건에 따른 모든 교환 요청 조회 성공"),

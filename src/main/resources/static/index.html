@@ -52,6 +52,10 @@
 
         function fn_getLocationInfo() {
             var latitude, longitude;
+            var options = {
+                enableHighAccuracy: false,
+                maximumAge: 600000,
+            };
             navigator.geolocation.getCurrentPosition(function (position) {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
@@ -64,10 +68,10 @@
                         'Authorization': 'Bearer ' + localStorage.getItem("accessToken") // 헤더에 토큰 추가
                     },
                     success : function (data) {
-                        console.log(data);
                         localStorage.setItem("accessAddress", JSON.stringify(data));
                         $("#accessAddress").text(data.state+" "+data.city+" "+data.address1);
-                    }
+                    },
+                    options
                 });
             })
         }
@@ -83,7 +87,6 @@
                 success : function (data) {
                     $(".member-nickname").text(data.nickname);
                     $(".member-email").text(data.email);
-                    console.log(data.role);
                     if (data.role.includes("ROLE_ADMIN")) {
                         $("#adminInfo").show();
                     } else {
@@ -99,6 +102,10 @@
             ];
             if (allowedUrls.includes(url)) {
                 loadHtmlAndExecuteScript(url,{});
+                return;
+            }
+            if (null == localStorage.getItem("accessAddress")) {
+                alert("위치정보를 찾을 수 없습니다.\n브라우저에서 위치권한을 승인하셔야 서비스를 이용하실 수 있습니다.");
                 return;
             }
             param = {};

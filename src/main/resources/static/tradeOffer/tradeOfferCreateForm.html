@@ -64,7 +64,6 @@
 
 <script>
     $(document).ready(function () {
-        console.log("param : " + JSON.stringify(param));
         fn_init();
     });
 
@@ -108,7 +107,6 @@
     }
 
     function fn_saveTradeInfo() {
-        console.log("fn_saveTradeInfo");
         var formData = new FormData();
         formData.append("title", $('#requestTitle').val());
         formData.append('imageFile', $('#imageFile')[0].files[0]);

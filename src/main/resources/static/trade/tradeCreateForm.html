@@ -220,14 +220,9 @@
         formData.append("categoryId", $('#categoryId').val());
         formData.append("placeDto", localStorage.getItem("accessAddress"));
 
-        for(var pair of formData.entries()){
-            console.log(pair[0], pair[1]);
-        }
-
         $.ajax({
             url: '/api/v1/trades',
             method: 'POST',
-            // enctype: 'multipart/form-data',
             data: formData,
             contentType: false,
             processData: false,
