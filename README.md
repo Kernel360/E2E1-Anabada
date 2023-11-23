@@ -104,7 +104,7 @@ Cache
 
 ## Troubleshooting
 > 프로젝트를 기획하고 직접 설계하면서 팀원들이 느꼈던 기술적인 고민들과 프로젝트를 개발하면서 느꼈던 점을 정리하였습니다.
-
+---
 ### 클라이언트에서 Ajax를 통한 이미지 파일 업로드 - [호윤](https://github.com/Uknow928)
 
 &emsp;프로젝트를 진행하면서 여러 중요한 기능들을 다루었지만, 클라이언트에서 Ajax를 통해 데이터를 전송하고 컨트롤러에서 이를 받아 처리하는 부분에서 이해도가 낮아 어려움을 겪었기에 이에 대한 내용을 트러블슈팅으로 정리하고자 합니다.
@@ -162,6 +162,7 @@ public ResponseEntity<Long> create(
 
 &emsp;위 코드에서는 `@RequestParam`을 이용하여 JSON 문자열을 받아오고 이를 `objectMapper`을 사용하여 `PlaceDto` 객체로 변환시키는 방식을 사용하여 데이터를 알맞게 맵핑할 수 있었습니다.
 
+---
 ### JWT를 이용한 로그인 기능 설계 - [윤선](https://github.com/yoonseon12)
 &emsp;로그인 기능을 설계하면서, 서버에서 유저의 상태 정보를 보존하고 있는 세션 기반 로그인 방식과 클라이언트에서 최소한의 유저 정보를 가지고 있는 JWT 기반의 무상태 방식 중 어떠한 방식을 선택할지가 중요한 부분이었고 팀원들과 의견 조율을 통해 최종적으로 **서비스의 확장성을 최대한 고려하고 Scale-Out 했을 때 영향이 적은 JWT를 로그인 기능에 적용**하기로 결정했습니다.
 
@@ -179,6 +180,8 @@ public ResponseEntity<Long> create(
 아래는 이 과정을 통해서 구현한 로그인 프로세스입니다.
 
 ![jwt2](src/main/resources/readme/Anabada-jwt-2.png)
+
+---
 
 ### Spring Security OAuth 2.0 Client를 통한 소셜 로그인 - [병룡](https://github.com/fingersdanny)
 &emsp;아나바다는 기존의 존재하는 회원가입을 통해서 웹 사이트에서 직접 로그인하여 서비스를 이용할 수 있도록 설계하였습니다. 
