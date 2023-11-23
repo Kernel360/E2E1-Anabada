@@ -38,7 +38,7 @@ Backend
   - Spring Cloud OpenFeign
 Frontend
   - HTML / CSS
-  - Javascript / Jquery
+  - Javascript / Jquery / Chart.js
 DB
   - MySQL
 Cache
