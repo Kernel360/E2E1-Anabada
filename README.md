@@ -17,9 +17,9 @@
 
 ### 목차
 - [기술 스택](#기술-스택)
-- [서비스 시현 영상](#서비스-시현-영상)
-  - [사용자 시현](#사용자-시현)
-  - [관리자 시현](#관리자-시현)
+- [서비스 시연 영상](#서비스-시연-영상)
+  - [사용자 시연](#사용자-시연)
+  - [관리자 시연](#관리자-시연)
 - [프로젝트 아키텍쳐](#프로젝트-아키텍쳐)
 - [ERD](#erd)
 - [기능 명세](#기능-명세)
@@ -44,17 +44,17 @@ DB
 Cache
   - Spring Data Redis
 ```
-## 서비스 시현 영상
+## 서비스 시연 영상
 
-### 사용자 시현
+### 사용자 시연
 ![user-test](src/main/resources/readme/Anabada-user-test.gif)
 
-더 자세한 사용자 시현 영상은 [여기](https://drive.google.com/file/d/1K-GDQlVRFaAT5hEnd3VeVsP2R1WfA-pp/view?usp=drive_link)에서 확인하실 수 있습니다.
+더 자세한 사용자 시연 영상은 [여기](https://drive.google.com/file/d/1K-GDQlVRFaAT5hEnd3VeVsP2R1WfA-pp/view?usp=drive_link)에서 확인하실 수 있습니다.
 
-### 관리자 시현
+### 관리자 시연
 ![admin-test](src/main/resources/readme/Anabada-admin-test.gif)
 
-더 자세한 관리자 시현 영상은 [여기](https://drive.google.com/file/d/1Mg998IMTBMaxK4XrXde1HsIe2O8TkESF/view?usp=drive_link)에서 확인하실 수 있습니다.
+더 자세한 관리자 시연 영상은 [여기](https://drive.google.com/file/d/1Mg998IMTBMaxK4XrXde1HsIe2O8TkESF/view?usp=drive_link)에서 확인하실 수 있습니다.
 
 ## 프로젝트 아키텍쳐
 ![anabada-system-architecture](src/main/resources/readme/Anabada%20System%20Architecture.png)
